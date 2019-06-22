@@ -1,0 +1,21 @@
+Package: mifa
+Type: Package
+Title: Multiple Imputation for Exploratory Factor Analysis
+Version: 0.1.0
+Authors@R: c(person("Vahid", "Nassiri", role = c("aut", "cre"),
+                     email = "vahid.nassiri@kuleuven.be"),
+              person("Anikó", "Lovik", role = "aut"),
+               person("Geert ", "Molenberghs", role = "aut"),
+                person("Geert Verbeke", "Verbeke", role = "aut"))
+Author: Vahid Nassiri, 
+        Anikó Lovik, 
+        Geert Molenberghs, 
+        Geert Verbeke
+Maintainer: Vahid Nassiri <vahid.nassiri@kuleuven.be>
+Imports: mice, Matrix
+Suggests: eigeninv, norm, psych, missMDA
+Description: This package uses multiple imputation to estimate the covariance matrix of incomplete data. An exploratory factor analysis then can be applied on this estimated covariance matrix. It also provides Fieller and bootstrap confidence intervals for the proportion of explained variance using different number of factors.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.1
