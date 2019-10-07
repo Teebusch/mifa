@@ -34,7 +34,7 @@ mifa.cov <- function(data.miss,n.factor,M,maxit.mi = 5,method.mi='pmm',
   comp.mice=NULL
   mi.na=rep(0,M)
   for (i in 1:M){
-    comp.mice[[i]]=complete(imputed_mice,i)
+    comp.mice[[i]]=mice::complete(imputed_mice,i)
     mi.na[i]=sum(is.na(comp.mice[[i]]))
   }
   # implementing sequential imputations in case that some of the columns are not
@@ -42,7 +42,7 @@ mifa.cov <- function(data.miss,n.factor,M,maxit.mi = 5,method.mi='pmm',
   while (sum(mi.na)>0){
     for (i in 1:M){
       imp.tmp=mice(comp.mice[[i]], m=1, maxit=maxit.mi,method=method.mi,print=FALSE)
-      comp.mice[[i]]=complete(imp.tmp,1)
+      comp.mice[[i]]=mice::complete(imp.tmp,1)
       mi.na[i]=sum(is.na(comp.mice[[i]]))
     }
   }
