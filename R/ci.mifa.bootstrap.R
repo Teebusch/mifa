@@ -40,7 +40,7 @@ ci.mifa.bootstrap<- function(data.miss,n.factor,rep.boot=1000,method.mi,maxit.mi
     # imputed due to collinearity, etc.
     while (sum(mi.na)>0){
       imp.tmp=mice(comp.mice, m=1, maxit=maxit.mi,method=method.mi,print=FALSE)
-      comp.mice=mice::mice::complete(imp.tmp,1)
+      comp.mice=mice::complete(imp.tmp,1)
       mi.na=sum(is.na(comp.mice))
     }
     ##
