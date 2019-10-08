@@ -102,7 +102,7 @@ chol.cov=t(chol(cov.mat))
 # with the given covariance matrix.
 data=matrix(0,N,P)
 for (i in 1:N){
-  data[i,]=chol.cov%*%data.ini[i,]
+  data[i,]=chol.cov\%*\%data.ini[i,]
 }
 # Here we create 5-percent missing data with
 # missing completely at random mechanism

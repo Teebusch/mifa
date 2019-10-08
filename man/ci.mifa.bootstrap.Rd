@@ -78,7 +78,7 @@ chol.cov=t(chol(cov.mat))
 # with the given covariance matrix.
 data=matrix(0,N,P)
 for (i in 1:N){
-  data[i,]=chol.cov%*%data.ini[i,]
+  data[i,]=chol.cov\%*\%data.ini[i,]
 }
 # Here we create 5-percent missing data with
 # missing completely at random mechanism
@@ -93,7 +93,7 @@ for (i in 1:P){
   }
 }
 ci.mifa.bootstrap(data.miss,n.factor=1:10,rep.boot=100,method.mi='pmm',maxit.mi=5,alpha=0.05)
-      n.factor      2.5%     97.5%
+      n.factor      2.5\%     97.5\%
  [1,]        1 0.2503306 0.3466675
  [2,]        2 0.4714291 0.5687062
  [3,]        3 0.6500003 0.7333300
@@ -103,6 +103,7 @@ ci.mifa.bootstrap(data.miss,n.factor=1:10,rep.boot=100,method.mi='pmm',maxit.mi=
  [7,]        7 0.9612759 0.9750707
  [8,]        8 0.9847418 0.9892099
  [9,]        9 0.9900835 0.9928978
-[10,]       10 0.9936964 0.9956437}
+[10,]       10 0.9936964 0.9956437
+}
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
