@@ -30,4 +30,4 @@ Description: This package uses multiple imputation to estimate the covariance
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

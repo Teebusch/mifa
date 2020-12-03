@@ -1,13 +1,22 @@
-## Computing parametric confidence intervals for proportion of explained variance
-# using Fieller's method.
+#' Fieller's confidence intervals for proportion of explained variance
+#'
+#' Computes parametric confidence intervals for proportion of explained
+#' variance using Fieller's method.
+#'
+#' @param cov.mi List containing the estimated covariance matrix within each
+#' imputed data. One can use the outcome of 'mi.cov' with the name
+#' `cov.mice.imp`.
+#' @param n.factor a vector indicating the number of factors for which the
+#' confidence interval should be constructed.
+#' @param alpha the level of significance of the confidence interval.
+#' @param N sample size
+#'
+#' @return A matrix contining 100(1-alpha)% confidence inervals for n.factor
+#' factors.
+#' @export
+#'
+#' @examples
 ci.mifa.fieller <- function(cov.mi,n.factor,alpha,N){
-  # input variables:
-  # cov.mi: a list containing the estimated covariance matrix within each imputed data.
-  # one can use the outcome of 'mi.cov' with the name 'cov.mice.imp'.
-  # n.factor: a vector indicating the number of factors forwhich the confidence ineterval
-  # should be constructed.
-  # alpha: the level of significance of the ocnfidence interval.
-  # N: sample size.
   n.items=dim(cov.mi[[1]])[1]
   N.factor=length(n.factor)
   M=length(cov.mi)
@@ -28,7 +37,4 @@ ci.mifa.fieller <- function(cov.mi,n.factor,alpha,N){
   fieller.ci=cbind(n.factor,fieller.ci)
   colnames(fieller.ci)=c('n.factor','Lower','Upper')
   return(fieller.ci)
-  # output:
-  # a matrix contining 100(1-alpha)% confidence inervals for
-  # n.factor factors.
 }

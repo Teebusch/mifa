@@ -1,7 +1,19 @@
-# find the Fieller interval for each k
+#' Find the Fieller interval for each k
+#'
+#' This function is loaded within ci.mi and will compute Fieller's confidence
+#' interval for each of the components of n.factor.
+#'
+#' @param eig.imp
+#' @param n.factor
+#' @param alpha
+#' @param N
+#' @param M
+#'
+#' @return
+#' @export
+#'
+#' @examples
 ci.mi.each <- function(eig.imp,n.factor,alpha,N,M){
-  # this function is loaded within ci.mi and will compute
-  # Fieller's confidence interval for each of the components of n.factor.
   eig.imp2=eig.imp^2
   mi.cov=NULL
   for (i in 1:M){

@@ -1,25 +1,33 @@
-# Computing covariance matrix of incomplete data using multiple imputation by
-# Multivariate Imputation by Chained Equations (MICE) method.
+#' Compute covariance matrix of incomplete data
+#'
+#' Compute covariance matrix of incomplete data using multiple imputation by
+#' Multivariate Imputation by Chained Equations (MICE) method.
+#' Please make sure the 'mice' package is installed. To install it use
+#' `install.packages("mice")`
+#'
+#' @param data.miss Dataset with missing values. <issing values should be
+#' shown with NA.
+#' @param n.factor Vector indicating number of factor should be used to compute
+#' proportion of explained variance or construct confidence intervals.
+#' @param M Number of generated imputations, for more information see R
+#' documentations for mice package.
+#' @param maxit.mi A scalar giving the number of iterations for each imputation,
+#' for more information see R documentations for mice package. The default is 5.
+#' @param method.mi the method which should be used for imputation. It can be a
+#' string or a vector of strings of the size equal to number of items. for more
+#' information see R documentations for mice package. The default is 'pmm'.
+#' @param alpha Significance level for constructing confidence intervals
+#' @param rep.boot
+#' @param ci A logical variable indicating whether a confidence interval should
+#' be constructed for proportion of explained variance or not. The default value
+#' is FALSE.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 mifa.cov <- function(data.miss,n.factor,M,maxit.mi = 5,method.mi='pmm',
                    alpha = 0.05,rep.boot=NULL,ci=FALSE){
-  # Please make sure the 'mice' package is installed. Use install.packages("mice")
-  # to install it.
-  # The input variable:
-  # data.miss: the dataset contaning missing values, the missing values should be
-  # shown with NA.
-  # n.factor: a vector indicating number of factor should be used to compute
-  # proportion of explained variance or construct confidence intervals.
-  # M: the number of generated imputations, for more information see
-  # R documentations for mice package.
-  # maxit.mi: a scalar giving the number of iterations for each imputation,
-  # for more information see R documentations for mice package. The default is
-  # set as 5.
-  # method.mi : the method which should be used for imputation. It can be a string
-  # or a vector of strings of the size equal to number of items. for more information see
-  # R documentations for mice package. The default is set is 'pmm'.
-  # alpha: the significance level for constructing confidence intervals
-  # ci: A logical variable indicaring whether a confidence interval should be
-  # constructed for proportion of explianed variance or not. The default value is FALSE.
   N=dim(data.miss)[1]
   require(mice)
   library(mice)

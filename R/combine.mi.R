@@ -1,10 +1,18 @@
-# This function applies Rubin's rule to combine results from different imputations
+#' Combine results from different imputations
+#'
+#' This function applies Rubin's rule to combine results from different
+#' imputations
+#'
+#' @param mi.parm.est Matrix containing estimated parameters in each imputation
+#' as its rows.
+#' @param mi.parm.cov List contaning the covariance matrix estimated within
+#' each imputation.
+#'
+#' @return
+#' @export
+#'
+#' @examples
 combine.mi <- function(mi.parm.est,mi.parm.cov){
-  # Input variables:
-  # mi.parm: a matrix containing estimated parameters in each imputation
-  # as its rows
-  # mi.parm.cov: a list contaning the covariance matrix estimated within 
-  # each imputation.
   M=length(mi.parm.cov)
   parm.est=apply(mi.parm.est,2,mean)
   est.diff=scale(mi.parm.est , center = TRUE, scale = FALSE)
