@@ -2,19 +2,17 @@
 #'
 #' This function computes a bootstrap confidence interval for proportion of
 #' explained variance for the covariance of an incomplete data imputed using
-#' MICE.
+#' multiple imputation with MICE.
+#' This function uses the Shao and Sitter (1996) method to combine multiple
+#' imputation and bootstrapping. The imputations are done using package mice.
 #'
-#' @param data.miss a matrix containing the incomplete datset with items as
-#' columns.
-#' @param n.factor a vector containing the number of factors should be used to
-#' compute proportion of explained variance.
-#' @param rep.boot the number of sub-samples to construct the bootstrap.
-#' confidence interval.
-#' @param method.mi the method which should be used for imputation. It can be a
-#' string or a vector of strings of the size equal to number of items.
-#' @param maxit.mi a scalar giving the number of iterations for each imputation,
-#  for more information see R documentations for mice package.
-#' @param alpha confidence level.
+#' @references Shao, Jun, and Randy R. Sitter. Bootstrap for imputed survey
+#' data. Journal of the American Statistical Association 91.435 (1996):
+#' 1278-1288.
+#'
+#' @inheritParams mifa.cov
+#'
+#' @seealso mifa.cov
 #'
 #' @return
 #' @export
@@ -30,7 +28,7 @@ ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
     boot.data <- data.miss[boot.data.idx, ]
 
     # impute it once
-    boot.imp <- try(mice(boot.data, m = 1, maxit = maxit.mi, method = method.mi, print = FALSE))
+    boot.imp <- try(mice::mice(boot.data, m = 1, maxit = maxit.mi, method = method.mi, print = FALSE))
 
     # check if everything is imputed
     method.levels.mi <- levels(boot.imp$loggedEvents$meth)
@@ -57,7 +55,6 @@ ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
       mi.na <- sum(is.na(comp.mice))
     }
 
-    ##
     boot.cov.tmp <- cov(comp.mice)
 
     # compute the covariance matrix and its explained variance
@@ -82,17 +79,27 @@ ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
 #' Fieller's confidence intervals for proportion of explained variance
 #'
 #' Computes parametric confidence intervals for proportion of explained
-#' variance using Fieller's method.
+#' variance for given numbers of factors using Fieller's method.
+#' Note that by setting ci = TRUE in mifa.cov, this confidence interval can be
+#' computed as well.
 #'
-#' @param cov.mi List containing the estimated covariance matrix within each
-#' imputed data. One can use the outcome of 'mi.cov' with the name
+#' @references Fieller, Edgar C. "Some problems in interval estimation."
+#' Journal of the Royal Statistical Society. Series B (Methodological) (1954):
+#' 175-185.
+#'
+#' @param cov.mi A vector containing the numbers of factors that should be used
+#' to compute the proportion of explained variance or construct confidence
+#' intervals. The minimum length of this vector is 1 and its maximum length is
+#' the number of items.List containing the estimated covariance matrix within
+#' each imputed data. One can use the outcome of 'mifa.cov' with the name
 #' `cov.mice.imp`.
-#' @param n.factor a vector indicating the number of factors for which the
-#' confidence interval should be constructed.
-#' @param alpha the level of significance of the confidence interval.
-#' @param N sample size
+#' @param N A scalar specifying sample size
 #'
-#' @return A matrix contining 100(1-alpha)% confidence inervals for n.factor
+#' @inheritParams mifa.cov
+#'
+#' @seealso mifa.cov
+#'
+#' @return A matrix containing 100(1-alpha)% confidence intervals for n.factor
 #' factors.
 #' @export
 #'
@@ -129,16 +136,19 @@ ci.mifa.fieller <- function(cov.mi, n.factor, alpha, N) {
 
 #' Find the Fieller interval for each k
 #'
-#' This function is loaded within ci.mi and will compute Fieller's confidence
-#' interval for each of the components of n.factor.
+#' This function is loaded within ci.mifa.fieller and will compute
+#' Fieller's confidence interval for each of the components of n.factor.
+#' Note that one can directly use ci.mifa.fieller. This function will be called
+#' in there for internal computations.
 #'
-#' @param eig.imp
-#' @param n.factor
-#' @param alpha
-#' @param N
-#' @param M
+#' @param eig.imp A matrix with each of its columns the eigenvalues of the
+#' estimated covariance matrix for each imputed data.
+#' @param M A scalar specifying number of multiple imputations.
 #'
-#' @return
+#' @inheritParams ci.mifa.fieller
+#'
+#' @return A vector of length 2, containing the lower and upper bounds of
+#' estimated Fieller's interval.
 #' @export
 #'
 #' @examples
@@ -174,15 +184,16 @@ ci.mi.each <- function(eig.imp, n.factor, alpha, N, M) {
   A           <- C12 + C22 - (2 * r * sqrt(C12 * C22))
   T.crit      <- qnorm(1 - (alpha / 2))
   B           <- (T.crit^2) * C12 * C22 * (1 - (r^2))
-  fieller1    <- eigen.first / eigen.all
-  fieller2    <- 1 - (T.crit^2 * r * sqrt(C12 * C22))
 
   if ((A - B) < 0) {
     stop("Computing Fieller CI is not possible, use a larger number of imputations.")
   }
 
-  fieller3    <- T.crit * sqrt(A - B)
-  fieller4    <- 1 - ((T.crit^2) * C22)
+  fieller1 <- eigen.first / eigen.all
+  fieller2 <- 1 - (T.crit^2 * r * sqrt(C12 * C22))
+  fieller3 <- T.crit * sqrt(A - B)
+  fieller4 <- 1 - ((T.crit^2) * C22)
+
   fieller.low <- fieller1 * ((fieller2 - fieller3) / fieller4)
   fieller.up  <- fieller1 * ((fieller2 + fieller3) / fieller4)
 

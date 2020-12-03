@@ -1,11 +1,16 @@
-#' Compute covariance matrix of incomplete data
+#' Compute covariance matrix of incomplete data using multiple imputation
 #'
 #' Compute covariance matrix of incomplete data using multiple imputation by
 #' Multivariate Imputation by Chained Equations (MICE) method.
 #'
-#' @param data.miss Dataset with missing values. <issing values should be
+#' @references Nassiri, V., Lovik, A., Molenberghs, G. et al. (2018).
+#' On using multiple imputation for exploratory factor analysis of incomplete
+#' data. Behavioral Research Methods 50, 501–517.
+#' \url(https://doi.org/10.3758/s13428-017-1013-4)
+#'
+#' @param data.miss Dataset with missing values. Missing values should be
 #' shown with NA.
-#' @param n.factor Vector indicating number of factor should be used to compute
+#' @param n.factor Vector indicating number of factors to be used to compute
 #' proportion of explained variance or construct confidence intervals.
 #' @param M Number of generated imputations, for more information see R
 #' documentations for mice package.
@@ -13,19 +18,40 @@
 #' for more information see R documentations for mice package. The default is 5.
 #' @param method.mi the method which should be used for imputation. It can be a
 #' string or a vector of strings of the size equal to number of items. for more
-#' information see R documentations for mice package. The default is 'pmm'.
+#' information see R documentations for mice package. The default is 'pmm',
+#' i.e., predictive mean matching.
 #' @param alpha Significance level for constructing confidence intervals
-#' @param rep.boot
+#' @param rep.boot number of bootstrap samples to use for bootstrap confidence
+#' intervals. If ci = TRUE rep.boot should be specified.
 #' @param ci A logical variable indicating whether a confidence interval should
 #' be constructed for proportion of explained variance or not. The default value
 #' is FALSE.
 #'
-#' @return
+#' @return A list:
+#' \describe{
+#'   \item{cov.mice} The estimated covariance matrix of the incomplete data
+#'   using multiple imputations.
+#'   \item{cov.mice.imp} A list containing th estimated covariance matrix for
+#'   each of M imputed data.
+#'   \item{exp.var.mice} A vector containing the estimated proportions of
+#'   explained variance for each of specified n.factor components.
+#'   \item{ci.mice.fieller} A matrix containing the estimated Fieller's
+#'   confidence interval for proportion of explained variance for each of specified n.factor components.
+#'   \item{ci.mice.bootstrap} A matrix containing the estimated bootstrap
+#'   confidence interval for proportion of explained variance for each of
+#'   specified n.factor components.
+#' }
+#' Confidence intervals are NULL, if ci = FALSE.
 #' @export
 #'
 #' @examples
 mifa.cov <- function(data.miss, n.factor, M, maxit.mi = 5, method.mi = "pmm",
                      alpha = 0.05, rep.boot = NULL, ci = FALSE) {
+  if (ci & !is.numeric(rep.boot)) {
+    stop(paste("You have set ci = TRUE, please set the number of bootstrap",
+               "sub-samples with rep.boot"))
+  }
+
   N <- dim(data.miss)[1]
 
   imputed_mice <- mice::mice(data.miss, m = M, maxit = maxit.mi,
@@ -66,38 +92,29 @@ mifa.cov <- function(data.miss, n.factor, M, maxit.mi = 5, method.mi = "pmm",
     cov.mice.imp[[i]] <- cov.tmp
   }
 
-  # Combining the estimated covariance from different imputations
+  # Combine estimated covariance from different imputations
   cov.mice <- Reduce("+", cov.mice.imp) / M
 
-  # computing the eigenvalues of the combined covariance matrix
+  # Eigenvalues of combined covariance matrix
   eig.cov.mice <- eigen(cov.mice)$values
 
   # proportion of explained variance for n.factor factors
   exp.var.mice <- (cumsum(eig.cov.mice) / sum(eig.cov.mice))[n.factor]
 
-  # If ci==TRUE the parametric (Fieller) and non-parametric (Bootstrap)
-  # confidence intervals are constructed here.
-  if (ci == TRUE) {
-    ci.mice.fieller <- try(ci.mifa.fieller(cov.mice.imp, n.factor, alpha, N))
-    if (is.numeric(rep.boot) == FALSE) {
-      stop(paste("You have set ci = TRUE, please set the number of bootstrap",
-                  "sub-samples with rep.boot"))
-    }
-    ci.mice.bootstrap <- try(ci.mifa.bootstrap(data.miss, n.factor, rep.boot,
-                                               method.mi, maxit.mi, alpha))
-    return(list(
+  out <- list(
       cov.mice          = cov.mice,
       cov.mice.imp      = cov.mice.imp,
       exp.var.mice      = exp.var.mice,
-      ci.mice.fieller   = ci.mice.fieller,
-      ci.mice.bootstrap = ci.mice.bootstrap
+      ci.mice.fieller   = NULL,
+      ci.mice.bootstrap = NULL
+  )
+
+  if (ci == TRUE) {
+    out$ci.mice.fieller <- try(ci.mifa.fieller(cov.mice.imp, n.factor, alpha, N))
+    out$ci.mice.bootstrap <- try(ci.mifa.bootstrap(
+      data.miss, n.factor, rep.boot, method.mi, maxit.mi, alpha
     ))
   }
-  if (ci == FALSE) {
-    return(list(
-      cov.mice     = cov.mice,
-      cov.mice.imp = cov.mice.imp,
-      exp.var.mice = exp.var.mice
-    ))
-  }
+
+  return(out)
 }

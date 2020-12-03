@@ -16,7 +16,7 @@ mifa.cov(
 )
 }
 \arguments{
-\item{data.miss}{Dataset with missing values. <issing values should be
+\item{data.miss}{Dataset with missing values. Missing values should be
 shown with NA.}
 
 \item{n.factor}{Vector indicating number of factor should be used to compute
@@ -34,16 +34,23 @@ information see R documentations for mice package. The default is 'pmm'.}
 
 \item{alpha}{Significance level for constructing confidence intervals}
 
+\item{rep.boot}{number of bootstrap samples to use for bootstrap confidence
+intervals}
+
 \item{ci}{A logical variable indicating whether a confidence interval should
 be constructed for proportion of explained variance or not. The default value
 is FALSE.}
 }
 \value{
-
+A list:
+`cov.mice` covariance matrix based on imputed values,
+`cov.mice.imp` Combined estimated covariance from different imputations,
+`exp.var.mice` proportion of explained variance for n.factor factors,
+`ci.mice.fieller parametric` (Fieller) confidence intervals (parametric)
+`ci.mice.bootstrap` bootstrap confidence intervals (non-parametric).
+Confidence intervals are NULL, if ci = FALSE.
 }
 \description{
 Compute covariance matrix of incomplete data using multiple imputation by
 Multivariate Imputation by Chained Equations (MICE) method.
-Please make sure the 'mice' package is installed. To install it use
-`install.packages("mice")`
 }
