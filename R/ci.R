@@ -19,7 +19,8 @@
 #' @seealso [mifa.cov()], [mice::mice()]
 #' @family {mifa confidence intervals}
 #'
-#' @return
+#' @return A matrix containing confidence intervals for `n.factor` factors with
+#' a confidence level of `100(1-alpha)%`.
 #' @export
 ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
                               method.mi, maxit.mi, alpha) {
@@ -158,7 +159,7 @@ ci.mi.each <- function(eig.imp, n.factor, alpha, N, M) {
   }
 
   # combining them into one single imputation
-  mi.comb       <- combine.mi((eig.imp), mi.cov)
+  mi.comb       <- combine.mi(eig.imp, mi.cov)
   cov.lambda    <- mi.comb$parm.cov
   P             <- dim(cov.lambda)[1]
   A1            <- matrix(c(rep(1, n.factor), rep(0, P - n.factor)), 1, P)

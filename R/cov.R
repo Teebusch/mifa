@@ -34,7 +34,7 @@
 #' \describe{
 #'   \item{cov.mice}{The estimated covariance matrix of the incomplete data
 #'   using multiple imputations.}
-#'   \item{cov.mice.imp}{A list containing th estimated covariance matrix for
+#'   \item{cov.mice.imp}{A list containing the estimated covariance matrix for
 #'   each of M imputed data.}
 #'   \item{exp.var.mice}{A vector containing the estimated proportions of
 #'   explained variance for each of specified n.factor components.}

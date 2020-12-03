@@ -14,13 +14,14 @@
 #'
 #' @return A list:
 #' \describe{
-#'   \item{parm.est}{Combined estimates.}
-#'   \item{parm.cov}{Combined variance-covariance matrix.}
-#'   \item{between.cov}{Between imputations variance-covariance matrix.}
+#'   \item{parm.est}{Vector of combined parameter estimates with the same length
+#'   as columns in `mi.parm.est`.}
+#'   \item{parm.cov}{Combined variance-covariance matrix of size n x n, where n
+#'   is the number of columns in `mi.parm.est`.}
+#'   \item{between.cov}{Between imputations variance-covariance matrix of size
+#'   n x n, where n is the number of columns in `mi.parm.est`.}
 #' }
 #' @export
-#'
-#' @examples
 combine.mi <- function(mi.parm.est, mi.parm.cov) {
   M                <- length(mi.parm.cov)
   parm.est         <- apply(mi.parm.est, 2, mean)

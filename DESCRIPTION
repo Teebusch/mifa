@@ -19,10 +19,11 @@ Imports:
   Matrix,
   stats
 Suggests: 
-  eigeninv, 
-  norm, 
-  psych, 
-  missMDA
+    eigeninv,
+    norm,
+    psych,
+    missMDA,
+    testthat
 Description: This package uses multiple imputation to estimate the covariance 
   matrix of incomplete data. An exploratory factor analysis then can be applied 
   on this estimated covariance matrix. It also provides Fieller and bootstrap 
