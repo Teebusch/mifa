@@ -1,9 +1,10 @@
-#' Combine results from different imputations using Rubin's rule
+#' Combine results from different imputations using Rubin's rules
 #'
-#' Applies Rubin's rules (Rubin, 2004) to combine estimates and
+#' Applies Rubin's rules to combine estimates and
 #' variance-covariance matrices from different imputations.
 #'
-#' @references Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
+#' @references
+#' Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
 #' John Wiley & Sons.
 #'
 #' @param mi.parm.est Matrix containing estimated parameters in each imputation
@@ -11,11 +12,11 @@
 #' @param mi.parm.cov List containing the covariance matrix estimated within
 #' each imputation.
 #'
-#' @return A list
-#' \itemize{
-#'   \item parm.est Combined estimates.
-#'   \item parm.cov Combined variance-covariance matrix
-#'   \item between.cov Between imputations variance-covariance matrix
+#' @return A list:
+#' \describe{
+#'   \item{parm.est}{Combined estimates.}
+#'   \item{parm.cov}{Combined variance-covariance matrix.}
+#'   \item{between.cov}{Between imputations variance-covariance matrix.}
 #' }
 #' @export
 #'

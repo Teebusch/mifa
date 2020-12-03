@@ -14,40 +14,48 @@ ci.mifa.bootstrap(
 )
 }
 \arguments{
-\item{data.miss}{Dataset with missing values. Missing values should be
-shown with NA.}
+\item{data.miss}{Dataset with missing values coded as \code{NA}.}
 
 \item{n.factor}{Vector indicating number of factors to be used to compute
-proportion of explained variance or construct confidence intervals.}
+proportion of explained variance or construct confidence intervals.
+The minimum length of this vector is 1 and its maximum length is
+the number of items.}
 
 \item{rep.boot}{number of bootstrap samples to use for bootstrap confidence
-intervals. If ci = TRUE rep.boot should be specified.}
+intervals. If \code{ci = TRUE} then \code{rep.boot} must be specified.}
 
-\item{method.mi}{the method which should be used for imputation. It can be a
-string or a vector of strings of the size equal to number of items. for more
-information see R documentations for mice package. The default is 'pmm',
-i.e., predictive mean matching.}
+\item{method.mi}{Method used for imputation. It can be a
+string or a vector of strings of the size equal to number of items.
+The default is \code{"pmm"}, i.e., predictive mean matching. See \code{\link[mice:mice]{mice::mice()}}.}
 
 \item{maxit.mi}{A scalar giving the number of iterations for each imputation,
 for more information see R documentations for mice package. The default is 5.}
 
-\item{alpha}{Significance level for constructing confidence intervals}
+\item{alpha}{Significance level for constructing confidence intervals.}
 }
 \value{
 
 }
 \description{
-This function computes a bootstrap confidence interval for proportion of
-explained variance for the covariance of an incomplete data imputed using
-multiple imputation with MICE.
+Compute bootstrap confidence intervals for the proportion of explained
+variance for the covariance of an incomplete data imputed using
+multiple imputation.
+For multiple imputation, Multivariate Imputation by Chained Equations
+(MICE) from the \link{mice} package is used.
+}
+\details{
 This function uses the Shao and Sitter (1996) method to combine multiple
-imputation and bootstrapping. The imputations are done using package mice.
+imputation and bootstrapping. The imputations are done using \code{\link[mice:mice]{mice::mice()}}.
 }
 \references{
-Shao, Jun, and Randy R. Sitter. Bootstrap for imputed survey
-data. Journal of the American Statistical Association 91.435 (1996):
-1278-1288.
+Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
+Journal of the American Statistical Association 91.435 (1996): 1278-1288.
+\url{https://dx.doi.org/10.1080/01621459.1996.10476997}
 }
 \seealso{
-mifa.cov
+\code{\link[=mifa.cov]{mifa.cov()}}, \code{\link[mice:mice]{mice::mice()}}
+
+Other {mifa confidence intervals}: 
+\code{\link{ci.mifa.fieller}()}
 }
+\concept{{mifa confidence intervals}}

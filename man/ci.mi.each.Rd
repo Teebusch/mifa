@@ -11,11 +11,13 @@ ci.mi.each(eig.imp, n.factor, alpha, N, M)
 estimated covariance matrix for each imputed data.}
 
 \item{n.factor}{Vector indicating number of factors to be used to compute
-proportion of explained variance or construct confidence intervals.}
+proportion of explained variance or construct confidence intervals.
+The minimum length of this vector is 1 and its maximum length is
+the number of items.}
 
-\item{alpha}{Significance level for constructing confidence intervals}
+\item{alpha}{Significance level for constructing confidence intervals.}
 
-\item{N}{A scalar specifying sample size}
+\item{N}{A scalar specifying sample size.}
 
 \item{M}{A scalar specifying number of multiple imputations.}
 }

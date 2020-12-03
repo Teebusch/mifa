@@ -2,7 +2,7 @@
 % Please edit documentation in R/combine.mi.R
 \name{combine.mi}
 \alias{combine.mi}
-\title{Combine results from different imputations using Rubin's rule}
+\title{Combine results from different imputations using Rubin's rules}
 \usage{
 combine.mi(mi.parm.est, mi.parm.cov)
 }
@@ -14,15 +14,15 @@ as its rows.}
 each imputation.}
 }
 \value{
-A list
-\itemize{
-  \item parm.est Combined estimates.
-  \item parm.cov Combined variance-covariance matrix
-  \item between.cov Between imputations variance-covariance matrix
+A list:
+\describe{
+\item{parm.est}{Combined estimates.}
+\item{parm.cov}{Combined variance-covariance matrix.}
+\item{between.cov}{Between imputations variance-covariance matrix.}
 }
 }
 \description{
-Applies Rubin's rules (Rubin, 2004) to combine estimates and
+Applies Rubin's rules to combine estimates and
 variance-covariance matrices from different imputations.
 }
 \references{

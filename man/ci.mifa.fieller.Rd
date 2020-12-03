@@ -7,35 +7,36 @@
 ci.mifa.fieller(cov.mi, n.factor, alpha, N)
 }
 \arguments{
-\item{cov.mi}{A vector containing the numbers of factors that should be used
-to compute the proportion of explained variance or construct confidence
-intervals. The minimum length of this vector is 1 and its maximum length is
-the number of items.List containing the estimated covariance matrix within
-each imputed data. One can use the outcome of 'mifa.cov' with the name
-`cov.mice.imp`.}
+\item{cov.mi}{List containing the estimated covariance matrix within
+each imputed data. One can use \code{cov.mice.imp} from \code{\link[=mifa.cov]{mifa.cov()}}.}
 
 \item{n.factor}{Vector indicating number of factors to be used to compute
-proportion of explained variance or construct confidence intervals.}
+proportion of explained variance or construct confidence intervals.
+The minimum length of this vector is 1 and its maximum length is
+the number of items.}
 
-\item{alpha}{Significance level for constructing confidence intervals}
+\item{alpha}{Significance level for constructing confidence intervals.}
 
-\item{N}{A scalar specifying sample size}
+\item{N}{A scalar specifying sample size.}
 }
 \value{
-A matrix containing 100(1-alpha)% confidence intervals for n.factor
-factors.
+A matrix containing confidence intervals for \code{n.factor} factors with
+a confidence level of \verb{100(1-alpha)\%}.
 }
 \description{
 Computes parametric confidence intervals for proportion of explained
 variance for given numbers of factors using Fieller's method.
-Note that by setting ci = TRUE in mifa.cov, this confidence interval can be
-computed as well.
+Note that by setting \code{ci = TRUE} in \code{\link[=mifa.cov]{mifa.cov()}}, this confidence
+interval can be computed as well.
 }
 \references{
-Fieller, Edgar C. "Some problems in interval estimation."
-Journal of the Royal Statistical Society. Series B (Methodological) (1954):
-175-185.
+Fieller, E. C. (1954). Some problems in interval estimation.
+Journal of the Royal Statistical Society. Series B (Methodological): 175-185.
 }
 \seealso{
-mifa.cov
+\code{\link[=mifa.cov]{mifa.cov()}}
+
+Other {mifa confidence intervals}: 
+\code{\link{ci.mifa.bootstrap}()}
 }
+\concept{{mifa confidence intervals}}
