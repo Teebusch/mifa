@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa.cov.R
 \name{mifa.cov}
 \alias{mifa.cov}
-\title{Compute covariance matrix of incomplete data}
+\title{Compute covariance matrix of incomplete data using multiple imputation}
 \usage{
 mifa.cov(
   data.miss,
@@ -19,7 +19,7 @@ mifa.cov(
 \item{data.miss}{Dataset with missing values. Missing values should be
 shown with NA.}
 
-\item{n.factor}{Vector indicating number of factor should be used to compute
+\item{n.factor}{Vector indicating number of factors to be used to compute
 proportion of explained variance or construct confidence intervals.}
 
 \item{M}{Number of generated imputations, for more information see R
@@ -30,12 +30,13 @@ for more information see R documentations for mice package. The default is 5.}
 
 \item{method.mi}{the method which should be used for imputation. It can be a
 string or a vector of strings of the size equal to number of items. for more
-information see R documentations for mice package. The default is 'pmm'.}
+information see R documentations for mice package. The default is 'pmm',
+i.e., predictive mean matching.}
 
 \item{alpha}{Significance level for constructing confidence intervals}
 
 \item{rep.boot}{number of bootstrap samples to use for bootstrap confidence
-intervals}
+intervals. If ci = TRUE rep.boot should be specified.}
 
 \item{ci}{A logical variable indicating whether a confidence interval should
 be constructed for proportion of explained variance or not. The default value
@@ -43,14 +44,28 @@ is FALSE.}
 }
 \value{
 A list:
-`cov.mice` covariance matrix based on imputed values,
-`cov.mice.imp` Combined estimated covariance from different imputations,
-`exp.var.mice` proportion of explained variance for n.factor factors,
-`ci.mice.fieller parametric` (Fieller) confidence intervals (parametric)
-`ci.mice.bootstrap` bootstrap confidence intervals (non-parametric).
+\describe{
+  \item{cov.mice} The estimated covariance matrix of the incomplete data
+  using multiple imputations.
+  \item{cov.mice.imp} A list containing th estimated covariance matrix for
+  each of M imputed data.
+  \item{exp.var.mice} A vector containing the estimated proportions of
+  explained variance for each of specified n.factor components.
+  \item{ci.mice.fieller} A matrix containing the estimated Fieller's
+  confidence interval for proportion of explained variance for each of specified n.factor components.
+  \item{ci.mice.bootstrap} A matrix containing the estimated bootstrap
+  confidence interval for proportion of explained variance for each of
+  specified n.factor components.
+}
 Confidence intervals are NULL, if ci = FALSE.
 }
 \description{
 Compute covariance matrix of incomplete data using multiple imputation by
 Multivariate Imputation by Chained Equations (MICE) method.
+}
+\references{
+Nassiri, V., Lovik, A., Molenberghs, G. et al. (2018).
+On using multiple imputation for exploratory factor analysis of incomplete
+data. Behavioral Research Methods 50, 501–517.
+\url(https://doi.org/10.3758/s13428-017-1013-4)
 }

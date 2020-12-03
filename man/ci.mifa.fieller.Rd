@@ -7,16 +7,19 @@
 ci.mifa.fieller(cov.mi, n.factor, alpha, N)
 }
 \arguments{
-\item{cov.mi}{List containing the estimated covariance matrix within each
-imputed data. One can use the outcome of 'mifa.cov' with the name
+\item{cov.mi}{A vector containing the numbers of factors that should be used
+to compute the proportion of explained variance or construct confidence
+intervals. The minimum length of this vector is 1 and its maximum length is
+the number of items.List containing the estimated covariance matrix within
+each imputed data. One can use the outcome of 'mifa.cov' with the name
 `cov.mice.imp`.}
 
-\item{n.factor}{Vector indicating number of factor should be used to compute
+\item{n.factor}{Vector indicating number of factors to be used to compute
 proportion of explained variance or construct confidence intervals.}
 
 \item{alpha}{Significance level for constructing confidence intervals}
 
-\item{N}{sample size}
+\item{N}{A scalar specifying sample size}
 }
 \value{
 A matrix containing 100(1-alpha)% confidence intervals for n.factor
@@ -24,5 +27,15 @@ factors.
 }
 \description{
 Computes parametric confidence intervals for proportion of explained
-variance using Fieller's method.
+variance for given numbers of factors using Fieller's method.
+Note that by setting ci = TRUE in mifa.cov, this confidence interval can be
+computed as well.
+}
+\references{
+Fieller, Edgar C. "Some problems in interval estimation."
+Journal of the Royal Statistical Society. Series B (Methodological) (1954):
+175-185.
+}
+\seealso{
+mifa.cov
 }

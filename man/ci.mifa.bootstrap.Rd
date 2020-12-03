@@ -17,15 +17,16 @@ ci.mifa.bootstrap(
 \item{data.miss}{Dataset with missing values. Missing values should be
 shown with NA.}
 
-\item{n.factor}{Vector indicating number of factor should be used to compute
+\item{n.factor}{Vector indicating number of factors to be used to compute
 proportion of explained variance or construct confidence intervals.}
 
 \item{rep.boot}{number of bootstrap samples to use for bootstrap confidence
-intervals}
+intervals. If ci = TRUE rep.boot should be specified.}
 
 \item{method.mi}{the method which should be used for imputation. It can be a
 string or a vector of strings of the size equal to number of items. for more
-information see R documentations for mice package. The default is 'pmm'.}
+information see R documentations for mice package. The default is 'pmm',
+i.e., predictive mean matching.}
 
 \item{maxit.mi}{A scalar giving the number of iterations for each imputation,
 for more information see R documentations for mice package. The default is 5.}
@@ -38,5 +39,15 @@ for more information see R documentations for mice package. The default is 5.}
 \description{
 This function computes a bootstrap confidence interval for proportion of
 explained variance for the covariance of an incomplete data imputed using
-MICE.
+multiple imputation with MICE.
+This function uses the Shao and Sitter (1996) method to combine multiple
+imputation and bootstrapping. The imputations are done using package mice.
+}
+\references{
+Shao, Jun, and Randy R. Sitter. Bootstrap for imputed survey
+data. Journal of the American Statistical Association 91.435 (1996):
+1278-1288.
+}
+\seealso{
+mifa.cov
 }

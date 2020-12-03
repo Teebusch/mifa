@@ -7,12 +7,25 @@
 ci.mi.each(eig.imp, n.factor, alpha, N, M)
 }
 \arguments{
-\item{M}{}
+\item{eig.imp}{A matrix with each of its columns the eigenvalues of the
+estimated covariance matrix for each imputed data.}
+
+\item{n.factor}{Vector indicating number of factors to be used to compute
+proportion of explained variance or construct confidence intervals.}
+
+\item{alpha}{Significance level for constructing confidence intervals}
+
+\item{N}{A scalar specifying sample size}
+
+\item{M}{A scalar specifying number of multiple imputations.}
 }
 \value{
-
+A vector of length 2, containing the lower and upper bounds of
+estimated Fieller's interval.
 }
 \description{
 This function is loaded within ci.mifa.fieller and will compute
 Fieller's confidence interval for each of the components of n.factor.
+Note that one can directly use ci.mifa.fieller. This function will be called
+in there for internal computations.
 }

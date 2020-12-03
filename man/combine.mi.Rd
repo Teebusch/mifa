@@ -14,8 +14,18 @@ as its rows.}
 each imputation.}
 }
 \value{
-A list: `parm.est`, `parm.cov`, `between.cov`
+A list
+\itemize{
+  \item parm.est Combined estimates.
+  \item parm.cov Combined variance-covariance matrix
+  \item between.cov Between imputations variance-covariance matrix
+}
 }
 \description{
-Use Rubin's rule to combine results from different imputations
+Applies Rubin's rules (Rubin, 2004) to combine estimates and
+variance-covariance matrices from different imputations.
+}
+\references{
+Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
+John Wiley & Sons.
 }
