@@ -1,0 +1,81 @@
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mifa)
+```
+
+This is a more complex example. 
+Generate a data set with 5% of the data missing completely at random (MCAR)
+
+```{r generate-data, message=FALSE}
+
+library(eigeninv)
+
+e.vals <- c(50, 48, 45, 25, 20, 10, 5, 5, 1, 1, 0.5, 0.5, 0.5, 0.1, 0.1) # eigenvalues
+P      <- length(e.vals)  # number of items
+N      <- 100             # sample size
+
+# generate a covariance matrix with the eigenvalues in e.vals
+cov.mat  <- eigeninv::eiginv(evals = e.vals, symmetric = TRUE) 
+chol.cov <- t(chol(cov.mat)) # Cholesky decomposition of the covariance matrix
+
+# Generate centered independent normal data
+data.ini1     <- matrix(rnorm(N * P), N, P)
+mean.data.ini <- apply(data.ini1, 2, mean)
+data.ini      <- t(t(data.ini1) - mean.data.ini)
+
+# generate multivariate normal data with the given covariance matrix.
+data <- matrix(0, N, P)
+for (i in 1:N) {
+  data[i, ] <- chol.cov %*% data.ini[i, ]
+}
+
+# Create 5-percent missing data with missing completely at random
+data.miss <- data
+mcar.n.miss <- 0.05
+
+for (i in 1:P) {
+  for (j in 1:N) {
+    rand.u <- runif(1)
+    if (rand.u <= mcar.n.miss) {
+      data.miss[j, i] <- NA
+    }
+  }
+}
+```
+
+`mifa.cov()` provides the confidence intervals when `ci == TRUE`. 
+CIs can also be calculated separately if desired:
+
+```{r run-mifa-ci}
+
+# get CIs using Fieller's method
+result.mi <- mifa.cov(data.miss,
+  n.factor = 1:10, M = 10, maxit.mi = 5, method.mi = "pmm",
+  alpha = 0.05, rep.boot = 500, ci = FALSE
+)
+
+ci.mifa.fieller(result.mi$cov.mice.imp, 1:10, 0.05, N = 100)
+
+
+# Get CIs using bootstrapping
+ci.mifa.bootstrap(data.miss, 
+  n.factor = 1:10, rep.boot = 100, maxit.mi = 5, method.mi = "pmm", 
+  alpha = 0.05
+)
+
+```

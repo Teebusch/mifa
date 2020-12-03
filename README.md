@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mifa - Multiple Imputation for Exploratory Factor Analysis
+# mifa
 
 <!-- badges: start -->
 
@@ -11,13 +11,14 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
 <!-- badges: end -->
 
-This package uses multiple imputation to estimate the covariance matrix
-of incomplete data. An exploratory factor analysis then can be applied
-on this estimated covariance matrix. It also provides Fieller and
-bootstrap confidence intervals for the proportion of explained variance
-using different number of factors.
+`mifa` implements multiple imputation for exploratory factor analysis.
+It uses multiple imputation by chained equations (MICE) to estimate the
+covariance matrix of the incomplete data. An exploratory factor analysis
+then can be applied on this estimated covariance matrix. It also
+provides Fieller and bootstrap confidence intervals for the proportion
+of explained variance using different numbers of factors.
 
-#### For more information, see:
+**For more information, see:**
 
 Nassiri, V., Lovik, A., Molenberghs, G. *et al.* On using multiple
 imputation for exploratory factor analysis of incomplete data. *Behav
@@ -35,191 +36,209 @@ devtools::install_github("vahidnassiri/mifa")
 
 ## Usage
 
-### Generate Data Set
+In this example, we use the `bfi` data set from the `psych` package. It
+contains data from 2800 subjects: Their answers to 25 personality self
+report items and 3 demographic variables (sex, education, and age).
 
-Genarate a data set with 5% of the data missing completely at random
-(MCAR)
+The 25 columns with responses to personality questions are already
+grouped into 5 personality factors, as indicated by their names:
 
-``` r
-library(eigeninv)
-#> Warning: package 'eigeninv' was built under R version 4.0.3
+-   **A1-A5** Agreeableness)
+-   **C1-C5** Conscientiousness)
+-   **E1-E5** Extraversion)
+-   **N1-N5** Neuroticism)
+-   **O1-O5** Openness)
 
-e.vals <- c(50, 48, 45, 25, 20, 10, 5, 5, 1, 1, 0.5, 0.5, 0.5, 0.1, 0.1) # eigenvalues
-P      <- length(e.vals)  # number of items
-N      <- 100             # sample size
-
-# generate a covariance matrix with the eigenvalues in e.vals
-cov.mat  <- eigeninv::eiginv(evals = e.vals, symmetric = TRUE) 
-chol.cov <- t(chol(cov.mat)) # Cholesky decomposition of the covariance matrix
-
-# Generate centered independent normal data
-data.ini1     <- matrix(rnorm(N * P), N, P)
-mean.data.ini <- apply(data.ini1, 2, mean)
-data.ini      <- t(t(data.ini1) - mean.data.ini)
-
-# generate multivariate normal data with the given covariance matrix.
-data <- matrix(0, N, P)
-for (i in 1:N) {
-  data[i, ] <- chol.cov %*% data.ini[i, ]
-}
-
-# Create 5-percent missing data with missing completely at random
-data.miss <- data
-mcar.n.miss <- 0.05
-
-for (i in 1:P) {
-  for (j in 1:N) {
-    rand.u <- runif(1)
-    if (rand.u <= mcar.n.miss) {
-      data.miss[j, i] <- NA
-    }
-  }
-}
-```
-
-### Run mifa
-
-Run mifa:
-
-``` r
-library(mifa)
-
-result.mi <- mifa.cov(data.miss,
-  n.factor = 1:10, M = 10, maxit.mi = 5, method.mi = "pmm",
-  alpha = 0.05, rep.boot = 50, ci = TRUE
-)
-#> Warning: Number of logged events: 3
-#> Warning: Number of logged events: 5
-
-summary(result.mi)
-#>                   Length Class  Mode   
-#> cov.mice          225    -none- numeric
-#> cov.mice.imp       10    -none- list   
-#> exp.var.mice       10    -none- numeric
-#> ci.mice.fieller    30    -none- numeric
-#> ci.mice.bootstrap  30    -none- numeric
-```
-
-The Fieller confidence intervals indicate that 4 factors are enough to
-explain around 80% of the variance.
-
-``` r
-round(result.mi$ci.mice.fieller, 2)
-#>       n.factor Lower Upper
-#>  [1,]        1  0.23  0.36
-#>  [2,]        2  0.46  0.58
-#>  [3,]        3  0.66  0.75
-#>  [4,]        4  0.79  0.85
-#>  [5,]        5  0.90  0.93
-#>  [6,]        6  0.94  0.96
-#>  [7,]        7  0.97  0.98
-#>  [8,]        8  0.98  0.99
-#>  [9,]        9  0.99  0.99
-#> [10,]       10  0.99  0.99
-```
-
-The estimated covariance matrix based on imputed data is in
-`result.mi$cov.mice`, and we can use it to perform exploratory factor
-analysis:
+In most columns there are a couple of missing values.
 
 ``` r
 library(psych)
 #> Warning: package 'psych' was built under R version 4.0.3
-fit <- fa(r = result.mi$cov.mice, n.obs = N, nfactors = 4, rotate = "varimax")
+colSums(is.na(bfi))
+#>        A1        A2        A3        A4        A5        C1        C2        C3 
+#>        16        27        26        19        16        21        24        20 
+#>        C4        C5        E1        E2        E3        E4        E5        N1 
+#>        26        16        23        16        25         9        21        22 
+#>        N2        N3        N4        N5        O1        O2        O3        O4 
+#>        21        11        36        29        22         0        28        14 
+#>        O5    gender education       age 
+#>        20         0       223         0
+```
 
+We can use `mifa` to impute the missing values multiple times using
+Multivariate Imputation with Chained Equations (MICE). Then we can
+obtain a covariance matrix for each imputed data set and combine these
+estimates into a single estimated covariance matrix on which we can then
+perform exploratory factor analyis:
+
+``` r
+library(mifa)
+
+data <- bfi[, 1:25] # exclude gender, education, and age
+
+mi <- mifa.cov(data, n.factor = 2:8, M = 5, maxit.mi = 5, method.mi = "pmm",
+               alpha = 0.05, rep.boot = 50, ci = TRUE)
+
+summary(mi)
+#>                   Length Class  Mode   
+#> cov.mice          625    -none- numeric
+#> cov.mice.imp        5    -none- list   
+#> exp.var.mice        7    -none- numeric
+#> ci.mice.fieller    21    -none- numeric
+#> ci.mice.bootstrap  21    -none- numeric
+```
+
+The Fieller confidence intervals indicate that 5 factors are enough to
+explain more than half of the variance:
+
+``` r
+round(mi$ci.mice.fieller, 2)
+#>      n.factor Lower Upper
+#> [1,]        2  0.32  0.34
+#> [2,]        3  0.40  0.42
+#> [3,]        4  0.47  0.49
+#> [4,]        5  0.53  0.55
+#> [5,]        6  0.58  0.59
+#> [6,]        7  0.61  0.63
+#> [7,]        8  0.65  0.66
+```
+
+The bootstrapped confidence intervals also confirm this:
+
+``` r
+round(mi$ci.mice.bootstrap, 2)
+#>      n.factor 2.5% 97.5%
+#> [1,]        2 0.32  0.34
+#> [2,]        3 0.41  0.42
+#> [3,]        4 0.48  0.49
+#> [4,]        5 0.53  0.55
+#> [5,]        6 0.58  0.59
+#> [6,]        7 0.62  0.63
+#> [7,]        8 0.65  0.67
+```
+
+The estimated covariance matrix based on imputed data is in
+`result.mi$cov.mice`, and we can use it to perform exploratory factor
+analysis with the desired number of factors. We use the `fa()` function
+from `psych` for this:
+
+``` r
+fit <- fa(r = mi$cov.mice, n.obs = nrow(data), nfactors = 5, rotate = "varimax")
 fit
 #> Factor Analysis using method =  minres
-#> Call: fa(r = result.mi$cov.mice, nfactors = 4, n.obs = N, rotate = "varimax")
+#> Call: fa(r = mi$cov.mice, nfactors = 5, n.obs = nrow(data), rotate = "varimax")
 #> Standardized loadings (pattern matrix) based upon correlation matrix
-#>       MR1   MR3   MR4   MR2   h2    u2 com
-#> V1   0.87  0.01 -0.11  0.01 0.76 0.238 1.0
-#> V2   0.98  0.15  0.06 -0.01 0.98 0.024 1.1
-#> V3   0.97  0.15  0.04 -0.02 0.97 0.032 1.1
-#> V4   0.91  0.26  0.15 -0.07 0.93 0.074 1.2
-#> V5   0.94  0.24  0.08 -0.05 0.95 0.050 1.1
-#> V6   0.93  0.20  0.13 -0.03 0.92 0.077 1.1
-#> V7  -0.03  0.13  0.06  0.63 0.42 0.579 1.1
-#> V8   0.60 -0.07  0.51  0.01 0.63 0.373 2.0
-#> V9   0.71  0.24  0.07 -0.06 0.57 0.426 1.3
-#> V10  0.50  0.60  0.15  0.09 0.64 0.356 2.1
-#> V11  0.60  0.16  0.09 -0.27 0.47 0.531 1.6
-#> V12  0.11  0.27  0.00 -0.29 0.18 0.825 2.3
-#> V13  0.07  0.38 -0.07  0.04 0.16 0.841 1.2
-#> V14  0.06 -0.01 -0.44  0.01 0.20 0.800 1.0
-#> V15  0.21 -0.08  0.27  0.12 0.13 0.865 2.5
+#>      MR2   MR1   MR3   MR5   MR4   h2   u2 com
+#> A1  0.12  0.04  0.02 -0.41 -0.08 0.19 0.81 1.3
+#> A2  0.03  0.21  0.14  0.61  0.07 0.45 0.55 1.4
+#> A3  0.01  0.32  0.11  0.63  0.06 0.52 0.48 1.6
+#> A4 -0.06  0.19  0.23  0.42 -0.11 0.28 0.72 2.2
+#> A5 -0.11  0.39  0.09  0.53  0.06 0.46 0.54 2.0
+#> C1  0.01  0.06  0.53  0.03  0.20 0.33 0.67 1.3
+#> C2  0.09  0.03  0.65  0.11  0.11 0.45 0.55 1.2
+#> C3 -0.02  0.02  0.55  0.12  0.00 0.32 0.68 1.1
+#> C4  0.25 -0.06 -0.61 -0.04 -0.11 0.45 0.55 1.5
+#> C5  0.30 -0.17 -0.55 -0.05  0.03 0.43 0.57 1.8
+#> E1  0.04 -0.57  0.04 -0.10 -0.07 0.35 0.65 1.1
+#> E2  0.25 -0.68 -0.09 -0.10 -0.04 0.54 0.46 1.3
+#> E3  0.02  0.54  0.08  0.26  0.27 0.44 0.56 2.0
+#> E4 -0.10  0.65  0.10  0.30 -0.08 0.53 0.47 1.6
+#> E5  0.03  0.50  0.32  0.09  0.21 0.41 0.59 2.2
+#> N1  0.77  0.08 -0.04 -0.22 -0.08 0.66 0.34 1.2
+#> N2  0.75  0.03 -0.03 -0.19 -0.02 0.60 0.40 1.1
+#> N3  0.73 -0.06 -0.07 -0.03  0.00 0.55 0.45 1.0
+#> N4  0.59 -0.33 -0.17  0.00  0.07 0.49 0.51 1.8
+#> N5  0.54 -0.15 -0.03  0.10 -0.15 0.35 0.65 1.4
+#> O1  0.01  0.22  0.12  0.06  0.50 0.31 0.69 1.6
+#> O2  0.19  0.00 -0.10  0.09 -0.45 0.26 0.74 1.5
+#> O3  0.02  0.30  0.08  0.13  0.59 0.46 0.54 1.7
+#> O4  0.23 -0.18 -0.01  0.16  0.38 0.25 0.75 2.6
+#> O5  0.10 -0.01 -0.06 -0.02 -0.53 0.30 0.70 1.1
 #> 
-#>                        MR1  MR3  MR4  MR2
-#> SS loadings           6.76 0.91 0.64 0.60
-#> Proportion Var        0.45 0.06 0.04 0.04
-#> Cumulative Var        0.45 0.51 0.55 0.59
-#> Proportion Explained  0.76 0.10 0.07 0.07
-#> Cumulative Proportion 0.76 0.86 0.93 1.00
+#>                        MR2  MR1  MR3  MR5  MR4
+#> SS loadings           2.69 2.45 1.97 1.77 1.47
+#> Proportion Var        0.11 0.10 0.08 0.07 0.06
+#> Cumulative Var        0.11 0.21 0.28 0.36 0.41
+#> Proportion Explained  0.26 0.24 0.19 0.17 0.14
+#> Cumulative Proportion 0.26 0.50 0.69 0.86 1.00
 #> 
 #> Mean item complexity =  1.5
-#> Test of the hypothesis that 4 factors are sufficient.
+#> Test of the hypothesis that 5 factors are sufficient.
 #> 
-#> The degrees of freedom for the null model are  105  and the objective function was  14.97 with Chi Square of  1394.85
-#> The degrees of freedom for the model are 51  and the objective function was  0.51 
+#> The degrees of freedom for the null model are  300  and the objective function was  7.22 with Chi Square of  20152.18
+#> The degrees of freedom for the model are 185  and the objective function was  0.66 
 #> 
-#> The root mean square of the residuals (RMSR) is  0.02 
-#> The df corrected root mean square of the residuals is  0.03 
+#> The root mean square of the residuals (RMSR) is  0.03 
+#> The df corrected root mean square of the residuals is  0.04 
 #> 
-#> The harmonic number of observations is  100 with the empirical chi square  8.3  with prob <  1 
-#> The total number of observations was  100  with Likelihood Chi Square =  46.11  with prob <  0.67 
+#> The harmonic number of observations is  2800 with the empirical chi square  1434.83  with prob <  4.8e-192 
+#> The total number of observations was  2800  with Likelihood Chi Square =  1835.32  with prob <  3.1e-269 
 #> 
-#> Tucker Lewis Index of factoring reliability =  1.008
-#> RMSEA index =  0  and the 90 % confidence intervals are  0 0.054
-#> BIC =  -188.75
-#> Fit based upon off diagonal values = 1
+#> Tucker Lewis Index of factoring reliability =  0.865
+#> RMSEA index =  0.056  and the 90 % confidence intervals are  0.054 0.059
+#> BIC =  366.9
+#> Fit based upon off diagonal values = 0.98
 #> Measures of factor score adequacy             
-#>                                                    MR1  MR3  MR4  MR2
-#> Correlation of (regression) scores with factors   0.99 0.78 0.75 0.71
-#> Multiple R square of scores with factors          0.97 0.61 0.56 0.51
-#> Minimum correlation of possible factor scores     0.95 0.21 0.11 0.01
+#>                                                    MR2  MR1  MR3  MR5  MR4
+#> Correlation of (regression) scores with factors   0.92 0.88 0.86 0.84 0.82
+#> Multiple R square of scores with factors          0.85 0.77 0.73 0.70 0.67
+#> Minimum correlation of possible factor scores     0.70 0.54 0.47 0.40 0.35
+```
 
+The plot below shows that the five factors have been recovered quite
+well:
+
+``` r
 fa.diagram(fit)
 ```
 
-<img src="man/figures/README-unnamed-chunk-3-1.png" width="100%" />
-`mifa.cov()` provides the confidence intervals when `ci == TRUE`. CIs
-can also be calculated separately if desired:
+<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> We
+can extract the factor scores and add them to the original data:
 
 ``` r
-# get CIs using Fieller's method
-result.mi <- mifa.cov(data.miss,
-  n.factor = 1:10, M = 10, maxit.mi = 5, method.mi = "pmm",
-  alpha = 0.05, rep.boot = 500, ci = FALSE
+# use a single imputation (predi)
+imp <- mice::mice(bfi, m = 1, print = FALSE)
+data_imp <- mice::complete(imp, 1)
+fct_scores <- data.frame(factor.scores(data_imp[, 1:25], fit)$scores)
+
+data_imp <- data.frame(
+  Gender        = factor(data_imp$gender),
+  Age           = data_imp$age,
+  Extraversion  = fct_scores$MR1,
+  Neuroticism   = fct_scores$MR2,
+  Conciousness  = fct_scores$MR3,
+  Openness      = fct_scores$MR4,
+  Agreeableness = fct_scores$MR5
 )
 
-ci.mifa.fieller(result.mi$cov.mice.imp, 1:10, 0.05, N = 100)
-#>       n.factor     Lower     Upper
-#>  [1,]        1 0.2273153 0.3636066
-#>  [2,]        2 0.4594949 0.5835279
-#>  [3,]        3 0.6571766 0.7523962
-#>  [4,]        4 0.7916119 0.8573226
-#>  [5,]        5 0.9040544 0.9337448
-#>  [6,]        6 0.9426481 0.9608676
-#>  [7,]        7 0.9657265 0.9770542
-#>  [8,]        8 0.9826180 0.9879300
-#>  [9,]        9 0.9872813 0.9913813
-#> [10,]       10 0.9912664 0.9942816
-
-
-# Get CIs using bootstrapping
-ci.mifa.bootstrap(data.miss, 
-  n.factor = 1:10, rep.boot = 100, maxit.mi = 5, method.mi = "pmm", 
-  alpha = 0.05
-)
-#> Warning: Number of logged events: 1
-#>       n.factor      2.5%     97.5%
-#>  [1,]        1 0.2667657 0.3775205
-#>  [2,]        2 0.4976026 0.5989957
-#>  [3,]        3 0.6930701 0.7681802
-#>  [4,]        4 0.8174491 0.8647566
-#>  [5,]        5 0.9112542 0.9369631
-#>  [6,]        6 0.9479430 0.9633479
-#>  [7,]        7 0.9689222 0.9790495
-#>  [8,]        8 0.9846687 0.9890757
-#>  [9,]        9 0.9892576 0.9926238
-#> [10,]       10 0.9931133 0.9952030
+levels(data_imp$Gender) <- c("Male", "Female")
 ```
+
+``` r
+library(ggplot2)
+#> 
+#> Attaching package: 'ggplot2'
+#> The following objects are masked from 'package:psych':
+#> 
+#>     %+%, alpha
+library(tidyr)
+
+data_imp <- tidyr::pivot_longer(data_imp, -c("Gender", "Age"), "factor")
+
+ggplot(data_imp, aes(value, linetype = Gender)) +
+  geom_density() +
+  facet_wrap(~ factor, nrow = 1)
+```
+
+<img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
+
+``` r
+ggplot(data_imp, aes(Age, value)) +
+  geom_point(alpha = .1, position = position_jitter(width = .4)) +
+  geom_smooth(color = "dodgerblue") +
+  facet_wrap(~ factor, ncol = 2) +
+  coord_cartesian(xlim = c(16, 65))
+#> `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
+```
+
+<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />
