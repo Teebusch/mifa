@@ -2,8 +2,6 @@
 #'
 #' Compute covariance matrix of incomplete data using multiple imputation by
 #' Multivariate Imputation by Chained Equations (MICE) method.
-#' Please make sure the 'mice' package is installed. To install it use
-#' `install.packages("mice")`
 #'
 #' @param data.miss Dataset with missing values. <issing values should be
 #' shown with NA.
@@ -29,9 +27,8 @@
 mifa.cov <- function(data.miss, n.factor, M, maxit.mi = 5, method.mi = "pmm",
                      alpha = 0.05, rep.boot = NULL, ci = FALSE) {
   N <- dim(data.miss)[1]
-  require(mice)
-  library(mice)
-  imputed_mice <- mice(data.miss, m = M, maxit = maxit.mi,
+
+  imputed_mice <- mice::mice(data.miss, m = M, maxit = maxit.mi,
                        method = method.mi, print = FALSE)
 
   ### Begin sequential imputation
@@ -53,7 +50,7 @@ mifa.cov <- function(data.miss, n.factor, M, maxit.mi = 5, method.mi = "pmm",
   # imputed due to collinearity, etc.
   while (sum(mi.na) > 0) {
     for (i in 1:M) {
-      imp.tmp <- mice(comp.mice[[i]], m = 1, maxit = maxit.mi,
+      imp.tmp <- mice::mice(comp.mice[[i]], m = 1, maxit = maxit.mi,
                       method = method.mi, print = FALSE)
       comp.mice[[i]] <- mice::complete(imp.tmp, 1)
       mi.na[i] <- sum(is.na(comp.mice[[i]]))

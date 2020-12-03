@@ -5,7 +5,7 @@
 #'
 #' @param mi.parm.est Matrix containing estimated parameters in each imputation
 #' as its rows.
-#' @param mi.parm.cov List contaning the covariance matrix estimated within
+#' @param mi.parm.cov List containing the covariance matrix estimated within
 #' each imputation.
 #'
 #' @return

@@ -3,8 +3,6 @@
 #' This function computes a bootstrap confidence interval for proportion of
 #' explained variance for the covariance of an incomplete data imputed using
 #' MICE.
-#' Please make sure the 'mice' package is installed. To install it use
-#' `install.packages("mice")`
 #'
 #' @param data.miss a matrix containing the incomplete datset with items as
 #' columns.
@@ -24,8 +22,6 @@
 #' @examples
 ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
                               method.mi, maxit.mi, alpha) {
-  require(mice)
-  library(mice)
   N <- dim(data.miss)[1]
   boot.eig <- matrix(0, dim(data.miss)[2], rep.boot)
 
@@ -42,7 +38,7 @@ ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
       boot.data.idx <- sample(1:N, N, replace = T)
       boot.data <- data.miss[boot.data.idx, ]
       # impute it once
-      boot.imp <- try(mice(boot.data, m = 1, maxit = maxit.mi,
+      boot.imp <- try(mice::mice(boot.data, m = 1, maxit = maxit.mi,
                            method = method.mi, print = FALSE))
       # check if everything is imputed
       method.levels.mi <- levels(boot.imp$loggedEvents$meth)
@@ -55,7 +51,7 @@ ci.mifa.bootstrap <- function(data.miss, n.factor, rep.boot = 1000,
     # implementing sequential imputations in case that some of the columns are not
     # imputed due to collinearity, etc.
     while (sum(mi.na) > 0) {
-      imp.tmp <- mice(comp.mice, m = 1, maxit = maxit.mi,
+      imp.tmp <- mice::mice(comp.mice, m = 1, maxit = maxit.mi,
                       method = method.mi, print = FALSE)
       comp.mice <- mice::complete(imp.tmp, 1)
       mi.na <- sum(is.na(comp.mice))
