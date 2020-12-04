@@ -79,14 +79,9 @@ As an example, we use the `bfi` data set from the `psych` package. It contains
 data from 2800 subjects: Their answers to 25 personality self report items and 
 3 demographic variables (sex, education, and age). 
 
-The 25 columns with responses to personality questions are already grouped into 
-5 personality factors, as indicated by their names:
-
-* **A1-A5** Agreeableness
-* **C1-C5** Conscientiousness
-* **E1-E5** Extraversion
-* **N1-N5** Neuroticism
-* **O1-O5** Openness
+The 25 columns with responses to personality questions correspond to 5 putative
+personality factors, as indicated by their names: Agreeableness,
+Conscientiousness, Extraversion, Neuroticism, Openness.
 
 In most columns there are a couple of missing values.
 
@@ -96,23 +91,22 @@ data <- bfi[, 1:25] # exclude gender, education, and age
 colSums(is.na(data))
 ```
 
+We use `mifa()` to get the corariance matrix.
 
 ```{r run-mifa, messages=FALSE}
-
 library(mifa)
 mi <- mifa(data, n_factors = 2:8, ci = "both", n_boot = 50, print = FALSE)
 
 summary(mi)
 ```
 
-The Fieller and bootstrap confidence intervals indicate that 5 factors are 
-enough to explain more than half of the variance:
+Both, the Fieller and bootstrap 95% confidence intervals indicate that 5 factors
+are enough to explain more than half of the variance:
 
 ```{r}
 round(mi$var_explained, 2)
 ```
 
- 
 The estimated covariance matrix based on imputed data is in `mi$cov_combined`, 
 and we can use it to perform exploratory factor analysis with the desired number
 of factors. We use the `fa()` function from `psych` for this:
@@ -125,10 +119,12 @@ fit
 
 The plot below shows that the five factors have been recovered quite well:
 
-```{r fig.width=10, fig.height=7}
+```{r fig.width=10, fig.height=7, fig.retina=T}
 fa.diagram(fit)
 ```
-We can extract the factor scores and add them to the original data:
+
+We can extract the factor scores, add them to the original data, and visualize
+them:
 
 ```{r}
 
@@ -153,10 +149,10 @@ levels(data_imp$Gender) <- c("Male", "Female")
 
 ```{r include = FALSE}
 library(ggplot2)
-ggplot2::theme_set(theme_minimal())
+ggplot2::theme_set(theme_minimal(base_size = 16))
 ```
 
-```{r fig.width=10, fig.height=7}
+```{r fig.width=10, fig.height=6, fig.retina=TRUE}
 library(ggplot2)
 library(tidyr)
 
@@ -164,5 +160,6 @@ data_imp <- tidyr::pivot_longer(data_imp, -Gender, "factor")
 
 ggplot(data_imp, aes(value, linetype = Gender)) +
   geom_density() +
-  facet_wrap(~ factor, nrow = 2)
+  facet_wrap(~ factor, nrow = 2) +
+  theme(legend.position = c(.9, .1))
 ```

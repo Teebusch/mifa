@@ -63,14 +63,9 @@ As an example, we use the `bfi` data set from the `psych` package. It
 contains data from 2800 subjects: Their answers to 25 personality self
 report items and 3 demographic variables (sex, education, and age).
 
-The 25 columns with responses to personality questions are already
-grouped into 5 personality factors, as indicated by their names:
-
--   **A1-A5** Agreeableness
--   **C1-C5** Conscientiousness
--   **E1-E5** Extraversion
--   **N1-N5** Neuroticism
--   **O1-O5** Openness
+The 25 columns with responses to personality questions correspond to 5
+putative personality factors, as indicated by their names:
+Agreeableness, Conscientiousness, Extraversion, Neuroticism, Openness.
 
 In most columns there are a couple of missing values.
 
@@ -83,6 +78,8 @@ colSums(is.na(data))
 #> 16 27 26 19 16 21 24 20 26 16 23 16 25  9 21 22 21 11 36 29 22  0 28 14 20
 ```
 
+We use `mifa()` to get the corariance matrix.
+
 ``` r
 library(mifa)
 mi <- mifa(data, n_factors = 2:8, ci = "both", n_boot = 50, print = FALSE)
@@ -94,8 +91,8 @@ summary(mi)
 #> var_explained     6    data.frame list
 ```
 
-The Fieller and bootstrap confidence intervals indicate that 5 factors
-are enough to explain more than half of the variance:
+Both, the Fieller and bootstrap 95% confidence intervals indicate that 5
+factors are enough to explain more than half of the variance:
 
 ``` r
 round(mi$var_explained, 2)
@@ -193,8 +190,10 @@ well:
 fa.diagram(fit)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" /> We
-can extract the factor scores and add them to the original data:
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" />
+
+We can extract the factor scores, add them to the original data, and
+visualize them:
 
 ``` r
 # impute a single data set with mice
@@ -224,7 +223,8 @@ data_imp <- tidyr::pivot_longer(data_imp, -Gender, "factor")
 
 ggplot(data_imp, aes(value, linetype = Gender)) +
   geom_density() +
-  facet_wrap(~ factor, nrow = 2)
+  facet_wrap(~ factor, nrow = 2) +
+  theme(legend.position = c(.9, .1))
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
