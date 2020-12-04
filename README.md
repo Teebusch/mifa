@@ -39,21 +39,23 @@ multiple imputation for exploratory factor analysis of incomplete data.
 
 ## Installation
 
-``` r
-# install.packages("devtools")
-devtools::install_github("teebusch/mifa@dev")
-```
+You can install the the developmental version of `mifa` with:
 
-You can install the the release version of mifa from
-[GitHub](https://github.com/) with:
+You can install the the release version of `mifa` from
+[GitHub](https://github.com/teebusch/mifa) with:
 
 ``` r
 # install.packages("devtools")
 devtools::install_github("teebusch/mifa")
 ```
 
+``` r
+# install.packages("devtools")
+devtools::install_github("teebusch/mifa@dev")
+```
+
 The original version of mifa appears to have been abandoned by the
-author. You can find it [here](https://github.com/vahidnassiri/mifa):
+author. You can find it [here](https://github.com/vahidnassiri/mifa).
 
 ## Usage
 
@@ -83,13 +85,13 @@ colSums(is.na(data))
 
 ``` r
 library(mifa)
-mi <- mifa(data, n_factors = 2:8, ci = TRUE, n_boot = 50, print = FALSE)
+mi <- mifa(data, n_factors = 2:8, ci = "both", n_boot = 50, print = FALSE)
 
 summary(mi)
 #>                 Length Class      Mode   
 #> cov_combined    625    -none-     numeric
 #> cov_imputations   5    -none-     list   
-#> var_explained     2    data.frame list
+#> var_explained     6    data.frame list
 ```
 
 The Fieller and bootstrap confidence intervals indicate that 5 factors
@@ -97,14 +99,22 @@ are enough to explain more than half of the variance:
 
 ``` r
 round(mi$var_explained, 2)
-#>   n_factors var_explained
-#> 1         2          0.33
-#> 2         3          0.41
-#> 3         4          0.48
-#> 4         5          0.54
-#> 5         6          0.58
-#> 6         7          0.62
-#> 7         8          0.66
+#>   n_factors var_explained ci_boot_lower ci_boot_upper ci_fieller_lower
+#> 1         2          0.33          0.32          0.34             0.32
+#> 2         3          0.41          0.41          0.42             0.40
+#> 3         4          0.48          0.48          0.49             0.47
+#> 4         5          0.54          0.53          0.55             0.53
+#> 5         6          0.58          0.58          0.59             0.58
+#> 6         7          0.62          0.62          0.63             0.61
+#> 7         8          0.66          0.65          0.67             0.65
+#>   ci_fieller_upper
+#> 1             0.34
+#> 2             0.42
+#> 3             0.49
+#> 4             0.55
+#> 5             0.59
+#> 6             0.63
+#> 7             0.66
 ```
 
 The estimated covariance matrix based on imputed data is in

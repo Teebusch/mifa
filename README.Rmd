@@ -54,21 +54,23 @@ imputation for exploratory factor analysis of incomplete data.
 
 ## Installation
 
-```r
-# install.packages("devtools")
-devtools::install_github("teebusch/mifa@dev")
-```
+You can install the the developmental version of `mifa` with:
 
-You can install the the release version of mifa from
-[GitHub](https://github.com/) with:
+You can install the the release version of `mifa` from
+[GitHub](https://github.com/teebusch/mifa) with:
 
 ```r
 # install.packages("devtools")
 devtools::install_github("teebusch/mifa")
 ```
 
+```r
+# install.packages("devtools")
+devtools::install_github("teebusch/mifa@dev")
+```
+
 The original version of mifa appears to have been abandoned by the author. 
-You can find it [here](https://github.com/vahidnassiri/mifa):
+You can find it [here](https://github.com/vahidnassiri/mifa).
 
 
 ## Usage
@@ -98,7 +100,7 @@ colSums(is.na(data))
 ```{r run-mifa, messages=FALSE}
 
 library(mifa)
-mi <- mifa(data, n_factors = 2:8, ci = TRUE, n_boot = 50, print = FALSE)
+mi <- mifa(data, n_factors = 2:8, ci = "both", n_boot = 50, print = FALSE)
 
 summary(mi)
 ```
@@ -123,12 +125,12 @@ fit
 
 The plot below shows that the five factors have been recovered quite well:
 
-```{r}
+```{r fig.width=10, fig.height=7}
 fa.diagram(fit)
 ```
 We can extract the factor scores and add them to the original data:
 
-```{r fig.height=4, fig.width=12}
+```{r}
 
 # impute a single data set with mice
 imp <- mice::mice(bfi, m = 1, print = FALSE)
@@ -154,7 +156,7 @@ library(ggplot2)
 ggplot2::theme_set(theme_minimal())
 ```
 
-```{r}
+```{r fig.width=10, fig.height=7}
 library(ggplot2)
 library(tidyr)
 
