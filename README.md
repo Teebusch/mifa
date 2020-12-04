@@ -11,122 +11,113 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
 <!-- badges: end -->
 
-`mifa` implements multiple imputation for exploratory factor analysis.
-It uses multiple imputation by chained equations (MICE) to estimate the
-covariance matrix of the incomplete data. An exploratory factor analysis
-then can be applied on this estimated covariance matrix. It also
-provides Fieller and bootstrap confidence intervals for the proportion
-of explained variance using different numbers of factors.
+`mifa` implements multiple imputation for exploratory factor analysis to
+allow performing exploratory factor analysis on data sets with missing
+data. It works as follows:
+
+-   `mifa` imputes the missing values multiple times using Multivariate
+    Imputation with Chained Equations (MICE) from the [mice
+    package](https://amices.org/mice/).
+
+-   It then combines the covariance matrices of the imputed data sets
+    into a single estimated covariance matrix using Rubin’s rules.
+
+-   This combined covariance matrix can then be used to perform
+    exploratory factor analyis.
+
+-   `mifa` also provides two types of confidence intervals for the
+    variance explained by different numbers of factors: Parametric
+    Fieller confidence intervals for larger samples, and nonparametric
+    bootstrapped confidence intervals for smaller samples.
 
 **For more information, see:**
 
-Nassiri, V., Lovik, A., Molenberghs, G. *et al.* On using multiple
-imputation for exploratory factor analysis of incomplete data. *Behav
-Res* 50, 501–517 (2018). <https://doi.org/10.3758/s13428-017-1013-4>
+Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018) On using
+multiple imputation for exploratory factor analysis of incomplete data.
+*Behavior Research Methods* 50, 501–517.
+<https://doi.org/10.3758/s13428-017-1013-4>
 
 ## Installation
+
+``` r
+# install.packages("devtools")
+devtools::install_github("teebusch/mifa@dev")
+```
 
 You can install the the release version of mifa from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("vahidnassiri/mifa")
+devtools::install_github("teebusch/mifa")
 ```
+
+The original version of mifa appears to have been abandoned by the
+author. You can find it [here](https://github.com/vahidnassiri/mifa):
 
 ## Usage
 
-In this example, we use the `bfi` data set from the `psych` package. It
+As an example, we use the `bfi` data set from the `psych` package. It
 contains data from 2800 subjects: Their answers to 25 personality self
 report items and 3 demographic variables (sex, education, and age).
 
 The 25 columns with responses to personality questions are already
 grouped into 5 personality factors, as indicated by their names:
 
--   **A1-A5** Agreeableness)
--   **C1-C5** Conscientiousness)
--   **E1-E5** Extraversion)
--   **N1-N5** Neuroticism)
--   **O1-O5** Openness)
+-   **A1-A5** Agreeableness
+-   **C1-C5** Conscientiousness
+-   **E1-E5** Extraversion
+-   **N1-N5** Neuroticism
+-   **O1-O5** Openness
 
 In most columns there are a couple of missing values.
 
 ``` r
 library(psych)
 #> Warning: package 'psych' was built under R version 4.0.3
-colSums(is.na(bfi))
-#>        A1        A2        A3        A4        A5        C1        C2        C3 
-#>        16        27        26        19        16        21        24        20 
-#>        C4        C5        E1        E2        E3        E4        E5        N1 
-#>        26        16        23        16        25         9        21        22 
-#>        N2        N3        N4        N5        O1        O2        O3        O4 
-#>        21        11        36        29        22         0        28        14 
-#>        O5    gender education       age 
-#>        20         0       223         0
+data <- bfi[, 1:25] # exclude gender, education, and age
+colSums(is.na(data))
+#> A1 A2 A3 A4 A5 C1 C2 C3 C4 C5 E1 E2 E3 E4 E5 N1 N2 N3 N4 N5 O1 O2 O3 O4 O5 
+#> 16 27 26 19 16 21 24 20 26 16 23 16 25  9 21 22 21 11 36 29 22  0 28 14 20
 ```
-
-We can use `mifa` to impute the missing values multiple times using
-Multivariate Imputation with Chained Equations (MICE). Then we can
-obtain a covariance matrix for each imputed data set and combine these
-estimates into a single estimated covariance matrix on which we can then
-perform exploratory factor analyis:
 
 ``` r
 library(mifa)
-
-data <- bfi[, 1:25] # exclude gender, education, and age
-
-mi <- mifa.cov(data, n.factor = 2:8, M = 5, maxit.mi = 5, method.mi = "pmm",
-               alpha = 0.05, rep.boot = 50, ci = TRUE)
+mi <- mifa(data, n_factors = 2:8, ci = TRUE, n_boot = 50, print = FALSE)
 
 summary(mi)
-#>                   Length Class  Mode   
-#> cov.mice          625    -none- numeric
-#> cov.mice.imp        5    -none- list   
-#> exp.var.mice        7    -none- numeric
-#> ci.mice.fieller    21    -none- numeric
-#> ci.mice.bootstrap  21    -none- numeric
+#>                 Length Class      Mode   
+#> cov_combined    625    -none-     numeric
+#> cov_imputations   5    -none-     list   
+#> var_explained     2    data.frame list
 ```
 
-The Fieller confidence intervals indicate that 5 factors are enough to
-explain more than half of the variance:
+The Fieller and bootstrap confidence intervals indicate that 5 factors
+are enough to explain more than half of the variance:
 
 ``` r
-round(mi$ci.mice.fieller, 2)
-#>      n.factor Lower Upper
-#> [1,]        2  0.32  0.34
-#> [2,]        3  0.40  0.42
-#> [3,]        4  0.47  0.49
-#> [4,]        5  0.53  0.55
-#> [5,]        6  0.58  0.59
-#> [6,]        7  0.61  0.63
-#> [7,]        8  0.65  0.66
-```
-
-The bootstrapped confidence intervals also confirm this:
-
-``` r
-round(mi$ci.mice.bootstrap, 2)
-#>      n.factor 2.5% 97.5%
-#> [1,]        2 0.32  0.34
-#> [2,]        3 0.41  0.42
-#> [3,]        4 0.48  0.49
-#> [4,]        5 0.53  0.55
-#> [5,]        6 0.58  0.59
-#> [6,]        7 0.62  0.63
-#> [7,]        8 0.65  0.67
+round(mi$var_explained, 2)
+#>   n_factors var_explained
+#> 1         2          0.33
+#> 2         3          0.41
+#> 3         4          0.48
+#> 4         5          0.54
+#> 5         6          0.58
+#> 6         7          0.62
+#> 7         8          0.66
 ```
 
 The estimated covariance matrix based on imputed data is in
-`result.mi$cov.mice`, and we can use it to perform exploratory factor
+`mi$cov_combined`, and we can use it to perform exploratory factor
 analysis with the desired number of factors. We use the `fa()` function
 from `psych` for this:
 
 ``` r
-fit <- fa(r = mi$cov.mice, n.obs = nrow(data), nfactors = 5, rotate = "varimax")
+fit <- fa(r = mi$cov_combined, n.obs = nrow(data), nfactors = 5, 
+          rotate = "varimax")
 fit
 #> Factor Analysis using method =  minres
-#> Call: fa(r = mi$cov.mice, nfactors = 5, n.obs = nrow(data), rotate = "varimax")
+#> Call: fa(r = mi$cov_combined, nfactors = 5, n.obs = nrow(data), rotate = "varimax")
 #> Standardized loadings (pattern matrix) based upon correlation matrix
 #>      MR2   MR1   MR3   MR5   MR4   h2   u2 com
 #> A1  0.12  0.04  0.02 -0.41 -0.08 0.19 0.81 1.3
@@ -192,21 +183,22 @@ well:
 fa.diagram(fit)
 ```
 
-<img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" /> We
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%" /> We
 can extract the factor scores and add them to the original data:
 
 ``` r
-# use a single imputation (predi)
+# impute a single data set with mice
 imp <- mice::mice(bfi, m = 1, print = FALSE)
 data_imp <- mice::complete(imp, 1)
+
+# get factor scores for original data
 fct_scores <- data.frame(factor.scores(data_imp[, 1:25], fit)$scores)
 
 data_imp <- data.frame(
   Gender        = factor(data_imp$gender),
-  Age           = data_imp$age,
   Extraversion  = fct_scores$MR1,
   Neuroticism   = fct_scores$MR2,
-  Conciousness  = fct_scores$MR3,
+  Conscientious = fct_scores$MR3,
   Openness      = fct_scores$MR4,
   Agreeableness = fct_scores$MR5
 )
@@ -216,29 +208,13 @@ levels(data_imp$Gender) <- c("Male", "Female")
 
 ``` r
 library(ggplot2)
-#> 
-#> Attaching package: 'ggplot2'
-#> The following objects are masked from 'package:psych':
-#> 
-#>     %+%, alpha
 library(tidyr)
 
-data_imp <- tidyr::pivot_longer(data_imp, -c("Gender", "Age"), "factor")
+data_imp <- tidyr::pivot_longer(data_imp, -Gender, "factor")
 
 ggplot(data_imp, aes(value, linetype = Gender)) +
   geom_density() +
-  facet_wrap(~ factor, nrow = 1)
+  facet_wrap(~ factor, nrow = 2)
 ```
 
 <img src="man/figures/README-unnamed-chunk-8-1.png" width="100%" />
-
-``` r
-ggplot(data_imp, aes(Age, value)) +
-  geom_point(alpha = .1, position = position_jitter(width = .4)) +
-  geom_smooth(color = "dodgerblue") +
-  facet_wrap(~ factor, ncol = 2) +
-  coord_cartesian(xlim = c(16, 65))
-#> `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
-```
-
-<img src="man/figures/README-unnamed-chunk-9-1.png" width="100%" />

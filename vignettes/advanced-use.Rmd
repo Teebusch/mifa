@@ -1,8 +1,8 @@
 ---
-title: "Getting Started"
+title: "Advanced Usage"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Getting Started}
+  %\VignetteIndexEntry{Advanced Usage}
   %\VignetteEngine{knitr::rmarkdown}
   \usepackage[utf8]{inputenc}
 ---
@@ -12,14 +12,16 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
+
+set.seed(1234)
 ```
 
 ```{r setup}
 library(mifa)
 ```
 
-This is a more complex example. 
-Generate a data set with 5% of the data missing completely at random (MCAR)
+This is a more complex example. We generate a data set with 5% of the data 
+missing completely at random (MCAR):
 
 ```{r generate-data, message=FALSE}
 
@@ -58,24 +60,16 @@ for (i in 1:P) {
 }
 ```
 
-`mifa.cov()` provides the confidence intervals when `ci == TRUE`. 
+`mifa.cov()` normally provides the confidence intervals when `ci = TRUE`. 
 CIs can also be calculated separately if desired:
 
 ```{r run-mifa-ci}
 
-# get CIs using Fieller's method
-result.mi <- mifa.cov(data.miss,
-  n.factor = 1:10, M = 10, maxit.mi = 5, method.mi = "pmm",
-  alpha = 0.05, rep.boot = 500, ci = FALSE
-)
+# get imputed covariance using Fieller's method
+mi <- mifa(data.miss, m = 10, ci = FALSE)
 
-ci.mifa.fieller(result.mi$cov.mice.imp, 1:10, 0.05, N = 100)
-
+mifa_ci_fieller(mi$cov_imputations, n_factors = 1:10, N = nrow(data.miss))
 
 # Get CIs using bootstrapping
-ci.mifa.bootstrap(data.miss, 
-  n.factor = 1:10, rep.boot = 100, maxit.mi = 5, method.mi = "pmm", 
-  alpha = 0.05
-)
-
+mifa_ci_boot(data.miss, n_factors = 1:10, n_boot = 100)
 ```

@@ -6,11 +6,13 @@ Authors@R: c(
          email = "vahid.nassiri@kuleuven.be"),
   person("Anikó", "Lovik", role = "aut"),
   person("Geert ", "Molenberghs", role = "aut"),
-  person("Geert Verbeke", "Verbeke", role = "aut"))
+  person("Geert ", "Verbeke", role = "aut"),
+  person("Tobias", "Busch", role = "aut"))
 Author: Vahid Nassiri [aut, cre], 
         Anikó Lovik [aut], 
         Geert Molenberghs [aut], 
-        Geert Verbeke [aut]
+        Geert Verbeke [aut],
+        Tobias Busch [aut]
 Maintainer: Vahid Nassiri <vahid.nassiri@kuleuven.be>
 URL: https://github.com/vahidnassiri/mifa
 BugReports: https://github.com/vahidnassiri/mifa/issues
