@@ -1,6 +1,6 @@
 Package: mifa
 Title: Multiple Imputation for Exploratory Factor Analysis
-Version: 0.1.0
+Version: 0.1.0.9000
 Authors@R: c(
   person("Vahid", "Nassiri", role = c("aut", "cre"),
          email = "vahid.nassiri@kuleuven.be"),
