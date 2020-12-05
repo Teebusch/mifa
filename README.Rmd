@@ -24,6 +24,7 @@ set.seed(1234)
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![R build status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
+[![Codecov test coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://codecov.io/gh/Teebusch/mifa?branch=master)
 <!-- badges: end -->
 
 `mifa` implements multiple imputation for exploratory factor analysis to allow

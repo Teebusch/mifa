@@ -29,7 +29,8 @@ Suggests:
     knitr,
     rmarkdown,
     ggplot2,
-    tidyr
+    tidyr,
+    covr
 Description: This package uses multiple imputation to estimate the covariance 
   matrix of incomplete data. An exploratory factor analysis then can be applied 
   on this estimated covariance matrix. It also provides Fieller and bootstrap 
