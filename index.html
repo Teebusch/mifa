@@ -12,11 +12,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Multiple Imputation for Exploratory Factor Analysis">
-<meta property="og:description" content="This package uses multiple imputation to estimate the covariance 
-  matrix of incomplete data. An exploratory factor analysis then can be applied 
-  on this estimated covariance matrix. It also provides Fieller and bootstrap 
-  confidence intervals for the proportion of explained variance using different 
-  number of factors.">
+<meta property="og:description" content="Mifa uses multiple imputation by Multivariate Imputation with 
+  Chained Equations (MICE) to estimate the covariance matrix of incomplete data. 
+  An exploratory factor analysis can be applied on this estimated covariance 
+  matrix. Mifa also provides Fieller and bootstrap confidence intervals for the 
+  variance explained by different numbers of factors.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -65,7 +65,7 @@
       </ul>
 <ul class="nav navbar-nav navbar-right">
 <li>
-  <a href="https://github.com/vahidnassiri/mifa/">
+  <a href="https://github.com/teebusch/mifa/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -124,7 +124,7 @@
 <span class="co">#&gt; 16 27 26 19 16 21 24 20 26 16 23 16 25  9 21 22 21 11 36 29 22  0 28 14 20</span></code></pre></div>
 <p>We use <code><a href="reference/mifa.html">mifa()</a></code> to get the corariance matrix.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/vahidnassiri/mifa">mifa</a></span><span class="op">)</span>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/teebusch/mifa">mifa</a></span><span class="op">)</span>
 <span class="va">mi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/mifa.html">mifa</a></span><span class="op">(</span><span class="va">data</span>, n_factors <span class="op">=</span> <span class="fl">2</span><span class="op">:</span><span class="fl">8</span>, ci <span class="op">=</span> <span class="st">"both"</span>, n_boot <span class="op">=</span> <span class="fl">50</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">mi</span><span class="op">)</span>
@@ -256,9 +256,9 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
-<li>Browse source code at <br><a href="https://github.com/vahidnassiri/mifa/">https://​github.com/​vahidnassiri/​mifa/​</a>
+<li>Browse source code at <br><a href="https://github.com/teebusch/mifa/">https://​github.com/​teebusch/​mifa/​</a>
 </li>
-<li>Report a bug at <br><a href="https://github.com/vahidnassiri/mifa/issues">https://​github.com/​vahidnassiri/​mifa/​issues</a>
+<li>Report a bug at <br><a href="https://github.com/teebusch/mifa/issues">https://​github.com/​teebusch/​mifa/​issues</a>
 </li>
 </ul>
 </div>
@@ -272,11 +272,11 @@
 <div class="developers">
 <h2>Developers</h2>
 <ul class="list-unstyled">
-<li>Vahid Nassiri <br><small class="roles"> Author, maintainer </small>  </li>
+<li>Vahid Nassiri <br><small class="roles"> Author </small>  </li>
 <li>Anikó Lovik <br><small class="roles"> Author </small>  </li>
 <li>Geert  Molenberghs <br><small class="roles"> Author </small>  </li>
 <li>Geert  Verbeke <br><small class="roles"> Author </small>  </li>
-<li>Tobias Busch <br><small class="roles"> Author </small>  </li>
+<li>Tobias Busch <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/https://orcid.org/0000-0002-8390-7892" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
 

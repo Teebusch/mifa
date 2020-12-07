@@ -106,7 +106,7 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/vahidnassiri/mifa/">
+  <a href="https://github.com/teebusch/mifa/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -125,7 +125,7 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Compute covariance matrix of incomplete data using multiple imputation</h1>
-    <small class="dont-index">Source: <a href='https://github.com/vahidnassiri/mifa/blob/master/R/mifa.R'><code>R/mifa.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/teebusch/mifa/blob/master/R/mifa.R'><code>R/mifa.R</code></a></small>
     <div class="hidden name"><code>mifa.Rd</code></div>
     </div>
 
@@ -137,14 +137,7 @@ Also provides variance explained by different numbers of factors with
 Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span>
-  <span class='va'>data</span>,
-  n_factors <span class='op'>=</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>ncol</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span>,
-  ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
-  n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
-  <span class='va'>...</span>
-<span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_var</span>, <span class='va'>n_factors</span>, ci <span class='op'>=</span> <span class='cn'>FALSE</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -154,11 +147,22 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
       <td><p>A data frame with missing values coded as <code>NA</code>.</p></td>
     </tr>
     <tr>
+      <th>cov_var</th>
+      <td><p>Variables in <code>data</code> to calculate the covariance
+matrix for. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
+select variables that are used for the imputations of missing values, but not
+the calculations of the covariance matrix. This is especially useful when
+there are categorical predictors that can improve the imputation of the
+response variables, but for which covariance cannot be calculated.
+By default, all variables in <code>data</code> are used for both, the imputation and
+the covariance matrix. Note: Variables and rows used for the imputation
+can be configured using the <code>...</code>. See also <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p></td>
+    </tr>
+    <tr>
       <th>n_factors</th>
-      <td><p>Vector indicating number of factors to be used to compute
-proportion of explained variance and construct confidence intervals.
-The minimum length of this vector is 1 and its maximum length is
-the number of columns in data. Defaults to all possible numbers of factors.</p></td>
+      <td><p>Integer or integer vector indicating number of factors for
+which proportion of explained variance (and optionally confidence intervals)
+should be indicated. Defaults to all possible numbers of factors.</p></td>
     </tr>
     <tr>
       <th>ci</th>
@@ -170,7 +174,7 @@ or <code>"both"</code>, the corresponding intervals are computed. If <code>FALSE
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% condifence interval.</p></td>
+default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
     </tr>
     <tr>
       <th>n_boot</th>

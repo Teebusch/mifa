@@ -103,7 +103,7 @@ intervals for each of the components of n_factors." />
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
-  <a href="https://github.com/vahidnassiri/mifa/">
+  <a href="https://github.com/teebusch/mifa/">
     <span class="fab fa fab fa-github fa-lg"></span>
      
   </a>
@@ -122,7 +122,7 @@ intervals for each of the components of n_factors." />
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Find the Fieller interval for each k</h1>
-    <small class="dont-index">Source: <a href='https://github.com/vahidnassiri/mifa/blob/master/R/mifa-ci.R'><code>R/mifa-ci.R</code></a></small>
+    <small class="dont-index">Source: <a href='https://github.com/teebusch/mifa/blob/master/R/mifa-ci.R'><code>R/mifa-ci.R</code></a></small>
     <div class="hidden name"><code>get_fieller_ci.Rd</code></div>
     </div>
 
@@ -143,15 +143,14 @@ estimated covariance matrix for each imputed data.</p></td>
     </tr>
     <tr>
       <th>n_factors</th>
-      <td><p>Vector indicating number of factors to be used to compute
-proportion of explained variance and construct confidence intervals.
-The minimum length of this vector is 1 and its maximum length is
-the number of columns in data. Defaults to all possible numbers of factors.</p></td>
+      <td><p>Integer or integer vector indicating number of factors for
+which proportion of explained variance (and optionally confidence intervals)
+should be indicated. Defaults to all possible numbers of factors.</p></td>
     </tr>
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% condifence interval.</p></td>
+default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
     </tr>
     <tr>
       <th>N</th>
