@@ -1,3 +1,5 @@
+library(dplyr)
+
 data_bfi <- psych::bfi[, 1:25]
 
 
@@ -11,6 +13,23 @@ test_that("mifa_ci_boot() returns right shape and type", {
   expect_type(res$lower, "double")
   expect_type(res$upper, "double")
   expect_equal(dim(res), c(3, 3))
+})
+
+
+test_that("using cov_var argument produces different cis", {
+  # can only test it indirectly, unfortunately
+  m <- 2
+
+  set.seed(123)
+  res1 <- mifa_ci_boot(data_bfi, n_boot = 3, maxit = 1, print = F)  # no selection
+
+  set.seed(123) # use same seed for bootstrapping
+  res2 <- mifa_ci_boot(data_bfi, cov_var = starts_with("O"),
+                      n_boot = 3, maxit = 1, print = F)  # with selection
+
+  expect_s3_class(res2, "data.frame")
+  expect_equal(dim(res1), dim(res2))
+  expect_false(identical(res1, res2))
 })
 
 

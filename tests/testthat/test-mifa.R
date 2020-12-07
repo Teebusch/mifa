@@ -1,12 +1,12 @@
-# The bfi data from the psych package contains answers to 5 personality items
-# and 3 additional demographics for 2800 participants
-# The 25 columns with responses are already classified into 5 personality
-# factors, as indicated by their names:
-# A (Agreeableness), C (Conscientiousness), E (Extraversion), N (Neuroticism),
-# O (Openness)
-# The data contains some missing values
+library(dplyr)
 
+# The bfi data from the psych package contains answers to 5 personality items
+# and 3 additional demographics for 2800 participants. The 25 columns with
+# responses are already classified into 5 personality factors, as indicated by
+# their names: A (Agreeableness), C (Conscientiousness), E (Extraversion),
+# N (Neuroticism), O (Openness). The data contains some missing values
 data_bfi <- psych::bfi[, 1:25]
+
 
 test_that("mifa() returns have the expected type and shape", {
   m <- 2
@@ -66,5 +66,18 @@ test_that("CIs returned by mifa() have the expected type and shape", {
   expect_length(cis$ci_fieller_upper, 3)
 })
 
+
+test_that("cov_var argument removes variables", {
+  m <- 2
+  c <- ncol(data_bfi)
+  c_sel <- ncol(dplyr::select(data_bfi, starts_with("O")))
+
+  res <- mifa(data_bfi, cov_var = starts_with("O"), m = m, print = FALSE)
+
+  expect_true(is.matrix(res$cov_combined))
+  expect_type(res$cov_combined, "double")
+  expect_length(res$cov_combined, c_sel^2)
+  expect_equal(dim(res$cov_combined), c(c_sel, c_sel))
+})
 
 

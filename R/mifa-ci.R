@@ -22,7 +22,8 @@
 #' @return A data frame containing bootstrapped confidence intervals for
 #' variance explained by different number of factors.
 #' @export
-mifa_ci_boot <- function(data, n_factors, conf = .95, n_boot = 1000, ...) {
+mifa_ci_boot <- function(data, cov_var, n_factors, conf = .95, n_boot = 1000,
+                         ...) {
 
   boot_eig <- matrix(0, ncol(data), n_boot)
 
@@ -41,6 +42,11 @@ mifa_ci_boot <- function(data, n_factors, conf = .95, n_boot = 1000, ...) {
     data_imp <- mice::complete(imp)
     data_imp <- mice_impute_all_NA(data_imp, ...)
 
+    # Select variables for calculation of covariance matrix
+    if(!missing(cov_var)) {
+      data_imp <- dplyr::select(data_imp, {{ cov_var }})
+    }
+
     # eigenvalues of covariance matrix
     boot_eig[, i] <- eigen(stats::cov(data_imp))$values
   }
@@ -49,6 +55,11 @@ mifa_ci_boot <- function(data, n_factors, conf = .95, n_boot = 1000, ...) {
   var_expl  <- t(apply(boot_eig, 2, cumsum)) / apply(boot_eig, 2, sum)
   probs_ci  <- c((1-conf)/2, 1-(1-conf)/2)
   boot_expl <- apply(var_expl, 2, stats::quantile, probs = probs_ci)
+
+  if (missing(n_factors)) {
+    n_factors <- 1:ncol(boot_expl)
+  }
+
   boot_cis  <- t(boot_expl)[n_factors, ]
 
   data.frame(
@@ -80,7 +91,7 @@ mifa_ci_boot <- function(data, n_factors, conf = .95, n_boot = 1000, ...) {
 #' @seealso [mifa()]
 #' @family {mifa confidence intervals}
 #'
-#' @return A matrix containing confidence intervals for `n_factors` factors
+#' @return A data frame containing confidence intervals for `n_factors` factors
 #' @export
 mifa_ci_fieller <- function(cov_imps, n_factors, conf = .95, N) {
 

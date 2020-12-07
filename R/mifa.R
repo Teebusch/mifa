@@ -13,12 +13,20 @@
 #' <https://doi.org/10.3758/s13428-017-1013-4>
 #'
 #' @param data A data frame with missing values coded as `NA`.
-#' @param n_factors Vector indicating number of factors to be used to compute
-#' proportion of explained variance and construct confidence intervals.
-#' The minimum length of this vector is 1 and its maximum length is
-#' the number of columns in data. Defaults to all possible numbers of factors.
+#' @param cov_var Variables in `data` to calculate the covariance
+#' matrix for. Supports (tidy selection)[dplyr::select()]. This allows to
+#' select variables that are used for the imputations of missing values, but not
+#' the calculations of the covariance matrix. This is especially useful when
+#' there are categorical predictors that can improve the imputation of the
+#' response variables, but for which covariance cannot be calculated.
+#' By default, all variables in `data` are used for both, the imputation and
+#' the covariance matrix. Note: Variables and rows used for the imputation
+#' can be configured using the `...`. See also [mice::mice()].
+#' @param n_factors Integer or integer vector indicating number of factors for
+#' which proportion of explained variance (and optionally confidence intervals)
+#' should be indicated. Defaults to all possible numbers of factors.
 #' @param conf Confidence level for constructing confidence intervals. The
-#' default is `.95`, i.e., a 95% condifence interval.
+#' default is `.95`, i.e., a 95% confidence interval.
 #' @param n_boot number of bootstrap samples to use for the bootstrap confidence
 #' intervals. The default is 1000.
 #' @param ci A character string or character vector indicating which types of
@@ -51,7 +59,7 @@
 #'   `n_factors`.}
 #' }
 #' @export
-mifa <- function(data, n_factors = 1:ncol(data), ci = FALSE, conf = .95,
+mifa <- function(data, cov_var, n_factors, ci = FALSE, conf = .95,
                  n_boot = 1000, ...) {
 
   imp <- stop_constants(mice::mice(data, ...))
@@ -60,12 +68,21 @@ mifa <- function(data, n_factors = 1:ncol(data), ci = FALSE, conf = .95,
   data_imps <- mice::complete(imp, "all")
   data_imps <- lapply(data_imps, function(x) mice_impute_all_NA(x, ...))
 
+  # Select variables for calculating covariance matrix
+  if(!missing(cov_var)) {
+    data_imps <- lapply(data_imps, function(d) dplyr::select(d, {{ cov_var }}))
+  }
+
   # estimate covariance matrix of imputed values and combine estimates
-  cov_imps <- lapply(data_imps, stats::cov)
-  cov_comb <- Reduce("+", cov_imps) / length(cov_imps)
+  cov_imps  <- lapply(data_imps, stats::cov)
+  cov_comb  <- Reduce("+", cov_imps) / length(cov_imps)
 
   # get proportion of explained variance for different number of factors
   cov_comb_eigen <- eigen(cov_comb)$values
+
+  if (missing(n_factors)) {
+    n_factors <- 1:length(cov_comb_eigen)
+  }
 
   var_expl <- data.frame(
     n_factors = n_factors,
@@ -74,7 +91,7 @@ mifa <- function(data, n_factors = 1:ncol(data), ci = FALSE, conf = .95,
 
   # add confidence intervals for variance explained
   if ("boot" %in% ci || "both" %in% ci) {
-    ci_boot <- try(mifa_ci_boot(data, n_factors, conf, n_boot, ...))
+    ci_boot <- try(mifa_ci_boot(data, cov_var, n_factors, conf, n_boot, ...))
     var_expl <- cbind(
       var_expl,
       ci_boot_lower = ci_boot$lower,

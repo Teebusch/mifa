@@ -2,7 +2,7 @@ Package: mifa
 Title: Multiple Imputation for Exploratory Factor Analysis
 Version: 0.1.0.9000
 Authors@R: c(
-  person("Vahid", "Nassiri"), role = "aut"),
+  person("Vahid", "Nassiri", role = "aut"),
   person("Anikó", "Lovik", role = "aut"),
   person("Geert ", "Molenberghs", role = "aut"),
   person("Geert ", "Verbeke", role = "aut"),
@@ -18,9 +18,10 @@ Maintainer: Tobias Busch <teebusch@gmail.com>
 URL: https://github.com/teebusch/mifa
 BugReports: https://github.com/teebusch/mifa/issues
 Imports: 
-  mice,
-  Matrix,
-  stats
+    mice,
+    Matrix,
+    stats,
+    dplyr
 Suggests: 
   eigeninv,
   norm,

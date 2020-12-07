@@ -10,18 +10,17 @@ mifa_ci_fieller(cov_imps, n_factors, conf = 0.95, N)
 \item{cov_imps}{List containing the estimated covariance matrix within
 each imputed data. One can use \code{cov_imputations} returned by \code{\link[=mifa]{mifa()}}.}
 
-\item{n_factors}{Vector indicating number of factors to be used to compute
-proportion of explained variance and construct confidence intervals.
-The minimum length of this vector is 1 and its maximum length is
-the number of columns in data. Defaults to all possible numbers of factors.}
+\item{n_factors}{Integer or integer vector indicating number of factors for
+which proportion of explained variance (and optionally confidence intervals)
+should be indicated. Defaults to all possible numbers of factors.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% condifence interval.}
+default is \code{.95}, i.e., a 95\% confidence interval.}
 
 \item{N}{A scalar specifying sample size.}
 }
 \value{
-A matrix containing confidence intervals for \code{n_factors} factors
+A data frame containing confidence intervals for \code{n_factors} factors
 }
 \description{
 Computes parametric confidence intervals for proportion of explained

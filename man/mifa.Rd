@@ -4,22 +4,24 @@
 \alias{mifa}
 \title{Compute covariance matrix of incomplete data using multiple imputation}
 \usage{
-mifa(
-  data,
-  n_factors = 1:ncol(data),
-  ci = FALSE,
-  conf = 0.95,
-  n_boot = 1000,
-  ...
-)
+mifa(data, cov_var, n_factors, ci = FALSE, conf = 0.95, n_boot = 1000, ...)
 }
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
 
-\item{n_factors}{Vector indicating number of factors to be used to compute
-proportion of explained variance and construct confidence intervals.
-The minimum length of this vector is 1 and its maximum length is
-the number of columns in data. Defaults to all possible numbers of factors.}
+\item{cov_var}{Variables in \code{data} to calculate the covariance
+matrix for. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
+select variables that are used for the imputations of missing values, but not
+the calculations of the covariance matrix. This is especially useful when
+there are categorical predictors that can improve the imputation of the
+response variables, but for which covariance cannot be calculated.
+By default, all variables in \code{data} are used for both, the imputation and
+the covariance matrix. Note: Variables and rows used for the imputation
+can be configured using the \code{...}. See also \code{\link[mice:mice]{mice::mice()}}.}
+
+\item{n_factors}{Integer or integer vector indicating number of factors for
+which proportion of explained variance (and optionally confidence intervals)
+should be indicated. Defaults to all possible numbers of factors.}
 
 \item{ci}{A character string or character vector indicating which types of
 confidence intervals should be constructed. If \code{"bootstrap"}, \code{"fieller"},
@@ -27,7 +29,7 @@ or \code{"both"}, the corresponding intervals are computed. If \code{FALSE}
 (the default) no confidence intervals will be computed.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% condifence interval.}
+default is \code{.95}, i.e., a 95\% confidence interval.}
 
 \item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.}

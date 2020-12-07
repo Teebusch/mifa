@@ -10,13 +10,12 @@ get_fieller_ci(eig_imp, n_factors, conf, N, m)
 \item{eig_imp}{A matrix with each of its columns the eigenvalues of the
 estimated covariance matrix for each imputed data.}
 
-\item{n_factors}{Vector indicating number of factors to be used to compute
-proportion of explained variance and construct confidence intervals.
-The minimum length of this vector is 1 and its maximum length is
-the number of columns in data. Defaults to all possible numbers of factors.}
+\item{n_factors}{Integer or integer vector indicating number of factors for
+which proportion of explained variance (and optionally confidence intervals)
+should be indicated. Defaults to all possible numbers of factors.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% condifence interval.}
+default is \code{.95}, i.e., a 95\% confidence interval.}
 
 \item{N}{A scalar specifying sample size.}
 
