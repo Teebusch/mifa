@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Compute bootstrap confidence interval for proportion of explained variance — mifa_ci_boot • mifa</title>
+<title>Bootstrap confidence intervals for proportion of explained variance — mifa_ci_boot • mifa</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Compute bootstrap confidence interval for proportion of explained variance — mifa_ci_boot" />
+<meta property="og:title" content="Bootstrap confidence intervals for proportion of explained variance — mifa_ci_boot" />
 <meta property="og:description" content="Compute bootstrap confidence intervals for the proportion of explained
 variance for the covariance of an incomplete data imputed using
 multiple imputation.
@@ -124,7 +124,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Compute bootstrap confidence interval for proportion of explained variance</h1>
+    <h1>Bootstrap confidence intervals for proportion of explained variance</h1>
     <small class="dont-index">Source: <a href='https://github.com/teebusch/mifa/blob/master/R/mifa-ci.R'><code>R/mifa-ci.R</code></a></small>
     <div class="hidden name"><code>mifa_ci_boot.Rd</code></div>
     </div>
@@ -173,18 +173,6 @@ default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
       <th>n_boot</th>
       <td><p>number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Named arguments that will be passed to <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>, such
-as</p><ul>
-<li><p><code>m</code> Number of generated imputations. The default is 5.</p></li>
-<li><p><code>maxit</code> Number of iterations for each imputation. The default is 5.</p></li>
-<li><p><code>method</code> Method used for imputation.</p></li>
-<li><p><code>printFlag</code> Whether to print diagnostic information to console. The
-default is TRUE).
-See <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code> for all options.</p></li>
-</ul></td>
     </tr>
     </table>
 
