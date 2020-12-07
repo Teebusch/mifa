@@ -2,40 +2,41 @@ Package: mifa
 Title: Multiple Imputation for Exploratory Factor Analysis
 Version: 0.1.0.9000
 Authors@R: c(
-  person("Vahid", "Nassiri", role = c("aut", "cre"),
-         email = "vahid.nassiri@kuleuven.be"),
+  person("Vahid", "Nassiri"), role = "aut"),
   person("Anikó", "Lovik", role = "aut"),
   person("Geert ", "Molenberghs", role = "aut"),
   person("Geert ", "Verbeke", role = "aut"),
-  person("Tobias", "Busch", role = "aut"))
-Author: Vahid Nassiri [aut, cre], 
+  person("Tobias", "Busch", email = "teebusch@gmail.com", role = c("aut", "cre"),
+         comment = c(ORCID = "https://orcid.org/0000-0002-8390-7892"))
+  )
+Author: Vahid Nassiri [aut], 
         Anikó Lovik [aut], 
         Geert Molenberghs [aut], 
         Geert Verbeke [aut],
-        Tobias Busch [aut]
-Maintainer: Vahid Nassiri <vahid.nassiri@kuleuven.be>
-URL: https://github.com/vahidnassiri/mifa
-BugReports: https://github.com/vahidnassiri/mifa/issues
+        Tobias Busch [aut, cre]
+Maintainer: Tobias Busch <teebusch@gmail.com>
+URL: https://github.com/teebusch/mifa
+BugReports: https://github.com/teebusch/mifa/issues
 Imports: 
   mice,
   Matrix,
   stats
 Suggests: 
-    eigeninv,
-    norm,
-    psych,
-    missMDA,
-    testthat,
-    knitr,
-    rmarkdown,
-    ggplot2,
-    tidyr,
-    covr
-Description: This package uses multiple imputation to estimate the covariance 
-  matrix of incomplete data. An exploratory factor analysis then can be applied 
-  on this estimated covariance matrix. It also provides Fieller and bootstrap 
-  confidence intervals for the proportion of explained variance using different 
-  number of factors.
+  eigeninv,
+  norm,
+  psych,
+  missMDA,
+  testthat,
+  knitr,
+  rmarkdown,
+  ggplot2,
+  tidyr,
+  covr
+Description: Mifa uses multiple imputation by Multivariate Imputation with 
+  Chained Equations (MICE) to estimate the covariance matrix of incomplete data. 
+  An exploratory factor analysis can be applied on this estimated covariance 
+  matrix. Mifa also provides Fieller and bootstrap confidence intervals for the 
+  variance explained by different numbers of factors.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
