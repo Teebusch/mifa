@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa-ci.R
 \name{mifa_ci_boot}
 \alias{mifa_ci_boot}
-\title{Compute bootstrap confidence interval for proportion of explained variance}
+\title{Bootstrap confidence intervals for proportion of explained variance}
 \usage{
 mifa_ci_boot(data, cov_var, n_factors, conf = 0.95, n_boot = 1000, ...)
 }
@@ -28,17 +28,6 @@ default is \code{.95}, i.e., a 95\% confidence interval.}
 
 \item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.}
-
-\item{...}{Named arguments that will be passed to \code{\link[mice:mice]{mice::mice()}}, such
-as
-\itemize{
-\item \code{m} Number of generated imputations. The default is 5.
-\item \code{maxit} Number of iterations for each imputation. The default is 5.
-\item \code{method} Method used for imputation.
-\item \code{printFlag} Whether to print diagnostic information to console. The
-default is TRUE).
-See \code{\link[mice:mice]{mice::mice()}} for all options.
-}}
 }
 \value{
 A data frame containing bootstrapped confidence intervals for

@@ -1,4 +1,4 @@
-#' Compute covariance matrix of incomplete data using multiple imputation
+#' Get covariance matrix of incomplete data using multiple imputation
 #'
 #' Compute covariance matrix of incomplete data using multiple imputation.
 #' For multiple imputation, Multivariate Imputation by Chained Equations
@@ -33,14 +33,7 @@
 #' confidence intervals should be constructed. If `"bootstrap"`, `"fieller"`,
 #' or `"both"`, the corresponding intervals are computed. If `FALSE`
 #' (the default) no confidence intervals will be computed.
-#' @param ... Named arguments that will be passed to [mice::mice()], such
-#' as
-#' * `m` Number of generated imputations. The default is 5.
-#' * `maxit` Number of iterations for each imputation. The default is 5.
-#' * `method` Method used for imputation.
-#' * `printFlag` Whether to print diagnostic information to console. The
-#'    default is TRUE).
-#' See [mice::mice()] for all options.
+#' @inheritDotParams mice::mice
 #'
 #' @seealso [mifa_ci_boot()], [mifa_ci_fieller()], [mice::mice()]
 #'

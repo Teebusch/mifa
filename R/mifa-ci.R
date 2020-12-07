@@ -1,4 +1,4 @@
-#' Compute bootstrap confidence interval for proportion of explained variance
+#' Bootstrap confidence intervals for proportion of explained variance
 #'
 #' Compute bootstrap confidence intervals for the proportion of explained
 #' variance for the covariance of an incomplete data imputed using

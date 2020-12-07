@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa.R
 \name{mifa}
 \alias{mifa}
-\title{Compute covariance matrix of incomplete data using multiple imputation}
+\title{Get covariance matrix of incomplete data using multiple imputation}
 \usage{
 mifa(data, cov_var, n_factors, ci = FALSE, conf = 0.95, n_boot = 1000, ...)
 }
@@ -34,16 +34,101 @@ default is \code{.95}, i.e., a 95\% confidence interval.}
 \item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.}
 
-\item{...}{Named arguments that will be passed to \code{\link[mice:mice]{mice::mice()}}, such
-as
-\itemize{
-\item \code{m} Number of generated imputations. The default is 5.
-\item \code{maxit} Number of iterations for each imputation. The default is 5.
-\item \code{method} Method used for imputation.
-\item \code{printFlag} Whether to print diagnostic information to console. The
-default is TRUE).
-See \code{\link[mice:mice]{mice::mice()}} for all options.
-}}
+\item{...}{
+  Arguments passed on to \code{\link[mice:mice]{mice::mice}}
+  \describe{
+    \item{\code{m}}{Number of multiple imputations. The default is \code{m=5}.}
+    \item{\code{method}}{Can be either a single string, or a vector of strings with
+length \code{length(blocks)}, specifying the imputation method to be
+used for each column in data. If specified as a single string, the same
+method will be used for all blocks. The default imputation method (when no
+argument is specified) depends on the measurement level of the target column,
+as regulated by the \code{defaultMethod} argument. Columns that need
+not be imputed have the empty method \code{""}. See details.}
+    \item{\code{predictorMatrix}}{A numeric matrix of \code{length(blocks)} rows
+and \code{ncol(data)} columns, containing 0/1 data specifying
+the set of predictors to be used for each target column.
+Each row corresponds to a variable block, i.e., a set of variables
+to be imputed. A value of \code{1} means that the column
+variable is used as a predictor for the target block (in the rows).
+By default, the \code{predictorMatrix} is a square matrix of \code{ncol(data)}
+rows and columns with all 1's, except for the diagonal.
+Note: For two-level imputation models (which have \code{"2l"} in their names)
+other codes (e.g, \code{2} or \code{-2}) are also allowed.}
+    \item{\code{ignore}}{A logical vector of \code{nrow(data)} elements indicating
+which rows are ignored when creating the imputation model. The default
+\code{NULL} includes all rows that have an observed value of the variable
+to imputed. Rows with \code{ignore} set to \code{TRUE} do not influence the
+parameters of the imputation model, but are still imputed. We may use the
+\code{ignore} argument to split \code{data} into a training set (on which the
+imputation model is built) and a test set (that does not influence the
+imputation model estimates).
+Note: Multivariate imputation methods, like \code{mice.impute.jomoImpute()}
+or \code{mice.impute.panImpute()}, do not honour the \code{ignore} argument.}
+    \item{\code{where}}{A data frame or matrix with logicals of the same dimensions
+as \code{data} indicating where in the data the imputations should be
+created. The default, \code{where = is.na(data)}, specifies that the
+missing data should be imputed. The \code{where} argument may be used to
+overimpute observed data, or to skip imputations for selected missing values.}
+    \item{\code{blocks}}{List of vectors with variable names per block. List elements
+may be named to identify blocks. Variables within a block are
+imputed by a multivariate imputation method
+(see \code{method} argument). By default each variable is placed
+into its own block, which is effectively
+fully conditional specification (FCS) by univariate models
+(variable-by-variable imputation). Only variables whose names appear in
+\code{blocks} are imputed. The relevant columns in the \code{where}
+matrix are set to \code{FALSE} of variables that are not block members.
+A variable may appear in multiple blocks. In that case, it is
+effectively re-imputed each time that it is visited.}
+    \item{\code{visitSequence}}{A vector of block names of arbitrary length, specifying the
+sequence of blocks that are imputed during one iteration of the Gibbs
+sampler. A block is a collection of variables. All variables that are
+members of the same block are imputed
+when the block is visited. A variable that is a member of multiple blocks
+is re-imputed within the same iteration.
+The default \code{visitSequence = "roman"} visits the blocks (left to right)
+in the order in which they appear in \code{blocks}.
+One may also use one of the following keywords: \code{"arabic"}
+(right to left), \code{"monotone"} (ordered low to high proportion
+of missing data) and \code{"revmonotone"} (reverse of monotone).}
+    \item{\code{formulas}}{A named list of formula's, or expressions that
+can be converted into formula's by \code{as.formula}. List elements
+correspond to blocks. The block to which the list element applies is
+identified by its name, so list names must correspond to block names.
+The \code{formulas} argument is an alternative to the
+\code{predictorMatrix} argument that allows for more flexibility in
+specifying imputation models, e.g., for specifying interaction terms.}
+    \item{\code{blots}}{A named \code{list} of \code{alist}'s that can be used
+to pass down arguments to lower level imputation function. The entries
+of element \code{blots[[blockname]]} are passed down to the function
+called for block \code{blockname}.}
+    \item{\code{post}}{A vector of strings with length \code{ncol(data)} specifying
+expressions as strings. Each string is parsed and
+executed within the \code{sampler()} function to post-process
+imputed values during the iterations.
+The default is a vector of empty strings, indicating no post-processing.}
+    \item{\code{defaultMethod}}{A vector of length 4 containing the default
+imputation methods for 1) numeric data, 2) factor data with 2 levels, 3)
+factor data with > 2 unordered levels, and 4) factor data with > 2
+ordered levels. By default, the method uses
+\code{pmm}, predictive mean matching (numeric data) \code{logreg}, logistic
+regression imputation (binary data, factor with 2 levels) \code{polyreg},
+polytomous regression imputation for unordered categorical data (factor > 2
+levels) \code{polr}, proportional odds model for (ordered, > 2 levels).}
+    \item{\code{maxit}}{A scalar giving the number of iterations. The default is 5.}
+    \item{\code{printFlag}}{If \code{TRUE}, \code{mice} will print history on console.
+Use \code{print=FALSE} for silent computation.}
+    \item{\code{seed}}{An integer that is used as argument by the \code{set.seed()} for
+offsetting the random number generator. Default is to leave the random number
+generator alone.}
+    \item{\code{data.init}}{A data frame of the same size and type as \code{data},
+without missing data, used to initialize imputations before the start of the
+iterative process.  The default \code{NULL} implies that starting imputation
+are created by a simple random draw from the data. Note that specification of
+\code{data.init} will start all \code{m} Gibbs sampling streams from the same
+imputation.}
+  }}
 }
 \value{
 A list:

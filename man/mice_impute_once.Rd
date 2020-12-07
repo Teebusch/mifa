@@ -8,17 +8,6 @@ mice_impute_once(data, ...)
 }
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
-
-\item{...}{Named arguments that will be passed to \code{\link[mice:mice]{mice::mice()}}, such
-as
-\itemize{
-\item \code{m} Number of generated imputations. The default is 5.
-\item \code{maxit} Number of iterations for each imputation. The default is 5.
-\item \code{method} Method used for imputation.
-\item \code{printFlag} Whether to print diagnostic information to console. The
-default is TRUE).
-See \code{\link[mice:mice]{mice::mice()}} for all options.
-}}
 }
 \value{
 A data frame with missing values imputed.
