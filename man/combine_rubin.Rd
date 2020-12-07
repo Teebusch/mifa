@@ -31,3 +31,4 @@ variance-covariance matrices from different imputations.
 Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
 John Wiley & Sons.
 }
+\keyword{internal}

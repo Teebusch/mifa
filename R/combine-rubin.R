@@ -20,7 +20,7 @@
 #'   \item{between_cov}{Between imputations variance-covariance matrix of size
 #'   n x n, where n is the number of columns in `param_imps`.}
 #' }
-#' @export
+#' @keywords internal
 combine_rubin <- function(param_imps, cov_imps) {
 
   m <- length(cov_imps)
