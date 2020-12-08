@@ -4,12 +4,12 @@
 \alias{mifa}
 \title{Get covariance matrix of incomplete data using multiple imputation}
 \usage{
-mifa(data, cov_var, n_factors, ci = FALSE, conf = 0.95, n_boot = 1000, ...)
+mifa(data, cov_vars, n_factors, ci = FALSE, conf = 0.95, n_boot = 1000, ...)
 }
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
 
-\item{cov_var}{Variables in \code{data} to calculate the covariance
+\item{cov_vars}{Variables in \code{data} to calculate the covariance
 matrix for. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
 select variables that are used for the imputations of missing values, but not
 the calculations of the covariance matrix. This is especially useful when
@@ -24,7 +24,7 @@ which proportion of explained variance (and optionally confidence intervals)
 should be indicated. Defaults to all possible numbers of factors.}
 
 \item{ci}{A character string or character vector indicating which types of
-confidence intervals should be constructed. If \code{"bootstrap"}, \code{"fieller"},
+confidence intervals should be constructed. If \code{"boot"}, \code{"fieller"},
 or \code{"both"}, the corresponding intervals are computed. If \code{FALSE}
 (the default) no confidence intervals will be computed.}
 
@@ -144,6 +144,9 @@ n \code{ci}, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
 variance explained by the different numbers of factors defined by
 \code{n_factors}.}
+\item{mids}{Object of type (mids)\linkS4class{mids}. This is the results of
+the multiple imputation step for the covariance matrix. Can be useful for
+diagnosing the multiple imputations.}
 }
 }
 \description{
@@ -152,6 +155,12 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the \link{mice} package is used.
 Also provides variance explained by different numbers of factors with
 Fieller (parametric) or bootstrap (nonparametric) confidence intervals.
+}
+\examples{
+\dontrun{
+data <- psych::bfi
+mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+}
 }
 \references{
 Nassiri, V., Lovik, A., Molenberghs, G., & Verbeke, G. (2018).

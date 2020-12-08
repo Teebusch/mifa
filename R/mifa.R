@@ -13,7 +13,7 @@
 #' <https://doi.org/10.3758/s13428-017-1013-4>
 #'
 #' @param data A data frame with missing values coded as `NA`.
-#' @param cov_var Variables in `data` to calculate the covariance
+#' @param cov_vars Variables in `data` to calculate the covariance
 #' matrix for. Supports (tidy selection)[dplyr::select()]. This allows to
 #' select variables that are used for the imputations of missing values, but not
 #' the calculations of the covariance matrix. This is especially useful when
@@ -30,7 +30,7 @@
 #' @param n_boot number of bootstrap samples to use for the bootstrap confidence
 #' intervals. The default is 1000.
 #' @param ci A character string or character vector indicating which types of
-#' confidence intervals should be constructed. If `"bootstrap"`, `"fieller"`,
+#' confidence intervals should be constructed. If `"boot"`, `"fieller"`,
 #' or `"both"`, the corresponding intervals are computed. If `FALSE`
 #' (the default) no confidence intervals will be computed.
 #' @inheritDotParams mice::mice
@@ -50,9 +50,17 @@
 #'   bootstrap (nonparametric) confidence interval for the proportion of
 #'   variance explained by the different numbers of factors defined by
 #'   `n_factors`.}
+#'   \item{mids}{Object of type (mids)[mids-class]. This is the results of
+#'   the multiple imputation step for the covariance matrix. Can be useful for
+#'   diagnosing the multiple imputations.}
 #' }
 #' @export
-mifa <- function(data, cov_var, n_factors, ci = FALSE, conf = .95,
+#' @examples
+#' \dontrun{
+#' data <- psych::bfi
+#' mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+#' }
+mifa <- function(data, cov_vars, n_factors, ci = FALSE, conf = .95,
                  n_boot = 1000, ...) {
 
   imp <- stop_constants(mice::mice(data, ...))
@@ -62,8 +70,8 @@ mifa <- function(data, cov_var, n_factors, ci = FALSE, conf = .95,
   data_imps <- lapply(data_imps, function(x) mice_impute_all_NA(x, ...))
 
   # Select variables for calculating covariance matrix
-  if(!missing(cov_var)) {
-    data_imps <- lapply(data_imps, function(d) dplyr::select(d, {{ cov_var }}))
+  if(!missing(cov_vars)) {
+    data_imps <- lapply(data_imps, function(d) dplyr::select(d, {{ cov_vars }}))
   }
 
   # estimate covariance matrix of imputed values and combine estimates
@@ -84,16 +92,16 @@ mifa <- function(data, cov_var, n_factors, ci = FALSE, conf = .95,
 
   # add confidence intervals for variance explained
   if ("boot" %in% ci || "both" %in% ci) {
-    ci_boot <- try(mifa_ci_boot(data, cov_var, n_factors, conf, n_boot, ...))
-    var_expl <- cbind(
+    ci_boot <- mifa_ci_boot(data, cov_vars, n_factors, conf, n_boot, ...)
+    var_expl <- dplyr::bind_cols(
       var_expl,
       ci_boot_lower = ci_boot$lower,
       ci_boot_upper = ci_boot$upper
     )
   }
   if ("fieller" %in% ci || "both" %in% ci) {
-    ci_fieller <- try(mifa_ci_fieller(cov_imps, n_factors, conf, nrow(data)))
-    var_expl <- cbind(
+    ci_fieller <- mifa_ci_fieller(cov_imps, n_factors, conf, nrow(data))
+    var_expl <- dplyr::bind_cols(
       var_expl,
       ci_fieller_lower = ci_fieller$lower,
       ci_fieller_upper = ci_fieller$upper
@@ -103,6 +111,7 @@ mifa <- function(data, cov_var, n_factors, ci = FALSE, conf = .95,
   list(
     cov_combined    = cov_comb,
     cov_imputations = cov_imps,
-    var_explained   = var_expl
+    var_explained   = var_expl,
+    mids            = imp
   )
 }

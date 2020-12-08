@@ -66,10 +66,10 @@ CIs can also be calculated separately if desired:
 ```{r run-mifa-ci}
 
 # get imputed covariance using Fieller's method
-mi <- mifa(data.miss, m = 10, ci = FALSE)
+mi <- mifa(data.miss, m = 10, ci = FALSE, print = FALSE)
 
 mifa_ci_fieller(mi$cov_imputations, n_factors = 1:10, N = nrow(data.miss))
 
 # Get CIs using bootstrapping
-mifa_ci_boot(data.miss, n_factors = 1:10, n_boot = 100)
+mifa_ci_boot(data.miss, n_factors = 1:10, n_boot = 100, print = FALSE)
 ```

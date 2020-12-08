@@ -15,6 +15,7 @@
 #' <https://dx.doi.org/10.1080/01621459.1996.10476997>
 #'
 #' @inheritParams mifa
+#' @inheritDotParams mice::mice
 #'
 #' @seealso [mifa()], [mice::mice()]
 #' @family {mifa confidence intervals}
@@ -22,10 +23,20 @@
 #' @return A data frame containing bootstrapped confidence intervals for
 #' variance explained by different number of factors.
 #' @export
-mifa_ci_boot <- function(data, cov_var, n_factors, conf = .95, n_boot = 1000,
+mifa_ci_boot <- function(data, cov_vars, n_factors, conf = .95, n_boot = 1000,
                          ...) {
 
-  boot_eig <- matrix(0, ncol(data), n_boot)
+  if (missing(cov_vars)) {
+    n_cov_vars <- ncol(data)
+  } else {
+    n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
+  }
+
+  if (missing(n_factors)) {
+    n_factors <- 1:n_cov_vars
+  }
+
+  boot_eig <- matrix(0, n_cov_vars, n_boot)
 
   for (i in 1:n_boot) {
     # draw bootstrap samples and impute until there are no constants
@@ -43,8 +54,8 @@ mifa_ci_boot <- function(data, cov_var, n_factors, conf = .95, n_boot = 1000,
     data_imp <- mice_impute_all_NA(data_imp, ...)
 
     # Select variables for calculation of covariance matrix
-    if(!missing(cov_var)) {
-      data_imp <- dplyr::select(data_imp, {{ cov_var }})
+    if(!missing(cov_vars)) {
+      data_imp <- dplyr::select(data_imp, {{ cov_vars }})
     }
 
     # eigenvalues of covariance matrix
@@ -55,11 +66,6 @@ mifa_ci_boot <- function(data, cov_var, n_factors, conf = .95, n_boot = 1000,
   var_expl  <- t(apply(boot_eig, 2, cumsum)) / apply(boot_eig, 2, sum)
   probs_ci  <- c((1-conf)/2, 1-(1-conf)/2)
   boot_expl <- apply(var_expl, 2, stats::quantile, probs = probs_ci)
-
-  if (missing(n_factors)) {
-    n_factors <- 1:ncol(boot_expl)
-  }
-
   boot_cis  <- t(boot_expl)[n_factors, ]
 
   data.frame(

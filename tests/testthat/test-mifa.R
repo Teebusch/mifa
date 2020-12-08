@@ -67,7 +67,7 @@ test_that("CIs returned by mifa() have the expected type and shape", {
 })
 
 
-test_that("cov_var argument removes variables", {
+test_that("cov_vars argument removes variables", {
   m <- 2
   c <- ncol(data_bfi)
   c_sel <- ncol(dplyr::select(data_bfi, starts_with("O")))

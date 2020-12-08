@@ -18,10 +18,10 @@ Maintainer: Tobias Busch <teebusch@gmail.com>
 URL: https://github.com/teebusch/mifa
 BugReports: https://github.com/teebusch/mifa/issues
 Imports: 
-    mice,
-    Matrix,
-    stats,
-    dplyr
+  mice,
+  Matrix,
+  stats,
+  dplyr
 Suggests: 
   eigeninv,
   norm,
