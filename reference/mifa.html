@@ -137,7 +137,7 @@ Also provides variance explained by different numbers of factors with
 Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_var</span>, <span class='va'>n_factors</span>, ci <span class='op'>=</span> <span class='cn'>FALSE</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_vars</span>, <span class='va'>n_factors</span>, ci <span class='op'>=</span> <span class='cn'>FALSE</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,7 +147,7 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
       <td><p>A data frame with missing values coded as <code>NA</code>.</p></td>
     </tr>
     <tr>
-      <th>cov_var</th>
+      <th>cov_vars</th>
       <td><p>Variables in <code>data</code> to calculate the covariance
 matrix for. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
 select variables that are used for the imputations of missing values, but not
@@ -167,7 +167,7 @@ should be indicated. Defaults to all possible numbers of factors.</p></td>
     <tr>
       <th>ci</th>
       <td><p>A character string or character vector indicating which types of
-confidence intervals should be constructed. If <code>"bootstrap"</code>, <code>"fieller"</code>,
+confidence intervals should be constructed. If <code>"boot"</code>, <code>"fieller"</code>,
 or <code>"both"</code>, the corresponding intervals are computed. If <code>FALSE</code>
 (the default) no confidence intervals will be computed.</p></td>
     </tr>
@@ -294,6 +294,9 @@ n <code>ci</code>, it will also contain the estimated Fieller's (parametric) and
 bootstrap (nonparametric) confidence interval for the proportion of
 variance explained by the different numbers of factors defined by
 <code>n_factors</code>.</p></dd>
+<dt>mids</dt><dd><p>Object of type (mids)mids. This is the results of
+the multiple imputation step for the covariance matrix. Can be useful for
+diagnosing the multiple imputations.</p></dd>
 
 </dl>
 
@@ -307,6 +310,12 @@ data. Behavioral Research Methods 50, 501–517.
 
     <div class='dont-index'><p><code><a href='mifa_ci_boot.html'>mifa_ci_boot()</a></code>, <code><a href='mifa_ci_fieller.html'>mifa_ci_fieller()</a></code>, <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span>
+<span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, cov_vars <span class='op'>=</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>education</span>, <span class='va'>gender</span><span class='op'>)</span>, ci <span class='op'>=</span> <span class='st'>"fieller"</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

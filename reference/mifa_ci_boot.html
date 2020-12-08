@@ -137,7 +137,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_var</span>, <span class='va'>n_factors</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_vars</span>, <span class='va'>n_factors</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -147,7 +147,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
       <td><p>A data frame with missing values coded as <code>NA</code>.</p></td>
     </tr>
     <tr>
-      <th>cov_var</th>
+      <th>cov_vars</th>
       <td><p>Variables in <code>data</code> to calculate the covariance
 matrix for. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
 select variables that are used for the imputations of missing values, but not
@@ -173,6 +173,103 @@ default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
       <th>n_boot</th>
       <td><p>number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Arguments passed on to <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice</a></code></p><dl>
+    <dt><code>m</code></dt><dd><p>Number of multiple imputations. The default is <code>m=5</code>.</p></dd>
+    <dt><code>method</code></dt><dd><p>Can be either a single string, or a vector of strings with
+length <code><a href='https://rdrr.io/r/base/length.html'>length(blocks)</a></code>, specifying the imputation method to be
+used for each column in data. If specified as a single string, the same
+method will be used for all blocks. The default imputation method (when no
+argument is specified) depends on the measurement level of the target column,
+as regulated by the <code>defaultMethod</code> argument. Columns that need
+not be imputed have the empty method <code>""</code>. See details.</p></dd>
+    <dt><code>predictorMatrix</code></dt><dd><p>A numeric matrix of <code><a href='https://rdrr.io/r/base/length.html'>length(blocks)</a></code> rows
+and <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(data)</a></code> columns, containing 0/1 data specifying
+the set of predictors to be used for each target column.
+Each row corresponds to a variable block, i.e., a set of variables
+to be imputed. A value of <code>1</code> means that the column
+variable is used as a predictor for the target block (in the rows).
+By default, the <code>predictorMatrix</code> is a square matrix of <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(data)</a></code>
+rows and columns with all 1's, except for the diagonal.
+Note: For two-level imputation models (which have <code>"2l"</code> in their names)
+other codes (e.g, <code>2</code> or <code>-2</code>) are also allowed.</p></dd>
+    <dt><code>ignore</code></dt><dd><p>A logical vector of <code><a href='https://rdrr.io/r/base/nrow.html'>nrow(data)</a></code> elements indicating
+which rows are ignored when creating the imputation model. The default
+<code>NULL</code> includes all rows that have an observed value of the variable
+to imputed. Rows with <code>ignore</code> set to <code>TRUE</code> do not influence the
+parameters of the imputation model, but are still imputed. We may use the
+<code>ignore</code> argument to split <code>data</code> into a training set (on which the
+imputation model is built) and a test set (that does not influence the
+imputation model estimates).
+Note: Multivariate imputation methods, like <code>mice.impute.jomoImpute()</code>
+or <code>mice.impute.panImpute()</code>, do not honour the <code>ignore</code> argument.</p></dd>
+    <dt><code>where</code></dt><dd><p>A data frame or matrix with logicals of the same dimensions
+as <code>data</code> indicating where in the data the imputations should be
+created. The default, <code>where = is.na(data)</code>, specifies that the
+missing data should be imputed. The <code>where</code> argument may be used to
+overimpute observed data, or to skip imputations for selected missing values.</p></dd>
+    <dt><code>blocks</code></dt><dd><p>List of vectors with variable names per block. List elements
+may be named to identify blocks. Variables within a block are
+imputed by a multivariate imputation method
+(see <code>method</code> argument). By default each variable is placed
+into its own block, which is effectively
+fully conditional specification (FCS) by univariate models
+(variable-by-variable imputation). Only variables whose names appear in
+<code>blocks</code> are imputed. The relevant columns in the <code>where</code>
+matrix are set to <code>FALSE</code> of variables that are not block members.
+A variable may appear in multiple blocks. In that case, it is
+effectively re-imputed each time that it is visited.</p></dd>
+    <dt><code>visitSequence</code></dt><dd><p>A vector of block names of arbitrary length, specifying the
+sequence of blocks that are imputed during one iteration of the Gibbs
+sampler. A block is a collection of variables. All variables that are
+members of the same block are imputed
+when the block is visited. A variable that is a member of multiple blocks
+is re-imputed within the same iteration.
+The default <code>visitSequence = "roman"</code> visits the blocks (left to right)
+in the order in which they appear in <code>blocks</code>.
+One may also use one of the following keywords: <code>"arabic"</code>
+(right to left), <code>"monotone"</code> (ordered low to high proportion
+of missing data) and <code>"revmonotone"</code> (reverse of monotone).</p></dd>
+    <dt><code>formulas</code></dt><dd><p>A named list of formula's, or expressions that
+can be converted into formula's by <code>as.formula</code>. List elements
+correspond to blocks. The block to which the list element applies is
+identified by its name, so list names must correspond to block names.
+The <code>formulas</code> argument is an alternative to the
+<code>predictorMatrix</code> argument that allows for more flexibility in
+specifying imputation models, e.g., for specifying interaction terms.</p></dd>
+    <dt><code>blots</code></dt><dd><p>A named <code>list</code> of <code>alist</code>'s that can be used
+to pass down arguments to lower level imputation function. The entries
+of element <code>blots[[blockname]]</code> are passed down to the function
+called for block <code>blockname</code>.</p></dd>
+    <dt><code>post</code></dt><dd><p>A vector of strings with length <code><a href='https://rdrr.io/r/base/nrow.html'>ncol(data)</a></code> specifying
+expressions as strings. Each string is parsed and
+executed within the <code>sampler()</code> function to post-process
+imputed values during the iterations.
+The default is a vector of empty strings, indicating no post-processing.</p></dd>
+    <dt><code>defaultMethod</code></dt><dd><p>A vector of length 4 containing the default
+imputation methods for 1) numeric data, 2) factor data with 2 levels, 3)
+factor data with &gt; 2 unordered levels, and 4) factor data with &gt; 2
+ordered levels. By default, the method uses
+<code>pmm</code>, predictive mean matching (numeric data) <code>logreg</code>, logistic
+regression imputation (binary data, factor with 2 levels) <code>polyreg</code>,
+polytomous regression imputation for unordered categorical data (factor &gt; 2
+levels) <code>polr</code>, proportional odds model for (ordered, &gt; 2 levels).</p></dd>
+    <dt><code>maxit</code></dt><dd><p>A scalar giving the number of iterations. The default is 5.</p></dd>
+    <dt><code>printFlag</code></dt><dd><p>If <code>TRUE</code>, <code>mice</code> will print history on console.
+Use <code>print=FALSE</code> for silent computation.</p></dd>
+    <dt><code>seed</code></dt><dd><p>An integer that is used as argument by the <code><a href='https://rdrr.io/r/base/Random.html'>set.seed()</a></code> for
+offsetting the random number generator. Default is to leave the random number
+generator alone.</p></dd>
+    <dt><code>data.init</code></dt><dd><p>A data frame of the same size and type as <code>data</code>,
+without missing data, used to initialize imputations before the start of the
+iterative process.  The default <code>NULL</code> implies that starting imputation
+are created by a simple random draw from the data. Note that specification of
+<code>data.init</code> will start all <code>m</code> Gibbs sampling streams from the same
+imputation.</p></dd>
+  
+</dl></td>
     </tr>
     </table>
 
