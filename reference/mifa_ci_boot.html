@@ -137,7 +137,14 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_vars</span>, <span class='va'>n_factors</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa_ci_boot</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  cov_vars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/everything.html'>everything</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>n_factors</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">

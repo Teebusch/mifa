@@ -137,7 +137,15 @@ Also provides variance explained by different numbers of factors with
 Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, <span class='va'>cov_vars</span>, <span class='va'>n_factors</span>, ci <span class='op'>=</span> <span class='cn'>FALSE</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, n_boot <span class='op'>=</span> <span class='fl'>1000</span>, <span class='va'>...</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span>
+  <span class='va'>data</span>,
+  cov_vars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/everything.html'>everything</a></span><span class='op'>(</span><span class='op'>)</span>,
+  <span class='va'>n_factors</span>,
+  ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  conf <span class='op'>=</span> <span class='fl'>0.95</span>,
+  n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
+  <span class='va'>...</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
