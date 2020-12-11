@@ -14,6 +14,7 @@ test_that("mifa() returns have the expected type and shape", {
   res <- mifa(data_bfi, m = m, print = FALSE)
 
   expect_type(res, "list")
+  expect_s3_class(res, "mifa")
 
   # cov_combined is a single matrix of type double
   expect_type(res$cov_combined, "double")
@@ -53,6 +54,7 @@ test_that("CIs returned by mifa() have the expected type and shape", {
 
 
   expect_type(res, "list")
+  expect_s3_class(res, "mifa")
   expect_s3_class(cis, "data.frame")
 
   expect_type(cis$ci_boot_lower, "double")

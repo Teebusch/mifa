@@ -4,7 +4,15 @@
 \alias{mifa}
 \title{Get covariance matrix of incomplete data using multiple imputation}
 \usage{
-mifa(data, cov_vars, n_factors, ci = FALSE, conf = 0.95, n_boot = 1000, ...)
+mifa(
+  data,
+  cov_vars = dplyr::everything(),
+  n_factors,
+  ci = FALSE,
+  conf = 0.95,
+  n_boot = 1000,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}

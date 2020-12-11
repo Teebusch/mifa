@@ -58,6 +58,8 @@ for (i in 1:P) {
     }
   }
 }
+
+data.miss <- data.frame(data.miss)
 ```
 
 `mifa.cov()` normally provides the confidence intervals when `ci = TRUE`. 

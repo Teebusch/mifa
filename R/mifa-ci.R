@@ -23,14 +23,10 @@
 #' @return A data frame containing bootstrapped confidence intervals for
 #' variance explained by different number of factors.
 #' @export
-mifa_ci_boot <- function(data, cov_vars, n_factors, conf = .95, n_boot = 1000,
-                         ...) {
+mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
+                         conf = .95, n_boot = 1000, ...) {
 
-  if (missing(cov_vars)) {
-    n_cov_vars <- ncol(data)
-  } else {
-    n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
-  }
+  n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
 
   if (missing(n_factors)) {
     n_factors <- 1:n_cov_vars
@@ -54,9 +50,7 @@ mifa_ci_boot <- function(data, cov_vars, n_factors, conf = .95, n_boot = 1000,
     data_imp <- mice_impute_all_NA(data_imp, ...)
 
     # Select variables for calculation of covariance matrix
-    if(!missing(cov_vars)) {
-      data_imp <- dplyr::select(data_imp, {{ cov_vars }})
-    }
+    data_imp <- dplyr::select(data_imp, {{ cov_vars }})
 
     # eigenvalues of covariance matrix
     boot_eig[, i] <- eigen(stats::cov(data_imp))$values

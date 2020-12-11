@@ -4,7 +4,14 @@
 \alias{mifa_ci_boot}
 \title{Bootstrap confidence intervals for proportion of explained variance}
 \usage{
-mifa_ci_boot(data, cov_vars, n_factors, conf = 0.95, n_boot = 1000, ...)
+mifa_ci_boot(
+  data,
+  cov_vars = dplyr::everything(),
+  n_factors,
+  conf = 0.95,
+  n_boot = 1000,
+  ...
+)
 }
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
