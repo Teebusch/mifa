@@ -1,4 +1,4 @@
-#' Bootstrap confidence intervals for proportion of explained variance
+#' Bootstrap confidence intervals for explained variance
 #'
 #' Compute bootstrap confidence intervals for the proportion of explained
 #' variance for the covariance of an incomplete data imputed using
@@ -9,11 +9,16 @@
 #' This function uses the Shao and Sitter (1996) method to combine multiple
 #' imputation and bootstrapping. The imputations are done using [mice::mice()].
 #'
+#' Normally, this function does not need to be called directly. Instead,
+#' use `mifa(..., ci = "boot")`.
+#'
 #' @references
 #' Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
 #' Journal of the American Statistical Association 91.435 (1996): 1278-1288.
 #' <https://dx.doi.org/10.1080/01621459.1996.10476997>
 #'
+#' @param progress Logical. Whether to show progress bars for computation of
+#' bootstrap confidence intervals. Default is FALSE.
 #' @inheritParams mifa
 #' @inheritDotParams mice::mice
 #'
@@ -24,7 +29,7 @@
 #' variance explained by different number of factors.
 #' @export
 mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
-                         conf = .95, n_boot = 1000, ...) {
+                         conf = .95, n_boot = 1000, progress = FALSE, ...) {
 
   n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
 
@@ -34,6 +39,10 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
 
   boot_eig <- matrix(0, n_cov_vars, n_boot)
 
+  if(progress) {
+    cat("\n\n  Computing bootstrap confidence intervals...\n")
+    pb = utils::txtProgressBar(min = 0, max = n_boot, initial = 0, style = 3)
+  }
   for (i in 1:n_boot) {
     # draw bootstrap samples and impute until there are no constants
     repeat {
@@ -54,6 +63,8 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
 
     # eigenvalues of covariance matrix
     boot_eig[, i] <- eigen(stats::cov(data_imp))$values
+
+    if(progress) utils::setTxtProgressBar(pb,i)
   }
 
   # variance explained and confidence intervals
@@ -71,12 +82,15 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
 
 
 
-#' Fieller's confidence intervals for proportion of explained variance
+#' Fieller's confidence intervals for explained variance
 #'
 #' Computes parametric confidence intervals for proportion of explained
 #' variance for given numbers of factors using Fieller's method.
 #' Note that by setting `ci = TRUE` in [mifa()], this confidence
 #' interval can be computed as well.
+#'
+#' Normally, this function does not need to be called directly. Instead,
+#' use `mifa(..., ci = "fieller")`.
 #'
 #' @references
 #' Fieller, E. C. (1954). Some problems in interval estimation.

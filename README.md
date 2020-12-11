@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# mifa - multiple imputation for exploratory factor analysis
+# mifa - Multiple Imputation for Factor Analysis
 
 <!-- badges: start -->
 
@@ -14,8 +14,8 @@ coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](ht
 
 <!-- badges: end -->
 
-`mifa` implements multiple imputation of covariance matrices to allow
-exploratory factor analysis of incomplete data. It works as follows:
+`mifa` implements multiple imputation of covariance matrices to allow to
+perform factor analysis on incomplete data. It works as follows:
 
 1.  Impute missing values multiple times using *Multivariate Imputation
     with Chained Equations* (MICE) from the
@@ -29,24 +29,25 @@ exploratory factor analysis of incomplete data. It works as follows:
 `mifa` also provides two types of confidence intervals for the variance
 explained by different numbers of principal components: Fieller
 confidence intervals (parametric) for larger samples <sup>[2]</sup> and
-bootstrapped confidence intervals (nonparametric) for smaller samples
+bootstrapped confidence intervals (nonparametric) for smaller samples.
 <sup>[3]</sup>
 
-For more information about the method, see: Nassiri, V., Lovik, A.,
-Molenberghs, G., Verbeke, G. (2018). On using multiple imputation for
-exploratory factor analysis of incomplete data. *Behavior Research
-Methods* 50, 501–517.
+**For more information about the method, see:**
+
+Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using
+multiple imputation for exploratory factor analysis of incomplete data.
+*Behavior Research Methods* 50, 501–517.
 [\[doi\]](https://doi.org/10.3758/s13428-017-1013-4)
 
-**Note:** The paper was accompanied by an implementation of `mifa`, and
-this package emerged from it. Although the repository appears to have
-been abandoned by the author, you can still find it
+*Note:* The paper was accompanied by an implementation in R, and this
+package emerged from it. The repository appears to have been abandoned
+by the authors, but you can still find it
 [here](https://github.com/vahidnassiri/mifa).
 
 ## Installation
 
-`mifa` is not yet on CRAN, but you can install it from
-[GitHub](https://github.com/teebusch/mifa) with:
+You can install `mifa` from [GitHub](https://github.com/teebusch/mifa)
+with:
 
 ``` r
 # install.packages("devtools")

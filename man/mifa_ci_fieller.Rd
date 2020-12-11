@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa-ci.R
 \name{mifa_ci_fieller}
 \alias{mifa_ci_fieller}
-\title{Fieller's confidence intervals for proportion of explained variance}
+\title{Fieller's confidence intervals for explained variance}
 \usage{
 mifa_ci_fieller(cov_imps, n_factors, conf = 0.95, N)
 }
@@ -27,6 +27,10 @@ Computes parametric confidence intervals for proportion of explained
 variance for given numbers of factors using Fieller's method.
 Note that by setting \code{ci = TRUE} in \code{\link[=mifa]{mifa()}}, this confidence
 interval can be computed as well.
+}
+\details{
+Normally, this function does not need to be called directly. Instead,
+use \code{mifa(..., ci = "fieller")}.
 }
 \references{
 Fieller, E. C. (1954). Some problems in interval estimation.

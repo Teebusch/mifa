@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa-ci.R
 \name{mifa_ci_boot}
 \alias{mifa_ci_boot}
-\title{Bootstrap confidence intervals for proportion of explained variance}
+\title{Bootstrap confidence intervals for explained variance}
 \usage{
 mifa_ci_boot(
   data,
@@ -10,6 +10,7 @@ mifa_ci_boot(
   n_factors,
   conf = 0.95,
   n_boot = 1000,
+  progress = FALSE,
   ...
 )
 }
@@ -35,6 +36,9 @@ default is \code{.95}, i.e., a 95\% confidence interval.}
 
 \item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.}
+
+\item{progress}{Logical. Whether to show progress bars for computation of
+bootstrap confidence intervals. Default is FALSE.}
 
 \item{...}{
   Arguments passed on to \code{\link[mice:mice]{mice::mice}}
@@ -146,6 +150,9 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 \details{
 This function uses the Shao and Sitter (1996) method to combine multiple
 imputation and bootstrapping. The imputations are done using \code{\link[mice:mice]{mice::mice()}}.
+
+Normally, this function does not need to be called directly. Instead,
+use \code{mifa(..., ci = "boot")}.
 }
 \references{
 Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
