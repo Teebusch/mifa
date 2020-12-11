@@ -180,7 +180,7 @@ summary.mifa <- function(object, ...) {
   }
 
   k_width <- max(nchar(mi$var_explained$n_factors))
-  cat("\n\nCumulative proportion of variance explained by n eigenvectors:")
+  cat("\n\nCumulative proportion of variance explained by n principal components:")
   cat(sprintf("\n\n%*s  prop  ", k_width, "n"))
   if(!is.null(ci_fieller)) cat("Fieller CI    ")
   if(!is.null(ci_boot))    cat("Bootstrap CI")

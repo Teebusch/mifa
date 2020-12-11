@@ -9,16 +9,27 @@ editor_options:
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "man/figures/README-",
-  out.width = "100%"
+  collapse   = TRUE,
+  comment    = "#>",
+  fig.path   = "man/figures/README-",
+  dpi        = 300,
+  fig.width  = 10,
+  fig.height = 7,
+  dev        = "svg"
 )
 
 set.seed(1234)
+
+# preload libraries here to avoid messages
+library(mifa)
+library(psych)
+library(ggplot2)
+library(tidyr)
+
+ggplot2::theme_set(theme_minimal(base_size = 16))
 ```
 
-# mifa
+# mifa - multiple imputation for exploratory factor analysis
 
 <!-- badges: start -->
 
@@ -32,44 +43,40 @@ coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](ht
 <!-- badges: end -->
 
 `mifa` implements multiple imputation of covariance matrices to allow
-exploratory factor analyis of incomplete data.
-
-It works as follows:
+exploratory factor analysis of incomplete data. It works as follows:
 
 1.  Impute missing values multiple times using *Multivariate Imputation with
-    Chained Equations* (MICE) from the [mice package](https://amices.org/mice/).
+    Chained Equations* (MICE) from the [mice](https://amices.org/mice/) package.
 
 2.  Combine the covariance matrices of the imputed data sets into a single
-    covariance matrix using Rubin's rules^[Rubin D. B. Multiple imputation for
-    nonresponse in surveys (2004). John Wiley & Sons].
+    covariance matrix using Rubin's rules <sup>^[Rubin D. B. Multiple imputation
+    for nonresponse in surveys (2004). John Wiley & Sons.]</sup>
 
-3.   Use the combined covariance matrix for exploratory factor analysis.
+3.  Use the combined covariance matrix for exploratory factor analysis.
 
 `mifa` also provides two types of confidence intervals for the variance
-explained by different numbers of principal components:
+explained by different numbers of principal components: Fieller confidence
+intervals (parametric) for larger samples <sup>^[Fieller, E. C. (1954). Some
+problems in interval estimation. Journal of the Royal Statistical Society.
+Series B (Methodological): 175-185.]</sup> and bootstrapped confidence intervals
+(nonparametric) for smaller samples <sup>^[Shao, J. & Sitter, R. R. (1996).
+Bootstrap for imputed survey data. Journal of the American Statistical
+Association 91.435 (1996): 1278-1288.
+[[doi]](https://dx.doi.org/10.1080/01621459.1996.10476997)]</sup>
 
--   Fieller confidence intervals (parametric) for larger samples^[Fieller, E. C.
-    (1954). Some problems in interval estimation. Journal of the Royal
-    Statistical Society. Series B (Methodological): 175-185.]
+For more information about the method, see: Nassiri, V., Lovik, A., Molenberghs,
+G., Verbeke, G. (2018). On using multiple imputation for exploratory factor
+analysis of incomplete data. *Behavior Research Methods* 50, 501–517.
+[[doi]](https://doi.org/10.3758/s13428-017-1013-4)
 
--   Bootstrapped confidence intervals (nonparametric) for smaller
-    samples^[Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
-    Journal of the American Statistical Association 91.435 (1996): 1278-1288.
-    <https://dx.doi.org/10.1080/01621459.1996.10476997>]
-
-#### Reference for mifa
-
-Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018) On using multiple
-imputation for exploratory factor analysis of incomplete data. *Behavior
-Research Methods* 50, 501–517. <https://doi.org/10.3758/s13428-017-1013-4>
-
-*Note:* The paper was accompanied by an implementation of `mifa` appears to have
-been abandoned by the author. You can find it
+**Note:** The paper was accompanied by an implementation of `mifa`, and this
+package emerged from it. Although the repository appears to have been abandoned
+by the author, you can still find it
 [here](https://github.com/vahidnassiri/mifa).
 
 ## Installation
 
-You can install the the stable release version of `mifa` from
+`mifa` is not yet on CRAN, but you can install it from
 [GitHub](https://github.com/teebusch/mifa) with:
 
 ``` r
@@ -77,24 +84,26 @@ You can install the the stable release version of `mifa` from
 devtools::install_github("teebusch/mifa")
 ```
 
-You can also install the the developmental version of `mifa` with:
-
-``` r
-# install.packages("devtools")
-devtools::install_github("teebusch/mifa@dev")
-```
-
 ## Usage
 
-As an example, we use the `bfi` data set from the `psych` package. It contains
+### Example Data
+
+For this example we use the `bfi` data set from the `psych` package. It contains
 2,800 subjects' answers to 25 personality self-report items and 3 demographic
-variables (sex, education, and age). The 25 columns with responses to
-personality questions correspond to 5 putative personality factors, as indicated
-by their names: **A**greeableness, **C**onscientiousness, **E**xtraversion,
-**N**euroticism, **O**penness. There are missing responses for most items.
+variables (sex, education, and age). Each of the 25 personality questions is
+meant to tap into one of the "Big 5" personality factors, as indicated by their
+names: **O**penness, **C**onscientiousness, **A**greeableness, ,
+**E**xtraversion, **N**euroticism. There are missing responses for most items.
+Instead of dropping the incomplete cases from the analysis, we will use `mifa`
+to impute them, and then perform a factor analysis on the imputed covariance
+matrix.
+
+### Imputing the Covariance Matrix
 
 First, we use `mifa()` to impute the covariance matrix and get an idea how many
-factors we should use:
+factors we should use. We use the `cov_vars` argument to tell `mifa` to use
+`gender`, `education`, and `age` for the imputations, but exclude them from the
+covariance matrix:
 
 ```{r run-mifa, messages=FALSE}
 library(mifa)
@@ -108,40 +117,40 @@ mi <- mifa(
   print     = FALSE
 )
 
-summary(mi)
+mi
+
 ```
 
-It looks like 5 factors explain more than half of the variance, so we perform a
-factor analysis with 5 factors, using the `fa()` function from the `psych`
-package.
+### Factor Analysis
 
-```{r}
+It looks like the first 5 principal components explain more than half of the
+variance in the responses, so we perform a factor analysis with 5 factors, using
+the `fa()` function from the `psych` package. We can get the imputed covariance
+matrix of our data from `mi$cov_combined`. From there on out, it's business as
+usual.
+
+```{r message=FALSE}
 fit <- fa(
   mi$cov_combined, 
-  n.obs     = nrow(bfi), 
-  nfactors  = 5, 
-  rotate    = "varimax"
+  n.obs    = nrow(bfi), 
+  nfactors = 5
 )
-
-fit
 ```
 
-The plot below shows that the five factors have been recovered quite well:
+The factor diagram shows that the five factors correspond nicely to the 5 types
+of questions:
 
-```{r fig.width=10, fig.height=7, fig.retina=T}
+```{r fig.height = 8}
 fa.diagram(fit)
 ```
 
-Once we have the estimated covariance matrix, we can perform a factor analysis
-as usual. For example, we can add the factor scores to the original data, and
-visualize them:
+We can add the factor scores to the original data, in order to explore group
+differences. Because we need complete data to calculate factor scores, we first
+impute a single data set with mice:
 
 ```{r}
-
-# impute a single data set with mice, so we can obtain factor scores for inclomplete cases
 data_imp <- mice::complete(mice::mice(bfi, 1, print = FALSE))
 
-# get factor scores for original data
 fct_scores <- data.frame(factor.scores(data_imp[, 1:25], fit)$scores)
 
 data_imp <- data.frame(
@@ -156,19 +165,16 @@ data_imp <- data.frame(
 levels(data_imp$Gender) <- c("Male", "Female")
 ```
 
-```{r include = FALSE}
-library(ggplot2)
-ggplot2::theme_set(theme_minimal(base_size = 16))
-```
-
-```{r fig.width=10, fig.height=6, fig.retina=TRUE}
+```{r}
 library(ggplot2)
 library(tidyr)
 
-data_imp <- tidyr::pivot_longer(data_imp, -Gender, "factor")
+data_imp2 <- tidyr::pivot_longer(data_imp, -Gender, "factor")
 
-ggplot(data_imp, aes(value, linetype = Gender)) +
-  geom_density() +
+ggplot(data_imp2) +
+  geom_density(aes(value, linetype = Gender)) +
   facet_wrap(~ factor, nrow = 2) +
   theme(legend.position = c(.9, .1))
 ```
+
+## Further Reading
