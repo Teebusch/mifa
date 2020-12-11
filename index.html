@@ -82,25 +82,26 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="mifa---multiple-imputation-for-exploratory-factor-analysis" class="section level1">
+<div id="mifa---multiple-imputation-for-factor-analysis" class="section level1">
 <div class="page-header"><h1 class="hasAnchor">
-<a href="#mifa---multiple-imputation-for-exploratory-factor-analysis" class="anchor"></a>mifa - multiple imputation for exploratory factor analysis</h1></div>
+<a href="#mifa---multiple-imputation-for-factor-analysis" class="anchor"></a>mifa - Multiple Imputation for Factor Analysis</h1></div>
 <!-- badges: start -->
 
 <!-- badges: end -->
-<p><code>mifa</code> implements multiple imputation of covariance matrices to allow exploratory factor analysis of incomplete data. It works as follows:</p>
+<p><code>mifa</code> implements multiple imputation of covariance matrices to allow to perform factor analysis on incomplete data. It works as follows:</p>
 <ol>
 <li><p>Impute missing values multiple times using <em>Multivariate Imputation with Chained Equations</em> (MICE) from the <a href="https://amices.org/mice/">mice</a> package.</p></li>
 <li><p>Combine the covariance matrices of the imputed data sets into a single covariance matrix using Rubin’s rules <sup>[1]</sup></p></li>
 <li><p>Use the combined covariance matrix for exploratory factor analysis.</p></li>
 </ol>
-<p><code>mifa</code> also provides two types of confidence intervals for the variance explained by different numbers of principal components: Fieller confidence intervals (parametric) for larger samples <sup>[2]</sup> and bootstrapped confidence intervals (nonparametric) for smaller samples <sup>[3]</sup></p>
-<p>For more information about the method, see: Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using multiple imputation for exploratory factor analysis of incomplete data. <em>Behavior Research Methods</em> 50, 501–517. <a href="https://doi.org/10.3758/s13428-017-1013-4"><br><span class="math display"><em>d</em><em>o</em><em>i</em></span><br></a></p>
-<p><strong>Note:</strong> The paper was accompanied by an implementation of <code>mifa</code>, and this package emerged from it. Although the repository appears to have been abandoned by the author, you can still find it <a href="https://github.com/vahidnassiri/mifa">here</a>.</p>
+<p><code>mifa</code> also provides two types of confidence intervals for the variance explained by different numbers of principal components: Fieller confidence intervals (parametric) for larger samples <sup>[2]</sup> and bootstrapped confidence intervals (nonparametric) for smaller samples. <sup>[3]</sup></p>
+<p><strong>For more information about the method, see:</strong></p>
+<p>Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using multiple imputation for exploratory factor analysis of incomplete data. <em>Behavior Research Methods</em> 50, 501–517. <a href="https://doi.org/10.3758/s13428-017-1013-4"><br><span class="math display"><em>d</em><em>o</em><em>i</em></span><br></a></p>
+<p><em>Note:</em> The paper was accompanied by an implementation in R, and this package emerged from it. The repository appears to have been abandoned by the authors, but you can still find it <a href="https://github.com/vahidnassiri/mifa">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p><code>mifa</code> is not yet on CRAN, but you can install it from <a href="https://github.com/teebusch/mifa">GitHub</a> with:</p>
+<p>You can install <code>mifa</code> from <a href="https://github.com/teebusch/mifa">GitHub</a> with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"teebusch/mifa"</span><span class="op">)</span></code></pre></div>

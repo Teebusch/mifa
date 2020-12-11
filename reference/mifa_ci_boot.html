@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Bootstrap confidence intervals for proportion of explained variance — mifa_ci_boot • mifa</title>
+<title>Bootstrap confidence intervals for explained variance — mifa_ci_boot • mifa</title>
 
 
 <!-- jquery -->
@@ -39,7 +39,7 @@
 
 
 
-<meta property="og:title" content="Bootstrap confidence intervals for proportion of explained variance — mifa_ci_boot" />
+<meta property="og:title" content="Bootstrap confidence intervals for explained variance — mifa_ci_boot" />
 <meta property="og:description" content="Compute bootstrap confidence intervals for the proportion of explained
 variance for the covariance of an incomplete data imputed using
 multiple imputation.
@@ -124,7 +124,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Bootstrap confidence intervals for proportion of explained variance</h1>
+    <h1>Bootstrap confidence intervals for explained variance</h1>
     <small class="dont-index">Source: <a href='https://github.com/teebusch/mifa/blob/master/R/mifa-ci.R'><code>R/mifa-ci.R</code></a></small>
     <div class="hidden name"><code>mifa_ci_boot.Rd</code></div>
     </div>
@@ -143,6 +143,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
   <span class='va'>n_factors</span>,
   conf <span class='op'>=</span> <span class='fl'>0.95</span>,
   n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
+  progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
   <span class='va'>...</span>
 <span class='op'>)</span></pre>
 
@@ -180,6 +181,11 @@ default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
       <th>n_boot</th>
       <td><p>number of bootstrap samples to use for the bootstrap confidence
 intervals. The default is 1000.</p></td>
+    </tr>
+    <tr>
+      <th>progress</th>
+      <td><p>Logical. Whether to show progress bars for computation of
+bootstrap confidence intervals. Default is FALSE.</p></td>
     </tr>
     <tr>
       <th>...</th>
@@ -288,6 +294,8 @@ variance explained by different number of factors.</p>
 
     <p>This function uses the Shao and Sitter (1996) method to combine multiple
 imputation and bootstrapping. The imputations are done using <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p>
+<p>Normally, this function does not need to be called directly. Instead,
+use <code><a href='mifa.html'>mifa(..., ci = "boot")</a></code>.</p>
     <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
 
     <p>Shao, J. &amp; Sitter, R. R. (1996). Bootstrap for imputed survey data.
