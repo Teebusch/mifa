@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Fieller's confidence intervals for explained variance — mifa_ci_fieller" />
 <meta property="og:description" content="Computes parametric confidence intervals for proportion of explained
-variance for given numbers of factors using Fieller's method.
+variance for given numbers of principal components using Fieller's method.
 Note that by setting ci = TRUE in mifa(), this confidence
 interval can be computed as well." />
 
@@ -90,18 +90,6 @@ interval can be computed as well." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/advanced-use.html">Advanced Usage</a>
-    </li>
-  </ul>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -130,12 +118,12 @@ interval can be computed as well." />
 
     <div class="ref-description">
     <p>Computes parametric confidence intervals for proportion of explained
-variance for given numbers of factors using Fieller's method.
+variance for given numbers of principal components using Fieller's method.
 Note that by setting <code>ci = TRUE</code> in <code><a href='mifa.html'>mifa()</a></code>, this confidence
 interval can be computed as well.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>cov_imps</span>, <span class='va'>n_factors</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>N</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>cov_imps</span>, <span class='va'>n_pc</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>N</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -146,15 +134,17 @@ interval can be computed as well.</p>
 each imputed data. One can use <code>cov_imputations</code> returned by <code><a href='mifa.html'>mifa()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>n_factors</th>
-      <td><p>Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.</p></td>
+      <th>n_pc</th>
+      <td><p>Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.</p></td>
     </tr>
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
+default is <code>.95</code> so that 95% confidence intervals will be constructed.</p></td>
     </tr>
     <tr>
       <th>N</th>
@@ -164,7 +154,8 @@ default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A data frame containing confidence intervals for <code>n_factors</code> factors</p>
+    <p>A data frame containing confidence intervals for <code>n_pc</code> principal
+components.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>Normally, this function does not need to be called directly. Instead,
@@ -179,6 +170,13 @@ Journal of the Royal Statistical Society. Series B (Methodological): 175-185.</p
 <p>Other mifa confidence intervals: 
 <code><a href='mifa_ci_boot.html'>mifa_ci_boot</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>25</span><span class='op'>]</span>
+<span class='va'>mi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mifa.html'>mifa</a></span><span class='op'>(</span><span class='va'>data</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>mi</span><span class='op'>$</span><span class='va'>cov_imputations</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

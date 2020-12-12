@@ -43,8 +43,9 @@
 <meta property="og:description" content="Compute covariance matrix of incomplete data using multiple imputation.
 For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used.
-Also provides variance explained by different numbers of factors with
-Fieller (parametric) or bootstrap (nonparametric) confidence intervals." />
+Also provides variance explained by different numbers of principal
+components with Fieller (parametric) or bootstrap (nonparametric) confidence
+intervals." />
 
 
 
@@ -91,18 +92,6 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/advanced-use.html">Advanced Usage</a>
-    </li>
-  </ul>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -133,14 +122,15 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals." />
     <p>Compute covariance matrix of incomplete data using multiple imputation.
 For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used.
-Also provides variance explained by different numbers of factors with
-Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
+Also provides variance explained by different numbers of principal
+components with Fieller (parametric) or bootstrap (nonparametric) confidence
+intervals.</p>
     </div>
 
     <pre class="usage"><span class='fu'>mifa</span><span class='op'>(</span>
   <span class='va'>data</span>,
   cov_vars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/everything.html'>everything</a></span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>n_factors</span>,
+  <span class='va'>n_pc</span>,
   ci <span class='op'>=</span> <span class='cn'>FALSE</span>,
   conf <span class='op'>=</span> <span class='fl'>0.95</span>,
   n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
@@ -156,21 +146,24 @@ Fieller (parametric) or bootstrap (nonparametric) confidence intervals.</p>
     </tr>
     <tr>
       <th>cov_vars</th>
-      <td><p>Variables in <code>data</code> to calculate the covariance
-matrix for. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
+      <td><p>Variables in <code>data</code> for which to calculate the covariance
+matrix. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
 select variables that are used for the imputations of missing values, but not
 the calculations of the covariance matrix. This is especially useful when
 there are categorical predictors that can improve the imputation of the
 response variables, but for which covariance cannot be calculated.
 By default, all variables in <code>data</code> are used for both, the imputation and
-the covariance matrix. Note: Variables and rows used for the imputation
-can be configured using the <code>...</code>. See also <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p></td>
+the covariance matrix. Note: Variables and rows used for the imputation, as
+well as the method for imputation can be configured using the <code>...</code>.
+See also <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>n_factors</th>
-      <td><p>Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.</p></td>
+      <th>n_pc</th>
+      <td><p>Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.</p></td>
     </tr>
     <tr>
       <th>ci</th>
@@ -182,11 +175,11 @@ or <code>"both"</code>, the corresponding intervals are computed. If <code>FALSE
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
+default is <code>.95</code> so that 95% confidence intervals will be constructed.</p></td>
     </tr>
     <tr>
       <th>n_boot</th>
-      <td><p>number of bootstrap samples to use for the bootstrap confidence
+      <td><p>Number of bootstrap samples to use for bootstrap confidence
 intervals. The default is 1000.</p></td>
     </tr>
     <tr>
@@ -297,11 +290,11 @@ data sets.</p></dd>
 <dt>cov_imputations</dt><dd><p>A list containing the estimated covariance matrixes
 for all imputed data sets.</p></dd>
 <dt>var_explained</dt><dd><p>A data frame containing the estimated proportions of
-explained variance for each of specified <code>n.factor</code> components. Depending o
+explained variance for each of specified <code>n_pc</code> components. Depending o
 n <code>ci</code>, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
-variance explained by the different numbers of factors defined by
-<code>n_factors</code>.</p></dd>
+variance explained by the different numbers of principal components defined
+by <code>n_pc</code>.</p></dd>
 <dt>mids</dt><dd><p>Object of type (mids)mids. This is the results of
 the multiple imputation step for the covariance matrix. Can be useful for
 diagnosing the multiple imputations.</p></dd>

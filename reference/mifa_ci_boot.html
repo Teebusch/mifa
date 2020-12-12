@@ -91,18 +91,6 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/advanced-use.html">Advanced Usage</a>
-    </li>
-  </ul>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -140,7 +128,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
     <pre class="usage"><span class='fu'>mifa_ci_boot</span><span class='op'>(</span>
   <span class='va'>data</span>,
   cov_vars <span class='op'>=</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://tidyselect.r-lib.org/reference/everything.html'>everything</a></span><span class='op'>(</span><span class='op'>)</span>,
-  <span class='va'>n_factors</span>,
+  <span class='va'>n_pc</span>,
   conf <span class='op'>=</span> <span class='fl'>0.95</span>,
   n_boot <span class='op'>=</span> <span class='fl'>1000</span>,
   progress <span class='op'>=</span> <span class='cn'>FALSE</span>,
@@ -156,30 +144,33 @@ For multiple imputation, Multivariate Imputation by Chained Equations
     </tr>
     <tr>
       <th>cov_vars</th>
-      <td><p>Variables in <code>data</code> to calculate the covariance
-matrix for. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
+      <td><p>Variables in <code>data</code> for which to calculate the covariance
+matrix. Supports (tidy selection)<code><a href='https://dplyr.tidyverse.org/reference/select.html'>dplyr::select()</a></code>. This allows to
 select variables that are used for the imputations of missing values, but not
 the calculations of the covariance matrix. This is especially useful when
 there are categorical predictors that can improve the imputation of the
 response variables, but for which covariance cannot be calculated.
 By default, all variables in <code>data</code> are used for both, the imputation and
-the covariance matrix. Note: Variables and rows used for the imputation
-can be configured using the <code>...</code>. See also <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p></td>
+the covariance matrix. Note: Variables and rows used for the imputation, as
+well as the method for imputation can be configured using the <code>...</code>.
+See also <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code>.</p></td>
     </tr>
     <tr>
-      <th>n_factors</th>
-      <td><p>Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.</p></td>
+      <th>n_pc</th>
+      <td><p>Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.</p></td>
     </tr>
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
+default is <code>.95</code> so that 95% confidence intervals will be constructed.</p></td>
     </tr>
     <tr>
       <th>n_boot</th>
-      <td><p>number of bootstrap samples to use for the bootstrap confidence
+      <td><p>Number of bootstrap samples to use for bootstrap confidence
 intervals. The default is 1000.</p></td>
     </tr>
     <tr>
@@ -289,7 +280,7 @@ imputation.</p></dd>
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A data frame containing bootstrapped confidence intervals for
-variance explained by different number of factors.</p>
+variance explained by different number of principal components.</p>
     <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
     <p>This function uses the Shao and Sitter (1996) method to combine multiple
@@ -307,6 +298,12 @@ Journal of the American Statistical Association 91.435 (1996): 1278-1288.
 <p>Other mifa confidence intervals: 
 <code><a href='mifa_ci_fieller.html'>mifa_ci_fieller</a>()</code></p></div>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>25</span><span class='op'>]</span>
+<span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, n_boot <span class='op'>=</span> <span class='fl'>50</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='op'>}</span>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

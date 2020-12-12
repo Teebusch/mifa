@@ -41,7 +41,7 @@
 
 <meta property="og:title" content="Find the Fieller interval for each k — get_fieller_ci" />
 <meta property="og:description" content="This function is used by mifa_ci_fieller() to compute Fieller's confidence
-intervals for each of the components of n_factors." />
+intervals for each of the components of n_pc." />
 
 
 
@@ -88,18 +88,6 @@ intervals for each of the components of n_factors." />
 <li>
   <a href="../reference/index.html">Reference</a>
 </li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Articles
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="../articles/advanced-use.html">Advanced Usage</a>
-    </li>
-  </ul>
-</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li>
@@ -128,10 +116,10 @@ intervals for each of the components of n_factors." />
 
     <div class="ref-description">
     <p>This function is used by <code><a href='mifa_ci_fieller.html'>mifa_ci_fieller()</a></code> to compute Fieller's confidence
-intervals for each of the components of n_factors.</p>
+intervals for each of the components of n_pc.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>get_fieller_ci</span><span class='op'>(</span><span class='va'>eig_imp</span>, <span class='va'>n_factors</span>, <span class='va'>conf</span>, <span class='va'>N</span>, <span class='va'>m</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>get_fieller_ci</span><span class='op'>(</span><span class='va'>eig_imp</span>, <span class='va'>n_pc</span>, <span class='va'>conf</span>, <span class='va'>N</span>, <span class='va'>m</span><span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -142,15 +130,17 @@ intervals for each of the components of n_factors.</p>
 estimated covariance matrix for each imputed data.</p></td>
     </tr>
     <tr>
-      <th>n_factors</th>
-      <td><p>Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.</p></td>
+      <th>n_pc</th>
+      <td><p>Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.</p></td>
     </tr>
     <tr>
       <th>conf</th>
       <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code>, i.e., a 95% confidence interval.</p></td>
+default is <code>.95</code> so that 95% confidence intervals will be constructed.</p></td>
     </tr>
     <tr>
       <th>N</th>
