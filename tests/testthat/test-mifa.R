@@ -83,3 +83,8 @@ test_that("cov_vars argument removes variables", {
   expect_length(res$cov_combined, c_sel^2)
   expect_equal(dim(res$cov_combined), c(c_sel, c_sel))
 })
+
+
+test_that("output is equivalent to that of original implementation (v0.1)", {
+  # TODO
+})

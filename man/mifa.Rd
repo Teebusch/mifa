@@ -34,15 +34,18 @@ be obtained and for which confidence intervals should be computed.
 Defaults to all principal components, i.e., the number of variables in the
 data.}
 
-\item{ci}{A character string or character vector indicating which types of
-confidence intervals should be constructed. If \code{"boot"}, \code{"fieller"},
-or \code{"both"}, the corresponding intervals are computed. If \code{FALSE}
-(the default) no confidence intervals will be computed.}
+\item{ci}{A character string indicating which types of confidence intervals
+should be constructed for the variance explained by the principal
+components. If \code{"boot"}, \code{"fieller"}, or \code{"both"}, the corresponding
+intervals are computed. If \code{FALSE} (the default) no confidence intervals will
+be computed. The components for which confidence intervals should be computed
+can be set with \code{n_pc}. See \code{\link[=mifa_ci_boot]{mifa_ci_boot()}} and \code{\link[=mifa_ci_fieller]{mifa_ci_fieller()}} for
+details about the two methods.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95} so that 95\% confidence intervals will be constructed.}
+default is \code{.95} that is, 95\% confidence intervals.}
 
-\item{n_boot}{Number of bootstrap samples to use for bootstrap confidence
+\item{n_boot}{Number of bootstrap samples to use for bootstrapped confidence
 intervals. The default is 1000.}
 
 \item{...}{
@@ -155,18 +158,21 @@ n \code{ci}, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
 variance explained by the different numbers of principal components defined
 by \code{n_pc}.}
-\item{mids}{Object of type (mids)\linkS4class{mids}. This is the results of
+\item{mids}{Object of type \href{mids-class}{mids}. This is the results of
 the multiple imputation step for the covariance matrix. Can be useful for
 diagnosing the multiple imputations.}
 }
 }
 \description{
 Compute covariance matrix of incomplete data using multiple imputation.
-For multiple imputation, Multivariate Imputation by Chained Equations
-(MICE) from the \link{mice} package is used.
-Also provides variance explained by different numbers of principal
-components with Fieller (parametric) or bootstrap (nonparametric) confidence
-intervals.
+For multiple imputation, \emph{Multivariate Imputation by Chained Equations}
+(MICE) from the \link{mice} package is used. The covariance matrices of the
+imputed data sets are combined using Rubin's rules.
+}
+\details{
+The function also computes the variance explained by different numbers of
+principal components and the corresponding Fieller (parametric) or bootstrap
+(nonparametric) confidence intervals.
 }
 \examples{
 \dontrun{

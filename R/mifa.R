@@ -1,11 +1,13 @@
 #' Get covariance matrix of incomplete data using multiple imputation
 #'
 #' Compute covariance matrix of incomplete data using multiple imputation.
-#' For multiple imputation, Multivariate Imputation by Chained Equations
-#' (MICE) from the [mice] package is used.
-#' Also provides variance explained by different numbers of principal
-#' components with Fieller (parametric) or bootstrap (nonparametric) confidence
-#' intervals.
+#' For multiple imputation, *Multivariate Imputation by Chained Equations*
+#' (MICE) from the [mice] package is used. The covariance matrices of the
+#' imputed data sets are combined using Rubin's rules.
+#'
+#' The function also computes the variance explained by different numbers of
+#' principal components and the corresponding Fieller (parametric) or bootstrap
+#' (nonparametric) confidence intervals.
 #'
 #' @references
 #' Nassiri, V., Lovik, A., Molenberghs, G., & Verbeke, G. (2018).
@@ -30,13 +32,16 @@
 #' Defaults to all principal components, i.e., the number of variables in the
 #' data.
 #' @param conf Confidence level for constructing confidence intervals. The
-#' default is `.95` so that 95% confidence intervals will be constructed.
-#' @param n_boot Number of bootstrap samples to use for bootstrap confidence
+#' default is `.95` that is, 95% confidence intervals.
+#' @param n_boot Number of bootstrap samples to use for bootstrapped confidence
 #' intervals. The default is 1000.
-#' @param ci A character string or character vector indicating which types of
-#' confidence intervals should be constructed. If `"boot"`, `"fieller"`,
-#' or `"both"`, the corresponding intervals are computed. If `FALSE`
-#' (the default) no confidence intervals will be computed.
+#' @param ci A character string indicating which types of confidence intervals
+#' should be constructed for the variance explained by the principal
+#' components. If `"boot"`, `"fieller"`, or `"both"`, the corresponding
+#' intervals are computed. If `FALSE` (the default) no confidence intervals will
+#' be computed. The components for which confidence intervals should be computed
+#' can be set with `n_pc`. See [mifa_ci_boot()] and [mifa_ci_fieller()] for
+#' details about the two methods.
 #' @inheritDotParams mice::mice
 #'
 #' @seealso [mifa_ci_boot()], [mifa_ci_fieller()], [mice::mice()]
@@ -54,7 +59,7 @@
 #'   bootstrap (nonparametric) confidence interval for the proportion of
 #'   variance explained by the different numbers of principal components defined
 #'   by `n_pc`.}
-#'   \item{mids}{Object of type (mids)[mids-class]. This is the results of
+#'   \item{mids}{Object of type [mids](mids-class). This is the results of
 #'   the multiple imputation step for the covariance matrix. Can be useful for
 #'   diagnosing the multiple imputations.}
 #' }

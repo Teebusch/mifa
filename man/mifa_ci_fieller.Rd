@@ -17,7 +17,7 @@ Defaults to all principal components, i.e., the number of variables in the
 data.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95} so that 95\% confidence intervals will be constructed.}
+default is \code{.95} that is, 95\% confidence intervals.}
 
 \item{N}{A scalar specifying sample size.}
 }

@@ -35,9 +35,9 @@ Defaults to all principal components, i.e., the number of variables in the
 data.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95} so that 95\% confidence intervals will be constructed.}
+default is \code{.95} that is, 95\% confidence intervals.}
 
-\item{n_boot}{Number of bootstrap samples to use for bootstrap confidence
+\item{n_boot}{Number of bootstrap samples to use for bootstrapped confidence
 intervals. The default is 1000.}
 
 \item{progress}{Logical. Whether to show progress bars for computation of
