@@ -35,18 +35,23 @@
 #' }
 mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
                          conf = .95, n_boot = 1000, progress = FALSE, ...) {
+  # check and clean arguments
+  checkmate::assert_data_frame(data, min.rows = 1, min.cols = 2)
+  checkmate::assert_data_frame(dplyr::select(data, {{ cov_vars }}), min.cols = 2)
+  checkmate::assert_number(conf, lower = 0, upper = 1)
+  checkmate::assert_count(n_boot, positive = TRUE)
+  checkmate::assert_flag(progress)
 
   n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
+  n_pc <- clean_n_pc(n_pc, n_cov_vars)
 
-  if (missing(n_pc)) {
-    n_pc <- 1:n_cov_vars
-  }
-
+  # bootstrap samples and compute variance explained by principal components
+  # (i.e. eigenvalues of eigenvectors)
   boot_eig <- matrix(0, n_cov_vars, n_boot)
 
-  if(progress) {
+  if (progress) {
     cat("\n\n  Computing bootstrap confidence intervals...\n")
-    pb = utils::txtProgressBar(min = 0, max = n_boot, initial = 0, style = 3)
+    pb <- utils::txtProgressBar(min = 0, max = n_boot, initial = 0, style = 3)
   }
   for (i in 1:n_boot) {
     # draw bootstrap samples and impute until there are no constants
@@ -69,14 +74,15 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
     # eigenvalues of covariance matrix
     boot_eig[, i] <- eigen(stats::cov(data_imp))$values
 
-    if(progress) utils::setTxtProgressBar(pb,i)
+    if (progress) utils::setTxtProgressBar(pb, i)
   }
 
-  # variance explained and confidence intervals
-  var_expl  <- t(apply(boot_eig, 2, cumsum)) / apply(boot_eig, 2, sum)
-  probs_ci  <- c((1-conf)/2, 1-(1-conf)/2)
+  # get confidence intervals for variance explained by  principal components
+  # (i.e., eigenvalues of eigenvectors)
+  var_expl <- t(apply(boot_eig, 2, cumsum)) / apply(boot_eig, 2, sum)
+  probs_ci <- c((1 - conf) / 2, 1 - (1 - conf) / 2)
   boot_expl <- apply(var_expl, 2, stats::quantile, probs = probs_ci)
-  boot_cis  <- t(boot_expl)[n_pc, ]
+  boot_cis <- t(boot_expl)[n_pc, ]
 
   data.frame(
     n_pc = n_pc,
@@ -120,9 +126,20 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
 #' mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
 #' }
 mifa_ci_fieller <- function(cov_imps, n_pc, conf = .95, N) {
+  # check and clean arguments
+  checkmate::assert_list(cov_imps, "matrix", any.missing = FALSE, min.len = 1)
+  lapply(cov_imps, function(x) {
+    checkmate::assert_matrix(x, ncols = nrow(x), any.missing = FALSE)
+  })
+  checkmate::assert_number(conf, lower = 0, upper = 1)
+  checkmate::assert_count(N, positive = TRUE)
 
-  m         <- length(cov_imps)
-  eig_imp   <- matrix(0, m, dim(cov_imps[[1]])[1])
+  n_cov_vars <- ncol(cov_imps[[1]])
+  n_pc <- clean_n_pc(n_pc, n_cov_vars)
+
+  # get eigenvalues
+  m <- length(cov_imps)
+  eig_imp <- matrix(0, m, dim(cov_imps[[1]])[1])
 
   for (i in 1:m) {
     eig_imp[i, ] <- eigen(cov_imps[[i]])$values
@@ -160,33 +177,33 @@ mifa_ci_fieller <- function(cov_imps, n_pc, conf = .95, N) {
 get_fieller_ci <- function(eig_imp, n_pc, conf, N, m) {
 
   # combine imputations
-  eig_imp2     <- eig_imp^2
-  mi_cov       <- lapply(1:m, function(i) (2 / N) * diag(eig_imp2[i, ]))
+  eig_imp2 <- eig_imp^2
+  mi_cov <- lapply(1:m, function(i) (2 / N) * diag(eig_imp2[i, ]))
 
-  mi_comb      <- combine_rubin(eig_imp, mi_cov)
-  cov_lambda   <- mi_comb$cov_param
+  mi_comb <- combine_rubin(eig_imp, mi_cov)
+  cov_lambda <- mi_comb$cov_param
 
   # compute Fieller's intervals
-  P         <- dim(cov_lambda)[1]
-  A1        <- matrix(c(rep(1, n_pc), rep(0, P - n_pc)), 1, P)
-  A         <- matrix(1, 1, P)
-  s11_comb  <- (A1 %*% cov_lambda) %*% t(A1)
-  s22_comb  <- (A %*% cov_lambda) %*% t(A)
-  s12_comb  <- (A1 %*% cov_lambda) %*% t(A)
-  S         <- matrix(c(s11_comb, s12_comb, s12_comb, s22_comb), 2, 2)
-  s11       <- S[1, 1]
-  s22       <- S[2, 2]
-  s12       <- S[1, 2]
+  P <- dim(cov_lambda)[1]
+  A1 <- matrix(c(rep(1, n_pc), rep(0, P - n_pc)), 1, P)
+  A <- matrix(1, 1, P)
+  s11_comb <- (A1 %*% cov_lambda) %*% t(A1)
+  s22_comb <- (A %*% cov_lambda) %*% t(A)
+  s12_comb <- (A1 %*% cov_lambda) %*% t(A)
+  S <- matrix(c(s11_comb, s12_comb, s12_comb, s22_comb), 2, 2)
+  s11 <- S[1, 1]
+  s22 <- S[2, 2]
+  s12 <- S[1, 2]
 
-  eigen.all   <- sum(mi_comb$param_est)
+  eigen.all <- sum(mi_comb$param_est)
   eigen.first <- sum(mi_comb$param_est[1:n_pc])
 
-  C12       <- s11 / (eigen.first^2)
-  C22       <- s22 / (eigen.all^2)
-  r         <- s12 / sqrt(s11 * s22)
-  T.crit    <- stats::qnorm(1 - ((1-conf) / 2))
-  A         <- C12 + C22 - (2 * r * sqrt(C12 * C22))
-  B         <- (T.crit^2) * C12 * C22 * (1 - (r^2))
+  C12 <- s11 / (eigen.first^2)
+  C22 <- s22 / (eigen.all^2)
+  r <- s12 / sqrt(s11 * s22)
+  T.crit <- stats::qnorm(1 - ((1 - conf) / 2))
+  A <- C12 + C22 - (2 * r * sqrt(C12 * C22))
+  B <- (T.crit^2) * C12 * C22 * (1 - (r^2))
 
   if ((A - B) < 0) {
     stop("Computing Fieller CI is not possible. Try using more imputations.")
@@ -229,20 +246,19 @@ get_fieller_ci <- function(eig_imp, n_pc, conf, N, m) {
 #' }
 #' @keywords internal
 combine_rubin <- function(param_imps, cov_imps) {
-
   m <- length(cov_imps)
 
-  est_diff          <- scale(param_imps, center = TRUE, scale = FALSE)
+  est_diff <- scale(param_imps, center = TRUE, scale = FALSE)
   cov_param_sample1 <- lapply(1:m, function(i) est_diff[i, ] %*% t(est_diff[i, ]))
   cov_param_sample1 <- Reduce("+", cov_param_sample1) / (m - 1)
 
-  cov_param_sample  <- cov_param_sample1 * ((m + 1) / m)
-  cov_param_mean    <- Reduce(`+`, cov_imps) / m
-  cov_param         <- cov_param_mean + cov_param_sample
+  cov_param_sample <- cov_param_sample1 * ((m + 1) / m)
+  cov_param_mean <- Reduce(`+`, cov_imps) / m
+  cov_param <- cov_param_mean + cov_param_sample
 
   list(
-    param_est    = apply(param_imps, 2, mean),
-    cov_param    = cov_param,
-    cov_between  = cov_param_sample1
+    param_est = apply(param_imps, 2, mean),
+    cov_param = cov_param,
+    cov_between = cov_param_sample1
   )
 }

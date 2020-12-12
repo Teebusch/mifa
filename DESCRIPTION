@@ -20,7 +20,8 @@ BugReports: https://github.com/teebusch/mifa/issues
 Imports: 
   stats,
   mice,
-  dplyr
+  dplyr,
+  checkmate
 Suggests: 
   psych,
   testthat,

@@ -5,7 +5,7 @@ data_bfi <- psych::bfi[, 1:25]
 
 test_that("mifa_ci_boot() returns right shape and type", {
   n_pc <- 3:5
-  res  <- mifa_ci_boot(data_bfi, n_pc = n_pc, n_boot = 3, maxit = 1, print = F)
+  res <- mifa_ci_boot(data_bfi, n_pc = n_pc, n_boot = 3, maxit = 1, print = F)
 
   expect_s3_class(res, "data.frame")
   expect_equal(res$n_pc, n_pc)
@@ -20,11 +20,13 @@ test_that("using cov_vars argument produces different cis", {
   m <- 2
 
   set.seed(123)
-  res1 <- mifa_ci_boot(data_bfi, n_boot = 3, maxit = 1, print = F)  # no selection
+  res1 <- mifa_ci_boot(data_bfi, n_boot = 3, maxit = 1, print = F) # no selection
 
   set.seed(123) # use same seed for bootstrapping
-  res2 <- mifa_ci_boot(data_bfi, cov_vars = starts_with("O"),
-                      n_boot = 3, maxit = 1, print = F)  # with selection
+  res2 <- mifa_ci_boot(data_bfi,
+    cov_vars = starts_with("O"),
+    n_boot = 3, maxit = 1, print = F
+  ) # with selection
 
   expect_s3_class(res2, "data.frame")
   expect_false(identical(res1, res2))
@@ -39,8 +41,10 @@ test_that("mifa_ci_fieller() returns right shape and type", {
 
   res_mifa <- mifa(data_bfi, n_pc = 2, m = m, maxit = 2, print = F)
 
-  res <- mifa_ci_fieller(res_mifa$cov_imputations, n_pc = n_pc,
-                         N = nrow(data_bfi))
+  res <- mifa_ci_fieller(res_mifa$cov_imputations,
+    n_pc = n_pc,
+    N = nrow(data_bfi)
+  )
 
   expect_s3_class(res, "data.frame")
   expect_equal(res$n_pc, n_pc)
@@ -52,14 +56,14 @@ test_that("mifa_ci_fieller() returns right shape and type", {
 
 test_that("combine_rubin() return has the right shape and type", {
   # make some input of the expected shape
-  data       <- na.omit(data_bfi)
-  c          <- ncol(data)
+  data <- na.omit(data_bfi)
+  c <- ncol(data)
   param_imps <- list()
-  cov_imps   <- list()
+  cov_imps <- list()
 
   for (i in 1:5) {
     param_imps[[i]] <- eigen(cov(data))$values
-    cov_imps[[i]]   <- eigen(cov(data))$vectors
+    cov_imps[[i]] <- eigen(cov(data))$vectors
   }
 
   param_imps <- data.frame(Reduce(rbind, param_imps))
@@ -78,5 +82,4 @@ test_that("combine_rubin() return has the right shape and type", {
 
   expect_type(res$cov_between, "double")
   expect_equal(dim(res$cov_between), c(c, c))
-
 })

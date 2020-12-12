@@ -25,10 +25,12 @@ mice_impute_once <- function(data, ...) {
 #' @return A data frame without NAs
 #' @keywords internal
 mice_impute_all_NA <- function(data, ...) {
-  if(any(is.na(data))) {
-    message(paste("There are", sum(is.na(data)), "NAs left in the data after",
-                  "using MICE. Mifa will try to use sequential MICE to impute",
-                  "them..."))
+  if (any(is.na(data))) {
+    message(paste(
+      "There are", sum(is.na(data)), "NAs left in the data after",
+      "using MICE. Mifa will try to use sequential MICE to impute",
+      "them..."
+    ))
   }
   while (any(is.na(data))) {
     imp <- mice_impute_once(data, ...)
@@ -52,4 +54,3 @@ stop_constants <- function(f) {
   }
   imp
 }
-

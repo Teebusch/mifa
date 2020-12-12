@@ -66,10 +66,20 @@
 #' }
 mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
                  conf = .95, n_boot = 1000, ...) {
+  # check and clean arguments
+  checkmate::assert_data_frame(data, min.rows = 1, min.cols = 2)
+  checkmate::assert_data_frame(dplyr::select(data, {{ cov_vars }}), min.cols = 2)
+  if (ci != FALSE) {
+    checkmate::assert_choice(ci, c(FALSE, "both", "boot", "fieller"))
+  }
+  checkmate::assert_number(conf, lower = 0, upper = 1)
+  checkmate::assert_count(n_boot, positive = TRUE)
 
+  n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
+  n_pc <- clean_n_pc(n_pc, n_cov_vars)
+
+  # create imputed datasets, make sure no NAs are left
   imp <- stop_constants(mice::mice(data, ...))
-
-  # extract imputed datasets, make sure no NAs are left
   data_imps <- mice::complete(imp, "all")
   data_imps <- lapply(data_imps, function(x) mice_impute_all_NA(x, ...))
 
@@ -77,15 +87,11 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
   data_imps <- lapply(data_imps, function(d) dplyr::select(d, {{ cov_vars }}))
 
   # estimate covariance matrix of imputed values and combine estimates
-  cov_imps  <- lapply(data_imps, stats::cov)
-  cov_comb  <- Reduce("+", cov_imps) / length(cov_imps)
+  cov_imps <- lapply(data_imps, stats::cov)
+  cov_comb <- Reduce("+", cov_imps) / length(cov_imps)
 
   # get proportion of explained variance for different number of pr. components
   cov_comb_eigen <- eigen(cov_comb)$values
-
-  if (missing(n_pc)) {
-    n_pc <- 1:length(cov_comb_eigen)
-  }
 
   var_expl <- data.frame(
     n_pc = n_pc,
@@ -112,10 +118,10 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
 
   structure(
     list(
-      cov_combined    = cov_comb,
+      cov_combined = cov_comb,
       cov_imputations = cov_imps,
-      var_explained   = var_expl,
-      mids            = imp
+      var_explained = var_expl,
+      mids = imp
     ),
     class = "mifa"
   )
@@ -126,8 +132,10 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
 #' @export
 summary.mifa <- function(object, ...) {
   mi <- object
-  cat(sprintf("Imputed covariance matrix of %i variables\n\n",
-              ncol(mi$cov_combined)))
+  cat(sprintf(
+    "Imputed covariance matrix of %i variables\n\n",
+    ncol(mi$cov_combined)
+  ))
 
   last_to_print <- function(x, max_width = getOption("width")) {
     widths <- pmax(nchar(names(x)), nchar(x))
@@ -136,16 +144,16 @@ summary.mifa <- function(object, ...) {
 
   # Details about data
 
-  vars_cov  <- colnames(mi$cov_combined)
+  vars_cov <- colnames(mi$cov_combined)
   n_missing <- colSums(is.na(mi$mids$data[, vars_cov]))
-  widths    <- pmax(nchar(names(n_missing)), nchar(n_missing))
-  n_print   <- last_to_print(n_missing)
+  widths <- pmax(nchar(names(n_missing)), nchar(n_missing))
+  n_print <- last_to_print(n_missing)
 
   cat("Variable:  ", sprintf("%*s", widths[1:n_print], names(n_missing)[1:n_print]), "\n")
   cat("N Imputed: ", sprintf("%*i", widths[1:n_print], n_missing[1:n_print]))
 
   if (n_print < length(vars_cov)) {
-    cat(sprintf(" ...\n...and %i more variables", length(vars_cov)-n_print))
+    cat(sprintf(" ...\n...and %i more variables", length(vars_cov) - n_print))
   }
 
   # Details on imputation
@@ -162,7 +170,7 @@ summary.mifa <- function(object, ...) {
 
     cat(sprintf("%s", vars_diff[1:n_print]))
     if (n_print < length(vars_diff)) {
-      cat(sprintf("... \n...and %i more variables", length(vars_diff)-n_print))
+      cat(sprintf("... \n...and %i more variables", length(vars_diff) - n_print))
     }
   }
 
@@ -171,24 +179,28 @@ summary.mifa <- function(object, ...) {
   if (is.null(mi$var_explained$ci_fieller_lower)) {
     ci_fieller <- NULL
   } else {
-    ci_fieller <- sprintf("[%.2f, %.2f]",
-                          mi$var_explained$ci_fieller_lower,
-                          mi$var_explained$ci_fieller_upper)
+    ci_fieller <- sprintf(
+      "[%.2f, %.2f]",
+      mi$var_explained$ci_fieller_lower,
+      mi$var_explained$ci_fieller_upper
+    )
   }
 
-  if(is.null(mi$var_explained$ci_boot_lower)) {
+  if (is.null(mi$var_explained$ci_boot_lower)) {
     ci_boot <- NULL
   } else {
-    ci_boot <- sprintf("[%.2f, %.2f]",
-                       mi$var_explained$ci_boot_lower,
-                       mi$var_explained$ci_boot_upper)
+    ci_boot <- sprintf(
+      "[%.2f, %.2f]",
+      mi$var_explained$ci_boot_lower,
+      mi$var_explained$ci_boot_upper
+    )
   }
 
   k_width <- max(nchar(mi$var_explained$n_pc))
   cat("\n\nCumulative proportion of variance explained by n principal components:")
   cat(sprintf("\n\n%*s  prop  ", k_width, "n"))
-  if(!is.null(ci_fieller)) cat("Fieller CI    ")
-  if(!is.null(ci_boot))    cat("Bootstrap CI")
+  if (!is.null(ci_fieller)) cat("Fieller CI    ")
+  if (!is.null(ci_boot)) cat("Bootstrap CI")
 
   cat(
     "\n",
@@ -197,13 +209,12 @@ summary.mifa <- function(object, ...) {
       k_width,
       mi$var_explained$n_pc,
       mi$var_explained$var_explained,
-      if(is.null(ci_fieller)) "" else ci_fieller,
-      if(is.null(ci_boot)) "" else ci_boot
+      if (is.null(ci_fieller)) "" else ci_fieller,
+      if (is.null(ci_boot)) "" else ci_boot
     ),
     "\n",
     sep = ""
   )
-
 }
 
 
