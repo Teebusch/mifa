@@ -31,10 +31,7 @@ works as follows:
 explained by different numbers of principal components: Fieller
 confidence intervals (parametric) for larger samples <sup>[2]</sup> and
 bootstrapped confidence intervals (nonparametric) for smaller samples.
-<sup>^\[Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey
-data. Journal of the American Statistical Association 91.435 (1996):
-1278-1288.
-[(doi)](https://dx.doi.org/10.1080/01621459.1996.10476997)</sup>
+<sup>[3]</sup>
 
 **For more information about the method, see:**
 
@@ -179,3 +176,7 @@ John Wiley & Sons.
 
 [2] Fieller, E. C. (1954). Some problems in interval estimation. Journal
 of the Royal Statistical Society. Series B (Methodological): 175-185.
+
+[3] Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
+Journal of the American Statistical Association 91.435 (1996):
+1278-1288. [(doi)](https://dx.doi.org/10.1080/01621459.1996.10476997)

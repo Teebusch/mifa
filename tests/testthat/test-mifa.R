@@ -85,6 +85,57 @@ test_that("cov_vars argument removes variables", {
 })
 
 
-test_that("output is equivalent to that of original implementation (v0.1)", {
-  # TODO
+test_that("output is equivalent to that of original implementation", {
+  # the essence of the original mifa algorithm, without cis
+  mifa_old <- function(data, n.factor, M, maxit.mi = 5, method.mi = "pmm") {
+    N <- dim(data)[1]
+    imputed_mice <- mice::mice(data, m = M, maxit = maxit.mi,
+                               method = method.mi, print = FALSE)
+    method.levels.mi <- levels(imputed_mice$loggedEvents$meth)
+    if ("constant" %in% method.levels.mi) {
+      stop("Probably at least one column with constant observed part.")
+    }
+    comp.mice <- NULL
+    mi.na <- rep(0, M)
+    for (i in 1:M) {
+      comp.mice[[i]] <- mice::complete(imputed_mice, i)
+      mi.na[i] <- sum(is.na(comp.mice[[i]]))
+    }
+    while (sum(mi.na) > 0) {
+      for (i in 1:M) {
+        imp.tmp <- mice::mice(comp.mice[[i]], m = 1, maxit = maxit.mi,
+                              method = method.mi, print = FALSE)
+        comp.mice[[i]] <- mice::complete(imp.tmp, 1)
+        mi.na[i] <- sum(is.na(comp.mice[[i]]))
+      }
+    }
+    cov.mice.imp <- NULL
+    prop.exp <- rep(0, M)
+    for (i in 1:M) {
+      cov.tmp <- cov(comp.mice[[i]])
+      cov.mice.imp[[i]] <- cov.tmp
+    }
+    cov.mice     <- Reduce("+", cov.mice.imp) / M
+    eig.cov.mice <- eigen(cov.mice)$values
+    exp.var.mice <- (cumsum(eig.cov.mice) / sum(eig.cov.mice))[n.factor]
+
+    list(
+      cov.mice     = cov.mice,
+      cov.mice.imp = cov.mice.imp,
+      exp.var.mice = exp.var.mice
+    )
+  }
+
+  m <- 2
+  maxit <- 3
+
+  set.seed(111)
+  old <- mifa_old(data_bfi, M = m, maxit.mi = maxit)
+  # latest version
+  set.seed(111)
+  new <- mifa(data_bfi, m = 2, maxit = maxit, print = FALSE)
+
+  expect_equal(old$cov.mice, new$cov_combined)
+  expect_equal(old$exp.var.mice, new$var_explained$var_explained,
+               tolerance = 0.0001)
 })

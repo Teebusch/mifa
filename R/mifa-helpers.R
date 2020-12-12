@@ -4,7 +4,6 @@
 #' @param n_cov_vars Number of variables in the covariance matrix
 #'
 #' @return Cleaned n_pc. An integer vector. Sorted, if applicable.
-#' @export
 #'
 #' @keywords internal
 clean_n_pc <- function(n_pc, n_cov_vars) {
