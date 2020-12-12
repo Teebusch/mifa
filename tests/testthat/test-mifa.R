@@ -33,7 +33,7 @@ test_that("mifa() returns have the expected type and shape", {
 
   # var_explained is a data frame
   expect_s3_class(res$var_explained, "data.frame")
-  expect_length(res$var_explained$n_factors, c)
+  expect_length(res$var_explained$n_pc, c)
   expect_true(all(res$var_explained$var_explained >= 0 &
                     res$var_explained$var_explained <= 1))
 
@@ -48,7 +48,7 @@ test_that("mifa() returns have the expected type and shape", {
 test_that("CIs returned by mifa() have the expected type and shape", {
   m <- 2
   c <- ncol(data_bfi)
-  res <- mifa(data_bfi, n_factors = 3:5, ci = "both", n_boot = 2, m = m,
+  res <- mifa(data_bfi, n_pc = 3:5, ci = "both", n_boot = 2, m = m,
               maxit = 2, print = FALSE)
   cis <- res$var_explained
 

@@ -83,7 +83,7 @@ library(psych)
 mi <- mifa(
   data      = bfi, 
   cov_vars  = -c(gender, education, age),
-  n_factors = 2:8, 
+  n_pc      = 2:8, 
   ci        = "fieller", 
   print     = FALSE
 )
@@ -116,14 +116,10 @@ It looks like the first 5 principal components explain more than half of
 the variance in the responses, so we perform a factor analysis with 5
 factors, using the `fa()` function from the `psych` package. We can get
 the imputed covariance matrix of our data from `mi$cov_combined`. From
-there on out, it’s business as usual.
+there on, it’s business as usual.
 
 ``` r
-fit <- fa(
-  mi$cov_combined, 
-  n.obs    = nrow(bfi), 
-  nfactors = 5
-)
+fit <- fa(mi$cov_combined, n.obs = nrow(bfi), nfactors = 5)
 ```
 
 The factor diagram shows that the five factors correspond nicely to the
@@ -155,6 +151,8 @@ data_imp <- data.frame(
 
 levels(data_imp$Gender) <- c("Male", "Female")
 ```
+
+Then we can visualize the group differences:
 
 ``` r
 library(ggplot2)

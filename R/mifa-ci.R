@@ -26,15 +26,20 @@
 #' @family {mifa confidence intervals}
 #'
 #' @return A data frame containing bootstrapped confidence intervals for
-#' variance explained by different number of factors.
+#' variance explained by different number of principal components.
 #' @export
-mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
+#' @examples
+#' \dontrun{
+#' data <- psych::bfi[, 1:25]
+#' mifa_ci_boot(data, n_pc = 3:8, n_boot = 50, print = FALSE)
+#' }
+mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
                          conf = .95, n_boot = 1000, progress = FALSE, ...) {
 
   n_cov_vars <- ncol(dplyr::select(data, {{ cov_vars }}))
 
-  if (missing(n_factors)) {
-    n_factors <- 1:n_cov_vars
+  if (missing(n_pc)) {
+    n_pc <- 1:n_cov_vars
   }
 
   boot_eig <- matrix(0, n_cov_vars, n_boot)
@@ -71,10 +76,10 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
   var_expl  <- t(apply(boot_eig, 2, cumsum)) / apply(boot_eig, 2, sum)
   probs_ci  <- c((1-conf)/2, 1-(1-conf)/2)
   boot_expl <- apply(var_expl, 2, stats::quantile, probs = probs_ci)
-  boot_cis  <- t(boot_expl)[n_factors, ]
+  boot_cis  <- t(boot_expl)[n_pc, ]
 
   data.frame(
-    n_factors = n_factors,
+    n_pc = n_pc,
     lower = boot_cis[, 1],
     upper = boot_cis[, 2]
   )
@@ -85,7 +90,7 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
 #' Fieller's confidence intervals for explained variance
 #'
 #' Computes parametric confidence intervals for proportion of explained
-#' variance for given numbers of factors using Fieller's method.
+#' variance for given numbers of principal components using Fieller's method.
 #' Note that by setting `ci = TRUE` in [mifa()], this confidence
 #' interval can be computed as well.
 #'
@@ -105,9 +110,16 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_factors,
 #' @seealso [mifa()]
 #' @family {mifa confidence intervals}
 #'
-#' @return A data frame containing confidence intervals for `n_factors` factors
+#' @return A data frame containing confidence intervals for `n_pc` principal
+#' components.
 #' @export
-mifa_ci_fieller <- function(cov_imps, n_factors, conf = .95, N) {
+#' @examples
+#' \dontrun{
+#' data <- psych::bfi[, 1:25]
+#' mi <- mifa(data, print = FALSE)
+#' mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+#' }
+mifa_ci_fieller <- function(cov_imps, n_pc, conf = .95, N) {
 
   m         <- length(cov_imps)
   eig_imp   <- matrix(0, m, dim(cov_imps[[1]])[1])
@@ -116,16 +128,16 @@ mifa_ci_fieller <- function(cov_imps, n_factors, conf = .95, N) {
     eig_imp[i, ] <- eigen(cov_imps[[i]])$values
   }
 
-  # compute Fieller confidence intervals for each number of factors
-  ci_fieller <- matrix(NA, length(n_factors), 2)
-  for (i in seq_along(n_factors)) {
+  # compute Fieller confidence intervals for each number of principal components
+  ci_fieller <- matrix(NA, length(n_pc), 2)
+  for (i in seq_along(n_pc)) {
     try({
-      ci_fieller[i, ] <- get_fieller_ci(eig_imp, n_factors[i], conf, N, m)
+      ci_fieller[i, ] <- get_fieller_ci(eig_imp, n_pc[i], conf, N, m)
     })
   }
 
-  out <- data.frame(cbind(n_factors, ci_fieller))
-  colnames(out) <- c("n_factors", "lower", "upper")
+  out <- data.frame(cbind(n_pc, ci_fieller))
+  colnames(out) <- c("n_pc", "lower", "upper")
   return(out)
 }
 
@@ -134,7 +146,7 @@ mifa_ci_fieller <- function(cov_imps, n_factors, conf = .95, N) {
 #' Find the Fieller interval for each k
 #'
 #' This function is used by [mifa_ci_fieller()] to compute Fieller's confidence
-#' intervals for each of the components of n_factors.
+#' intervals for each of the components of n_pc.
 #'
 #' @param eig_imp A matrix with each of its columns the eigenvalues of the
 #' estimated covariance matrix for each imputed data.
@@ -145,7 +157,7 @@ mifa_ci_fieller <- function(cov_imps, n_factors, conf = .95, N) {
 #' @return A vector of length 2, containing the lower and upper bounds of
 #' estimated Fieller's interval.
 #' @keywords internal
-get_fieller_ci <- function(eig_imp, n_factors, conf, N, m) {
+get_fieller_ci <- function(eig_imp, n_pc, conf, N, m) {
 
   # combine imputations
   eig_imp2     <- eig_imp^2
@@ -156,7 +168,7 @@ get_fieller_ci <- function(eig_imp, n_factors, conf, N, m) {
 
   # compute Fieller's intervals
   P         <- dim(cov_lambda)[1]
-  A1        <- matrix(c(rep(1, n_factors), rep(0, P - n_factors)), 1, P)
+  A1        <- matrix(c(rep(1, n_pc), rep(0, P - n_pc)), 1, P)
   A         <- matrix(1, 1, P)
   s11_comb  <- (A1 %*% cov_lambda) %*% t(A1)
   s22_comb  <- (A %*% cov_lambda) %*% t(A)
@@ -167,7 +179,7 @@ get_fieller_ci <- function(eig_imp, n_factors, conf, N, m) {
   s12       <- S[1, 2]
 
   eigen.all   <- sum(mi_comb$param_est)
-  eigen.first <- sum(mi_comb$param_est[1:n_factors])
+  eigen.first <- sum(mi_comb$param_est[1:n_pc])
 
   C12       <- s11 / (eigen.first^2)
   C22       <- s22 / (eigen.all^2)
@@ -188,5 +200,49 @@ get_fieller_ci <- function(eig_imp, n_factors, conf, N, m) {
   c(
     lower = fieller1 * ((fieller2 - fieller3) / fieller4),
     upper = fieller1 * ((fieller2 + fieller3) / fieller4)
+  )
+}
+
+
+
+#' Combine results from different imputations using Rubin's rules
+#'
+#' Applies Rubin's rules to combine estimates and
+#' variance-covariance matrices from different imputations.
+#'
+#' @references
+#' Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
+#' John Wiley & Sons.
+#'
+#' @param param_imps Matrix containing estimated parameters in each imputation
+#' as its rows.
+#' @param cov_imps List of estimated covariance matrices for each imputation.
+#'
+#' @return A list:
+#' \describe{
+#'   \item{param_est}{Vector of combined parameter estimates with the same length
+#'   as columns in `param_imps`.}
+#'   \item{cov_param}{Combined variance-covariance matrix of size n x n, where n
+#'   is the number of columns in `param_imps`.}
+#'   \item{between_cov}{Between imputations variance-covariance matrix of size
+#'   n x n, where n is the number of columns in `param_imps`.}
+#' }
+#' @keywords internal
+combine_rubin <- function(param_imps, cov_imps) {
+
+  m <- length(cov_imps)
+
+  est_diff          <- scale(param_imps, center = TRUE, scale = FALSE)
+  cov_param_sample1 <- lapply(1:m, function(i) est_diff[i, ] %*% t(est_diff[i, ]))
+  cov_param_sample1 <- Reduce("+", cov_param_sample1) / (m - 1)
+
+  cov_param_sample  <- cov_param_sample1 * ((m + 1) / m)
+  cov_param_mean    <- Reduce(`+`, cov_imps) / m
+  cov_param         <- cov_param_mean + cov_param_sample
+
+  list(
+    param_est    = apply(param_imps, 2, mean),
+    cov_param    = cov_param,
+    cov_between  = cov_param_sample1
   )
 }

@@ -4,18 +4,20 @@
 \alias{get_fieller_ci}
 \title{Find the Fieller interval for each k}
 \usage{
-get_fieller_ci(eig_imp, n_factors, conf, N, m)
+get_fieller_ci(eig_imp, n_pc, conf, N, m)
 }
 \arguments{
 \item{eig_imp}{A matrix with each of its columns the eigenvalues of the
 estimated covariance matrix for each imputed data.}
 
-\item{n_factors}{Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.}
+\item{n_pc}{Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% confidence interval.}
+default is \code{.95} so that 95\% confidence intervals will be constructed.}
 
 \item{N}{A scalar specifying sample size.}
 
@@ -27,6 +29,6 @@ estimated Fieller's interval.
 }
 \description{
 This function is used by \code{\link[=mifa_ci_fieller]{mifa_ci_fieller()}} to compute Fieller's confidence
-intervals for each of the components of n_factors.
+intervals for each of the components of n_pc.
 }
 \keyword{internal}

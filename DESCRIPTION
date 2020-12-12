@@ -18,26 +18,23 @@ Maintainer: Tobias Busch <teebusch@gmail.com>
 URL: https://github.com/teebusch/mifa
 BugReports: https://github.com/teebusch/mifa/issues
 Imports: 
-  mice,
-  Matrix,
   stats,
+  mice,
   dplyr
 Suggests: 
-  eigeninv,
-  norm,
   psych,
-  missMDA,
   testthat,
   knitr,
   rmarkdown,
   ggplot2,
   tidyr,
   covr
-Description: Mifa uses multiple imputation by Multivariate Imputation with 
-  Chained Equations (MICE) to estimate the covariance matrix of incomplete data. 
-  An exploratory factor analysis can be applied on this estimated covariance 
-  matrix. Mifa also provides Fieller and bootstrap confidence intervals for the 
-  variance explained by different numbers of factors.
+Description: Impute the covariance matrix of incomplete data so that factor 
+  analysis can be performed. Imputations are made using multiple imputation 
+  by Multivariate Imputation with Chained Equations (MICE) and combined with 
+  Rubin's rules. Parametric Fieller confidence intervals and nonparametric
+  bootstrap confidence intervals can be obtained for the variance explained by 
+  different numbers of principal components.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true

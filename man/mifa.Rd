@@ -7,7 +7,7 @@
 mifa(
   data,
   cov_vars = dplyr::everything(),
-  n_factors,
+  n_pc,
   ci = FALSE,
   conf = 0.95,
   n_boot = 1000,
@@ -17,19 +17,22 @@ mifa(
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
 
-\item{cov_vars}{Variables in \code{data} to calculate the covariance
-matrix for. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
+\item{cov_vars}{Variables in \code{data} for which to calculate the covariance
+matrix. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
 select variables that are used for the imputations of missing values, but not
 the calculations of the covariance matrix. This is especially useful when
 there are categorical predictors that can improve the imputation of the
 response variables, but for which covariance cannot be calculated.
 By default, all variables in \code{data} are used for both, the imputation and
-the covariance matrix. Note: Variables and rows used for the imputation
-can be configured using the \code{...}. See also \code{\link[mice:mice]{mice::mice()}}.}
+the covariance matrix. Note: Variables and rows used for the imputation, as
+well as the method for imputation can be configured using the \code{...}.
+See also \code{\link[mice:mice]{mice::mice()}}.}
 
-\item{n_factors}{Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.}
+\item{n_pc}{Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.}
 
 \item{ci}{A character string or character vector indicating which types of
 confidence intervals should be constructed. If \code{"boot"}, \code{"fieller"},
@@ -37,9 +40,9 @@ or \code{"both"}, the corresponding intervals are computed. If \code{FALSE}
 (the default) no confidence intervals will be computed.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% confidence interval.}
+default is \code{.95} so that 95\% confidence intervals will be constructed.}
 
-\item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
+\item{n_boot}{Number of bootstrap samples to use for bootstrap confidence
 intervals. The default is 1000.}
 
 \item{...}{
@@ -147,11 +150,11 @@ data sets.}
 \item{cov_imputations}{A list containing the estimated covariance matrixes
 for all imputed data sets.}
 \item{var_explained}{A data frame containing the estimated proportions of
-explained variance for each of specified \code{n.factor} components. Depending o
+explained variance for each of specified \code{n_pc} components. Depending o
 n \code{ci}, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
-variance explained by the different numbers of factors defined by
-\code{n_factors}.}
+variance explained by the different numbers of principal components defined
+by \code{n_pc}.}
 \item{mids}{Object of type (mids)\linkS4class{mids}. This is the results of
 the multiple imputation step for the covariance matrix. Can be useful for
 diagnosing the multiple imputations.}
@@ -161,8 +164,9 @@ diagnosing the multiple imputations.}
 Compute covariance matrix of incomplete data using multiple imputation.
 For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the \link{mice} package is used.
-Also provides variance explained by different numbers of factors with
-Fieller (parametric) or bootstrap (nonparametric) confidence intervals.
+Also provides variance explained by different numbers of principal
+components with Fieller (parametric) or bootstrap (nonparametric) confidence
+intervals.
 }
 \examples{
 \dontrun{

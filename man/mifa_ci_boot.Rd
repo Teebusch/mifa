@@ -7,7 +7,7 @@
 mifa_ci_boot(
   data,
   cov_vars = dplyr::everything(),
-  n_factors,
+  n_pc,
   conf = 0.95,
   n_boot = 1000,
   progress = FALSE,
@@ -17,24 +17,27 @@ mifa_ci_boot(
 \arguments{
 \item{data}{A data frame with missing values coded as \code{NA}.}
 
-\item{cov_vars}{Variables in \code{data} to calculate the covariance
-matrix for. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
+\item{cov_vars}{Variables in \code{data} for which to calculate the covariance
+matrix. Supports (tidy selection)\code{\link[dplyr:select]{dplyr::select()}}. This allows to
 select variables that are used for the imputations of missing values, but not
 the calculations of the covariance matrix. This is especially useful when
 there are categorical predictors that can improve the imputation of the
 response variables, but for which covariance cannot be calculated.
 By default, all variables in \code{data} are used for both, the imputation and
-the covariance matrix. Note: Variables and rows used for the imputation
-can be configured using the \code{...}. See also \code{\link[mice:mice]{mice::mice()}}.}
+the covariance matrix. Note: Variables and rows used for the imputation, as
+well as the method for imputation can be configured using the \code{...}.
+See also \code{\link[mice:mice]{mice::mice()}}.}
 
-\item{n_factors}{Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.}
+\item{n_pc}{Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% confidence interval.}
+default is \code{.95} so that 95\% confidence intervals will be constructed.}
 
-\item{n_boot}{number of bootstrap samples to use for the bootstrap confidence
+\item{n_boot}{Number of bootstrap samples to use for bootstrap confidence
 intervals. The default is 1000.}
 
 \item{progress}{Logical. Whether to show progress bars for computation of
@@ -138,7 +141,7 @@ imputation.}
 }
 \value{
 A data frame containing bootstrapped confidence intervals for
-variance explained by different number of factors.
+variance explained by different number of principal components.
 }
 \description{
 Compute bootstrap confidence intervals for the proportion of explained
@@ -153,6 +156,12 @@ imputation and bootstrapping. The imputations are done using \code{\link[mice:mi
 
 Normally, this function does not need to be called directly. Instead,
 use \code{mifa(..., ci = "boot")}.
+}
+\examples{
+\dontrun{
+data <- psych::bfi[, 1:25]
+mifa_ci_boot(data, n_pc = 3:8, n_boot = 50, print = FALSE)
+}
 }
 \references{
 Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.

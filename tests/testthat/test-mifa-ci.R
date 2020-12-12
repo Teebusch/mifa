@@ -4,12 +4,11 @@ data_bfi <- psych::bfi[, 1:25]
 
 
 test_that("mifa_ci_boot() returns right shape and type", {
-
-  n_fct <- 3:5
-  res <- mifa_ci_boot(data_bfi, n_factors = n_fct, n_boot = 3, maxit = 1, print = F)
+  n_pc <- 3:5
+  res  <- mifa_ci_boot(data_bfi, n_pc = n_pc, n_boot = 3, maxit = 1, print = F)
 
   expect_s3_class(res, "data.frame")
-  expect_equal(res$n_factors, n_fct)
+  expect_equal(res$n_pc, n_pc)
   expect_type(res$lower, "double")
   expect_type(res$upper, "double")
   expect_equal(dim(res), c(3, 3))
@@ -35,17 +34,49 @@ test_that("using cov_vars argument produces different cis", {
 
 
 test_that("mifa_ci_fieller() returns right shape and type", {
-  n_fct <- 3:5
+  n_pc <- 3:5
   m <- 2
 
-  res_mifa <- mifa(data_bfi, n_factors = 2, m = m, maxit = 2, print = F)
+  res_mifa <- mifa(data_bfi, n_pc = 2, m = m, maxit = 2, print = F)
 
-  res <- mifa_ci_fieller(res_mifa$cov_imputations, n_factor = n_fct,
+  res <- mifa_ci_fieller(res_mifa$cov_imputations, n_pc = n_pc,
                          N = nrow(data_bfi))
 
   expect_s3_class(res, "data.frame")
-  expect_equal(res$n_factors, n_fct)
+  expect_equal(res$n_pc, n_pc)
   expect_type(res$lower, "double")
   expect_type(res$upper, "double")
   expect_equal(dim(res), c(3, 3))
+})
+
+
+test_that("combine_rubin() return has the right shape and type", {
+  # make some input of the expected shape
+  data       <- na.omit(data_bfi)
+  c          <- ncol(data)
+  param_imps <- list()
+  cov_imps   <- list()
+
+  for (i in 1:5) {
+    param_imps[[i]] <- eigen(cov(data))$values
+    cov_imps[[i]]   <- eigen(cov(data))$vectors
+  }
+
+  param_imps <- data.frame(Reduce(rbind, param_imps))
+
+  # tests
+  res <- combine_rubin(param_imps, cov_imps)
+
+  expect_type(res, "list")
+  expect_length(res, 3)
+
+  expect_type(res$param_est, "double")
+  expect_length(res$param_est, c)
+
+  expect_type(res$cov_param, "double")
+  expect_equal(dim(res$cov_param), c(c, c))
+
+  expect_type(res$cov_between, "double")
+  expect_equal(dim(res$cov_between), c(c, c))
+
 })

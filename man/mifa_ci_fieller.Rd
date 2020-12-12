@@ -4,33 +4,43 @@
 \alias{mifa_ci_fieller}
 \title{Fieller's confidence intervals for explained variance}
 \usage{
-mifa_ci_fieller(cov_imps, n_factors, conf = 0.95, N)
+mifa_ci_fieller(cov_imps, n_pc, conf = 0.95, N)
 }
 \arguments{
 \item{cov_imps}{List containing the estimated covariance matrix within
 each imputed data. One can use \code{cov_imputations} returned by \code{\link[=mifa]{mifa()}}.}
 
-\item{n_factors}{Integer or integer vector indicating number of factors for
-which proportion of explained variance (and optionally confidence intervals)
-should be indicated. Defaults to all possible numbers of factors.}
+\item{n_pc}{Integer or integer vector indicating number of principal
+components (eigenvectors) for which explained variance (eigenvalues) should
+be obtained and for which confidence intervals should be computed.
+Defaults to all principal components, i.e., the number of variables in the
+data.}
 
 \item{conf}{Confidence level for constructing confidence intervals. The
-default is \code{.95}, i.e., a 95\% confidence interval.}
+default is \code{.95} so that 95\% confidence intervals will be constructed.}
 
 \item{N}{A scalar specifying sample size.}
 }
 \value{
-A data frame containing confidence intervals for \code{n_factors} factors
+A data frame containing confidence intervals for \code{n_pc} principal
+components.
 }
 \description{
 Computes parametric confidence intervals for proportion of explained
-variance for given numbers of factors using Fieller's method.
+variance for given numbers of principal components using Fieller's method.
 Note that by setting \code{ci = TRUE} in \code{\link[=mifa]{mifa()}}, this confidence
 interval can be computed as well.
 }
 \details{
 Normally, this function does not need to be called directly. Instead,
 use \code{mifa(..., ci = "fieller")}.
+}
+\examples{
+\dontrun{
+data <- psych::bfi[, 1:25]
+mi <- mifa(data, print = FALSE)
+mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+}
 }
 \references{
 Fieller, E. C. (1954). Some problems in interval estimation.

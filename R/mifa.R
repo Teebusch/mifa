@@ -3,8 +3,9 @@
 #' Compute covariance matrix of incomplete data using multiple imputation.
 #' For multiple imputation, Multivariate Imputation by Chained Equations
 #' (MICE) from the [mice] package is used.
-#' Also provides variance explained by different numbers of factors with
-#' Fieller (parametric) or bootstrap (nonparametric) confidence intervals.
+#' Also provides variance explained by different numbers of principal
+#' components with Fieller (parametric) or bootstrap (nonparametric) confidence
+#' intervals.
 #'
 #' @references
 #' Nassiri, V., Lovik, A., Molenberghs, G., & Verbeke, G. (2018).
@@ -13,21 +14,24 @@
 #' <https://doi.org/10.3758/s13428-017-1013-4>
 #'
 #' @param data A data frame with missing values coded as `NA`.
-#' @param cov_vars Variables in `data` to calculate the covariance
-#' matrix for. Supports (tidy selection)[dplyr::select()]. This allows to
+#' @param cov_vars Variables in `data` for which to calculate the covariance
+#' matrix. Supports (tidy selection)[dplyr::select()]. This allows to
 #' select variables that are used for the imputations of missing values, but not
 #' the calculations of the covariance matrix. This is especially useful when
 #' there are categorical predictors that can improve the imputation of the
 #' response variables, but for which covariance cannot be calculated.
 #' By default, all variables in `data` are used for both, the imputation and
-#' the covariance matrix. Note: Variables and rows used for the imputation
-#' can be configured using the `...`. See also [mice::mice()].
-#' @param n_factors Integer or integer vector indicating number of factors for
-#' which proportion of explained variance (and optionally confidence intervals)
-#' should be indicated. Defaults to all possible numbers of factors.
+#' the covariance matrix. Note: Variables and rows used for the imputation, as
+#' well as the method for imputation can be configured using the `...`.
+#' See also [mice::mice()].
+#' @param n_pc Integer or integer vector indicating number of principal
+#' components (eigenvectors) for which explained variance (eigenvalues) should
+#' be obtained and for which confidence intervals should be computed.
+#' Defaults to all principal components, i.e., the number of variables in the
+#' data.
 #' @param conf Confidence level for constructing confidence intervals. The
-#' default is `.95`, i.e., a 95% confidence interval.
-#' @param n_boot number of bootstrap samples to use for the bootstrap confidence
+#' default is `.95` so that 95% confidence intervals will be constructed.
+#' @param n_boot Number of bootstrap samples to use for bootstrap confidence
 #' intervals. The default is 1000.
 #' @param ci A character string or character vector indicating which types of
 #' confidence intervals should be constructed. If `"boot"`, `"fieller"`,
@@ -45,11 +49,11 @@
 #'   \item{cov_imputations}{A list containing the estimated covariance matrixes
 #'   for all imputed data sets.}
 #'   \item{var_explained}{A data frame containing the estimated proportions of
-#'   explained variance for each of specified `n.factor` components. Depending o
+#'   explained variance for each of specified `n_pc` components. Depending o
 #'   n `ci`, it will also contain the estimated Fieller's (parametric) and/or
 #'   bootstrap (nonparametric) confidence interval for the proportion of
-#'   variance explained by the different numbers of factors defined by
-#'   `n_factors`.}
+#'   variance explained by the different numbers of principal components defined
+#'   by `n_pc`.}
 #'   \item{mids}{Object of type (mids)[mids-class]. This is the results of
 #'   the multiple imputation step for the covariance matrix. Can be useful for
 #'   diagnosing the multiple imputations.}
@@ -60,7 +64,7 @@
 #' data <- psych::bfi
 #' mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
 #' }
-mifa <- function(data, cov_vars = dplyr::everything(), n_factors, ci = FALSE,
+mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
                  conf = .95, n_boot = 1000, ...) {
 
   imp <- stop_constants(mice::mice(data, ...))
@@ -76,21 +80,21 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_factors, ci = FALSE,
   cov_imps  <- lapply(data_imps, stats::cov)
   cov_comb  <- Reduce("+", cov_imps) / length(cov_imps)
 
-  # get proportion of explained variance for different number of factors
+  # get proportion of explained variance for different number of pr. components
   cov_comb_eigen <- eigen(cov_comb)$values
 
-  if (missing(n_factors)) {
-    n_factors <- 1:length(cov_comb_eigen)
+  if (missing(n_pc)) {
+    n_pc <- 1:length(cov_comb_eigen)
   }
 
   var_expl <- data.frame(
-    n_factors = n_factors,
-    var_explained = (cumsum(cov_comb_eigen) / sum(cov_comb_eigen))[n_factors]
+    n_pc = n_pc,
+    var_explained = (cumsum(cov_comb_eigen) / sum(cov_comb_eigen))[n_pc]
   )
 
   # add confidence intervals for variance explained
   if ("boot" %in% ci || "both" %in% ci) {
-    ci_boot <- mifa_ci_boot(data, {{ cov_vars }}, n_factors, conf, n_boot, ...)
+    ci_boot <- mifa_ci_boot(data, {{ cov_vars }}, n_pc, conf, n_boot, ...)
     var_expl <- dplyr::bind_cols(
       var_expl,
       ci_boot_lower = ci_boot$lower,
@@ -98,7 +102,7 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_factors, ci = FALSE,
     )
   }
   if ("fieller" %in% ci || "both" %in% ci) {
-    ci_fieller <- mifa_ci_fieller(cov_imps, n_factors, conf, nrow(data))
+    ci_fieller <- mifa_ci_fieller(cov_imps, n_pc, conf, nrow(data))
     var_expl <- dplyr::bind_cols(
       var_expl,
       ci_fieller_lower = ci_fieller$lower,
@@ -116,6 +120,7 @@ mifa <- function(data, cov_vars = dplyr::everything(), n_factors, ci = FALSE,
     class = "mifa"
   )
 }
+
 
 
 #' @export
@@ -179,7 +184,7 @@ summary.mifa <- function(object, ...) {
                        mi$var_explained$ci_boot_upper)
   }
 
-  k_width <- max(nchar(mi$var_explained$n_factors))
+  k_width <- max(nchar(mi$var_explained$n_pc))
   cat("\n\nCumulative proportion of variance explained by n principal components:")
   cat(sprintf("\n\n%*s  prop  ", k_width, "n"))
   if(!is.null(ci_fieller)) cat("Fieller CI    ")
@@ -190,7 +195,7 @@ summary.mifa <- function(object, ...) {
     sprintf(
       "%*i %5.2f  %s  %s\n",
       k_width,
-      mi$var_explained$n_factors,
+      mi$var_explained$n_pc,
       mi$var_explained$var_explained,
       if(is.null(ci_fieller)) "" else ci_fieller,
       if(is.null(ci_boot)) "" else ci_boot
@@ -200,6 +205,7 @@ summary.mifa <- function(object, ...) {
   )
 
 }
+
 
 
 #' @export
