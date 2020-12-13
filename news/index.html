@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fieller's confidence intervals for explained variance — mifa_ci_fieller • mifa</title>
+<title>Changelog • mifa</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -46,11 +46,7 @@
 
 
 
-<meta property="og:title" content="Fieller's confidence intervals for explained variance — mifa_ci_fieller" />
-<meta property="og:description" content="Computes parametric confidence intervals for proportion of explained
-variance for given numbers of principal components using Fieller's method.
-Note that by setting ci = TRUE in mifa(), this confidence
-interval can be computed as well." />
+<meta property="og:title" content="Changelog" />
 <meta property="og:image" content="/logo.png" />
 
 
@@ -70,7 +66,7 @@ interval can be computed as well." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -122,78 +118,45 @@ interval can be computed as well." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fieller's confidence intervals for explained variance</h1>
-    <small class="dont-index">Source: <a href='https://github.com/teebusch/mifa/blob/master/R/mifa-ci.R'><code>R/mifa-ci.R</code></a></small>
-    <div class="hidden name"><code>mifa_ci_fieller.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      <small>Source: <a href='https://github.com/teebusch/mifa/blob/master/NEWS.md'><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="ref-description">
-    <p>Computes parametric confidence intervals for proportion of explained
-variance for given numbers of principal components using Fieller's method.
-Note that by setting <code>ci = TRUE</code> in <code><a href='mifa.html'>mifa()</a></code>, this confidence
-interval can be computed as well.</p>
-    </div>
-
-    <pre class="usage"><span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>cov_imps</span>, <span class='va'>n_pc</span>, conf <span class='op'>=</span> <span class='fl'>0.95</span>, <span class='va'>N</span><span class='op'>)</span></pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>cov_imps</th>
-      <td><p>List containing the estimated covariance matrix within
-each imputed data. One can use <code>cov_imputations</code> returned by <code><a href='mifa.html'>mifa()</a></code>.</p></td>
-    </tr>
-    <tr>
-      <th>n_pc</th>
-      <td><p>Integer or integer vector indicating number of principal
-components (eigenvectors) for which explained variance (eigenvalues) should
-be obtained and for which confidence intervals should be computed.
-Defaults to all principal components, i.e., the number of variables in the
-data.</p></td>
-    </tr>
-    <tr>
-      <th>conf</th>
-      <td><p>Confidence level for constructing confidence intervals. The
-default is <code>.95</code> that is, 95% confidence intervals.</p></td>
-    </tr>
-    <tr>
-      <th>N</th>
-      <td><p>A scalar specifying sample size.</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A data frame containing confidence intervals for <code>n_pc</code> principal
-components.</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Normally, this function does not need to be called directly. Instead,
-use <code><a href='mifa.html'>mifa(..., ci = "fieller")</a></code>.</p>
-    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
-
-    <p>Fieller, E. C. (1954). Some problems in interval estimation.
-Journal of the Royal Statistical Society. Series B (Methodological): 175-185.</p>
-    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
-
-    <div class='dont-index'><p><code><a href='mifa.html'>mifa()</a></code></p>
-<p>Other mifa confidence intervals: 
-<code><a href='mifa_ci_boot.html'>mifa_ci_boot</a>()</code></p></div>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
-<span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>25</span><span class='op'>]</span>
-<span class='va'>mi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mifa.html'>mifa</a></span><span class='op'>(</span><span class='va'>data</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-<span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>mi</span><span class='op'>$</span><span class='va'>cov_imputations</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>
-<span class='op'>}</span>
-</div></pre>
+    <div id="mifa-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#mifa-020" class="anchor"></a>mifa 0.2.0</h1>
+<ul>
+<li>Major code refactoring for readability and maintainability</li>
+<li>Vastly improved function signatures (breaking changes to v0.1.0)</li>
+<li>Added argument checks for all user-facing functions</li>
+<li>Add <code>cov_vars</code> argument for selecting variables to use for for imputations but not for covariance matrix</li>
+<li>Complete control over <code>mice()</code> via <code>...</code> arguments</li>
+<li>Better function returns, e.g. main function now returns an <code>S3</code> object of class <code>mifa</code> which has nice <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> and <code><a href="https://rdrr.io/r/base/print.html">print()</a></code> generics</li>
+<li>Much improved documentation and examples</li>
+<li>Added a <code>README.md</code> with installation and usage instructions</li>
+<li>Added a <a href="https://pkgdown.r-lib.org">pkgdown</a> site at <a href="https://teebusch.github.io/mifa" class="uri">https://teebusch.github.io/mifa</a>
+</li>
+<li>Added a <code>NEWS.md</code> file to track changes to the package.</li>
+<li>Remove unused dependencies</li>
+<li>Added continuous integration and unit tests</li>
+</ul>
+</div>
+    <div id="mifa-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#mifa-010" class="anchor"></a>mifa 0.1.0</h1>
+<ul>
+<li>initial release, accompanying the paper in Behavioral Research Methods <a href="https://doi.org/10.3758/s13428-017-1013-4">(link)</a>
+</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 
