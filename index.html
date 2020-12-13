@@ -88,12 +88,12 @@
 <p><code>mifa</code> is an R package that implements multiple imputation of covariance matrices to allow to perform factor analysis on incomplete data. It works as follows:</p>
 <ol>
 <li><p>Impute missing values multiple times using <em>Multivariate Imputation with Chained Equations</em> (MICE) from the <a href="https://amices.org/mice/">mice</a> package.</p></li>
-<li><p>Combine the covariance matrices of the imputed data sets into a single covariance matrix using Rubin’s rules <sup>[1]</sup></p></li>
+<li><p>Combine the covariance matrices of the imputed data sets into a single covariance matrix using Rubin’s rules<sup>[1]</sup></p></li>
 <li><p>Use the combined covariance matrix for exploratory factor analysis.</p></li>
 </ol>
-<p><code>mifa</code> also provides two types of confidence intervals for the variance explained by different numbers of principal components: Fieller confidence intervals (parametric) for larger samples <sup>[2]</sup> and bootstrapped confidence intervals (nonparametric) for smaller samples. <sup>[3]</sup></p>
+<p><code>mifa</code> also provides two types of confidence intervals for the variance explained by different numbers of principal components: Fieller confidence intervals (parametric) for larger samples<sup>[2]</sup> and bootstrapped confidence intervals (nonparametric) for smaller samples.<sup>[3]</sup></p>
 <p><strong>For more information about the method, see:</strong></p>
-<p>Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using multiple imputation for exploratory factor analysis of incomplete data. <em>Behavior Research Methods</em> 50, 501–517. <a href="https://doi.org/10.3758/s13428-017-1013-4">(doi)</a></p>
+<p>Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using multiple imputation for exploratory factor analysis of incomplete data. <em>Behavior Research Methods</em> 50, 501–517. <a href="https://doi.org/10.3758/s13428-017-1013-4">(link)</a></p>
 <p><em>Note:</em> The paper was accompanied by an implementation in R, and this package emerged from it. The repository appears to have been abandoned by the authors, but you can still find it <a href="https://github.com/vahidnassiri/mifa">here</a>.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
@@ -193,7 +193,7 @@
 <a href="#further-reading" class="anchor"></a>Further Reading</h2>
 <p>[1] Rubin D. B. Multiple imputation for nonresponse in surveys (2004). John Wiley &amp; Sons.</p>
 <p>[2] Fieller, E. C. (1954). Some problems in interval estimation. Journal of the Royal Statistical Society. Series B (Methodological): 175-185.</p>
-<p>[3] Shao, J. &amp; Sitter, R. R. (1996). Bootstrap for imputed survey data. Journal of the American Statistical Association 91.435 (1996): 1278-1288. <a href="https://dx.doi.org/10.1080/01621459.1996.10476997">(doi)</a></p>
+<p>[3] Shao, J. &amp; Sitter, R. R. (1996). Bootstrap for imputed survey data. Journal of the American Statistical Association 91.435 (1996): 1278-1288. <a href="https://dx.doi.org/10.1080/01621459.1996.10476997">(link)</a></p>
 </div>
 </div>
   </div>
@@ -229,7 +229,7 @@
   <div class="dev-status">
 <h2>Dev status</h2>
 <ul class="list-unstyled">
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
 <li><a href="https://github.com/teebusch/mifa/actions"><img src="https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/Teebusch/mifa?branch=master"><img src="https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
