@@ -1,21 +1,44 @@
 Package: mifa
-Type: Package
 Title: Multiple Imputation for Exploratory Factor Analysis
-Version: 0.1.0
-Authors@R: c(person("Vahid", "Nassiri", role = c("aut", "cre"),
-                     email = "vahid.nassiri@kuleuven.be"),
-              person("Anikó", "Lovik", role = "aut"),
-               person("Geert ", "Molenberghs", role = "aut"),
-                person("Geert Verbeke", "Verbeke", role = "aut"))
-Author: Vahid Nassiri, 
-        Anikó Lovik, 
-        Geert Molenberghs, 
-        Geert Verbeke
-Maintainer: Vahid Nassiri <vahid.nassiri@kuleuven.be>
-Imports: mice, Matrix
-Suggests: eigeninv, norm, psych, missMDA
-Description: This package uses multiple imputation to estimate the covariance matrix of incomplete data. An exploratory factor analysis then can be applied on this estimated covariance matrix. It also provides Fieller and bootstrap confidence intervals for the proportion of explained variance using different number of factors.
+Version: 0.2.0
+Authors@R: c(
+  person("Vahid", "Nassiri", role = "aut"),
+  person("Anikó", "Lovik", role = "aut"),
+  person("Geert ", "Molenberghs", role = "aut"),
+  person("Geert ", "Verbeke", role = "aut"),
+  person("Tobias", "Busch", email = "teebusch@gmail.com", role = c("aut", "cre"),
+         comment = c(ORCID = "https://orcid.org/0000-0002-8390-7892"))
+  )
+Author: Vahid Nassiri [aut], 
+        Anikó Lovik [aut], 
+        Geert Molenberghs [aut], 
+        Geert Verbeke [aut],
+        Tobias Busch [aut, cre]
+Maintainer: Tobias Busch <teebusch@gmail.com>
+URL: https://github.com/teebusch/mifa
+BugReports: https://github.com/teebusch/mifa/issues
+Imports: 
+  stats,
+  mice,
+  dplyr,
+  checkmate
+Suggests: 
+  psych,
+  testthat,
+  knitr,
+  rmarkdown,
+  ggplot2,
+  tidyr,
+  covr
+Description: Impute the covariance matrix of incomplete data so that factor 
+  analysis can be performed. Imputations are made using multiple imputation 
+  by Multivariate Imputation with Chained Equations (MICE) and combined with 
+  Rubin's rules. Parametric Fieller confidence intervals and nonparametric
+  bootstrap confidence intervals can be obtained for the variance explained by 
+  different numbers of principal components.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)
+VignetteBuilder: knitr
