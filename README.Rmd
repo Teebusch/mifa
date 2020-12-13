@@ -30,6 +30,7 @@ ggplot2::theme_set(theme_minimal(base_size = 16))
 ```
 
 # mifa - multiple imputation for factor analysis
+<img src='man/figures/logo.png' align="right" height="139" />
 
 <!-- badges: start -->
 
