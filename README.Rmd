@@ -34,12 +34,9 @@ ggplot2::theme_set(theme_minimal(base_size = 16))
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![R build
-status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
-[![Codecov test
-coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://codecov.io/gh/Teebusch/mifa?branch=master)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![R build status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
+[![Codecov test coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://codecov.io/gh/Teebusch/mifa?branch=master)
 
 <!-- badges: end -->
 
@@ -51,25 +48,25 @@ follows:
     Chained Equations* (MICE) from the [mice](https://amices.org/mice/) package.
 
 2.  Combine the covariance matrices of the imputed data sets into a single
-    covariance matrix using Rubin's rules <sup>^[Rubin D. B. Multiple imputation
+    covariance matrix using Rubin's rules<sup>^[Rubin D. B. Multiple imputation
     for nonresponse in surveys (2004). John Wiley & Sons.]</sup>
 
 3.  Use the combined covariance matrix for exploratory factor analysis.
 
 `mifa` also provides two types of confidence intervals for the variance
 explained by different numbers of principal components: 
-Fieller confidence intervals (parametric) for larger samples 
-<sup>^[Fieller, E. C. (1954). Some problems in interval estimation. 
-Journal of the Royal Statistical Society. Series B (Methodological): 175-185.]</sup> 
-and bootstrapped confidence intervals (nonparametric) for smaller samples.
-<sup>^[Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data. 
-Journal of the American Statistical Association 91.435 (1996): 1278-1288. [(doi)](https://dx.doi.org/10.1080/01621459.1996.10476997)]</sup>
+Fieller confidence intervals (parametric) for larger samples<sup>^[Fieller, E. 
+C. (1954). Some problems in interval estimation. Journal of the Royal 
+Statistical Society. Series B (Methodological): 175-185.]</sup> 
+and bootstrapped confidence intervals (nonparametric) for smaller 
+samples.<sup>^[Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey 
+data. Journal of the American Statistical Association 91.435 (1996): 1278-1288. [(link)](https://dx.doi.org/10.1080/01621459.1996.10476997)]</sup>
 
 **For more information about the method, see:**
 
 Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using multiple
 imputation for exploratory factor analysis of incomplete data. *Behavior
-Research Methods* 50, 501–517. [(doi)](https://doi.org/10.3758/s13428-017-1013-4)
+Research Methods* 50, 501–517. [(link)](https://doi.org/10.3758/s13428-017-1013-4)
 
 *Note:* The paper was accompanied by an implementation in R, and this package
 emerged from it. The repository appears to have been abandoned by the authors,

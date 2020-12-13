@@ -8,7 +8,7 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![R build
 status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
 [![Codecov test
@@ -25,22 +25,22 @@ works as follows:
     [mice](https://amices.org/mice/) package.
 
 2.  Combine the covariance matrices of the imputed data sets into a
-    single covariance matrix using Rubin’s rules <sup>[1]</sup>
+    single covariance matrix using Rubin’s rules<sup>[1]</sup>
 
 3.  Use the combined covariance matrix for exploratory factor analysis.
 
 `mifa` also provides two types of confidence intervals for the variance
 explained by different numbers of principal components: Fieller
-confidence intervals (parametric) for larger samples <sup>[2]</sup> and
-bootstrapped confidence intervals (nonparametric) for smaller samples.
-<sup>[3]</sup>
+confidence intervals (parametric) for larger samples<sup>[2]</sup> and
+bootstrapped confidence intervals (nonparametric) for smaller
+samples.<sup>[3]</sup>
 
 **For more information about the method, see:**
 
 Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using
 multiple imputation for exploratory factor analysis of incomplete data.
 *Behavior Research Methods* 50, 501–517.
-[(doi)](https://doi.org/10.3758/s13428-017-1013-4)
+[(link)](https://doi.org/10.3758/s13428-017-1013-4)
 
 *Note:* The paper was accompanied by an implementation in R, and this
 package emerged from it. The repository appears to have been abandoned
@@ -181,4 +181,4 @@ of the Royal Statistical Society. Series B (Methodological): 175-185.
 
 [3] Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
 Journal of the American Statistical Association 91.435 (1996):
-1278-1288. [(doi)](https://dx.doi.org/10.1080/01621459.1996.10476997)
+1278-1288. [(link)](https://dx.doi.org/10.1080/01621459.1996.10476997)
