@@ -132,7 +132,7 @@ fit <- fa(mi$cov_combined, n.obs = nrow(bfi), nfactors = 5)
 The factor diagram shows that the five factors correspond nicely to the 5 types
 of questions:
 
-```{r fig.height = 8}
+```{r fa-diagram, fig.height = 8}
 fa.diagram(fit)
 ```
 
@@ -159,7 +159,7 @@ levels(data_imp$Gender) <- c("Male", "Female")
 
 Then we can visualize the group differences:
 
-```{r}
+```{r fa-group-comparison}
 library(ggplot2)
 library(tidyr)
 
