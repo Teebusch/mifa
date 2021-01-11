@@ -6,7 +6,8 @@ Authors@R: c(
   person("Anikó", "Lovik", role = "aut"),
   person("Geert ", "Molenberghs", role = "aut"),
   person("Geert ", "Verbeke", role = "aut"),
-  person("Tobias", "Busch", email = "teebusch@gmail.com", role = c("aut", "cre"),
+  person("Tobias", "Busch", email = "teebusch@gmail.com", 
+         role = c("aut", "cre"),
          comment = c(ORCID = "https://orcid.org/0000-0002-8390-7892"))
   )
 URL: https://github.com/teebusch/mifa
