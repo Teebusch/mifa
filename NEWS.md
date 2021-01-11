@@ -18,5 +18,7 @@
 
 # mifa 0.1.0
 
-* initial release, accompanying the paper in Behavioral Research Methods 
+* Initial release, accompanying the paper in Behavioral Research Methods 
   [(link)](https://doi.org/10.3758/s13428-017-1013-4)
+* mifa 0.1.0 was originally released at <https://github.com/vahidnassiri/mifa>
+  but this repository appears to have been abandoned
