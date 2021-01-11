@@ -11,3 +11,4 @@
 ^pkgdown$
 ^codecov\.yml$
 ^misc$
+^cran-comments\.md$

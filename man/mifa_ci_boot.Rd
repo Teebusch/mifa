@@ -171,7 +171,7 @@ Journal of the American Statistical Association 91.435 (1996): 1278-1288.
 \seealso{
 \code{\link[=mifa]{mifa()}}, \code{\link[mice:mice]{mice::mice()}}
 
-Other {mifa confidence intervals}: 
+Other mifa confidence intervals: 
 \code{\link{mifa_ci_fieller}()}
 }
-\concept{{mifa confidence intervals}}
+\concept{mifa confidence intervals}

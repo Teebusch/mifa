@@ -18,6 +18,6 @@ not imputed due to collinearity, etc.
 }
 \details{
 This function will keep imputing the same data over and over
-until all NA's are gone.
+until there are no NA values left.
 }
 \keyword{internal}
