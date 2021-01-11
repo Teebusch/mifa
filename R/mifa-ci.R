@@ -23,7 +23,7 @@
 #' @inheritDotParams mice::mice
 #'
 #' @seealso [mifa()], [mice::mice()]
-#' @family {mifa confidence intervals}
+#' @family mifa confidence intervals
 #'
 #' @return A data frame containing bootstrapped confidence intervals for
 #' variance explained by different number of principal components.
@@ -93,7 +93,7 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
 
 
 
-#' Fieller's confidence intervals for explained variance
+#' Fieller confidence intervals for explained variance
 #'
 #' Computes parametric confidence intervals for proportion of explained
 #' variance for given numbers of principal components using Fieller's method.
@@ -114,7 +114,7 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
 #' @inheritParams mifa
 #'
 #' @seealso [mifa()]
-#' @family {mifa confidence intervals}
+#' @family mifa confidence intervals
 #'
 #' @return A data frame containing confidence intervals for `n_pc` principal
 #' components.

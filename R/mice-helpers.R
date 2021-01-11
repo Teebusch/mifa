@@ -18,7 +18,7 @@ mice_impute_once <- function(data, ...) {
 #' not imputed due to collinearity, etc.
 #'
 #' This function will keep imputing the same data over and over
-#' until all NA's are gone.
+#' until there are no NA values left.
 #'
 #' @inheritParams mifa
 #'

@@ -132,7 +132,7 @@ The factor diagram shows that the five factors correspond nicely to the
 fa.diagram(fit)
 ```
 
-![](man/figures/README-unnamed-chunk-3-1.svg)<!-- -->
+![](man/figures/README-fa-diagram-1.svg)<!-- -->
 
 We can add the factor scores to the original data, in order to explore
 group differences. Because we need complete data to calculate factor
@@ -169,7 +169,7 @@ ggplot(data_imp2) +
   theme(legend.position = c(.9, .1))
 ```
 
-![](man/figures/README-unnamed-chunk-5-1.svg)<!-- -->
+![](man/figures/README-fa-group-comparison-1.svg)<!-- -->
 
 ## Further Reading
 

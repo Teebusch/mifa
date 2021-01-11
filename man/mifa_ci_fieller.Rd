@@ -2,7 +2,7 @@
 % Please edit documentation in R/mifa-ci.R
 \name{mifa_ci_fieller}
 \alias{mifa_ci_fieller}
-\title{Fieller's confidence intervals for explained variance}
+\title{Fieller confidence intervals for explained variance}
 \usage{
 mifa_ci_fieller(cov_imps, n_pc, conf = 0.95, N)
 }
@@ -49,7 +49,7 @@ Journal of the Royal Statistical Society. Series B (Methodological): 175-185.
 \seealso{
 \code{\link[=mifa]{mifa()}}
 
-Other {mifa confidence intervals}: 
+Other mifa confidence intervals: 
 \code{\link{mifa_ci_boot}()}
 }
-\concept{{mifa confidence intervals}}
+\concept{mifa confidence intervals}
