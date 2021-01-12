@@ -13,7 +13,7 @@
 #' Nassiri, V., Lovik, A., Molenberghs, G., & Verbeke, G. (2018).
 #' On using multiple imputation for exploratory factor analysis of incomplete
 #' data. Behavioral Research Methods 50, 501–517.
-#' <https://doi.org/10.3758/s13428-017-1013-4>
+#' \doi{10.3758/s13428-017-1013-4}
 #'
 #' @param data A data frame with missing values coded as `NA`.
 #' @param cov_vars Variables in `data` for which to calculate the covariance
@@ -59,7 +59,7 @@
 #'   bootstrap (nonparametric) confidence interval for the proportion of
 #'   variance explained by the different numbers of principal components defined
 #'   by `n_pc`.}
-#'   \item{mids}{Object of type [mids](mids-class). This is the results of
+#'   \item{mids}{Object of type [mice::mids]. This is the results of
 #'   the multiple imputation step for the covariance matrix. Can be useful for
 #'   diagnosing the multiple imputations.}
 #' }

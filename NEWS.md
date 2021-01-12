@@ -10,7 +10,7 @@
   class `mifa` which has nice `summary()` and `print()` generics
 * Much improved documentation and examples 
 * Added a `README.md` with installation and usage instructions
-* Added a `{pkgdown}` site at <https://teebusch.github.io/mifa>
+* Added a `{pkgdown}` site at <https://teebusch.github.io/mifa/>
 * Added a `NEWS.md` file to track changes to the package.
 * Remove unused dependencies
 * Added continuous integration and unit tests
@@ -20,5 +20,5 @@
 
 * Initial release, accompanying the paper in Behavioral Research Methods 
   [(link)](https://doi.org/10.3758/s13428-017-1013-4)
-* mifa 0.1.0 was originally released at <https://github.com/vahidnassiri/mifa>
+* mifa 0.1.0 was originally released at <https://github.com/vahidnassiri/mifa/>
   but this repository appears to have been abandoned

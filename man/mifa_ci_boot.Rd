@@ -166,7 +166,7 @@ mifa_ci_boot(data, n_pc = 3:8, n_boot = 50, print = FALSE)
 \references{
 Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
 Journal of the American Statistical Association 91.435 (1996): 1278-1288.
-\url{https://dx.doi.org/10.1080/01621459.1996.10476997}
+\doi{10.1080/01621459.1996.10476997}
 }
 \seealso{
 \code{\link[=mifa]{mifa()}}, \code{\link[mice:mice]{mice::mice()}}

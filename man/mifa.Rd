@@ -158,7 +158,7 @@ n \code{ci}, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
 variance explained by the different numbers of principal components defined
 by \code{n_pc}.}
-\item{mids}{Object of type \href{mids-class}{mids}. This is the results of
+\item{mids}{Object of type \link[mice:mids-class]{mice::mids}. This is the results of
 the multiple imputation step for the covariance matrix. Can be useful for
 diagnosing the multiple imputations.}
 }
@@ -184,7 +184,7 @@ mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
 Nassiri, V., Lovik, A., Molenberghs, G., & Verbeke, G. (2018).
 On using multiple imputation for exploratory factor analysis of incomplete
 data. Behavioral Research Methods 50, 501–517.
-\url{https://doi.org/10.3758/s13428-017-1013-4}
+\doi{10.3758/s13428-017-1013-4}
 }
 \seealso{
 \code{\link[=mifa_ci_boot]{mifa_ci_boot()}}, \code{\link[=mifa_ci_fieller]{mifa_ci_fieller()}}, \code{\link[mice:mice]{mice::mice()}}

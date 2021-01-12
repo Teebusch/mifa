@@ -39,8 +39,8 @@ samples.<sup>[3]</sup>
 
 Nassiri, V., Lovik, A., Molenberghs, G., Verbeke, G. (2018). On using
 multiple imputation for exploratory factor analysis of incomplete data.
-*Behavior Research Methods* 50, 501–517.
-[(link)](https://doi.org/10.3758/s13428-017-1013-4)
+*Behavior Research Methods* 50, 501–517. doi:
+[10.3758/s13428-017-1013-4](https://doi.org/10.3758/s13428-017-1013-4)
 
 *Note:* The paper was accompanied by an implementation in R, and this
 package emerged from it. The repository appears to have been abandoned
@@ -181,4 +181,5 @@ of the Royal Statistical Society. Series B (Methodological): 175-185.
 
 [3] Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
 Journal of the American Statistical Association 91.435 (1996):
-1278-1288. [(link)](https://dx.doi.org/10.1080/01621459.1996.10476997)
+1278-1288. doi:
+[10.1080/01621459.1996.10476997](https://dx.doi.org/10.1080/01621459.1996.10476997)

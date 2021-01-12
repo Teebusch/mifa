@@ -15,7 +15,7 @@
 #' @references
 #' Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
 #' Journal of the American Statistical Association 91.435 (1996): 1278-1288.
-#' <https://dx.doi.org/10.1080/01621459.1996.10476997>
+#' \doi{10.1080/01621459.1996.10476997}
 #'
 #' @param progress Logical. Whether to show progress bars for computation of
 #' bootstrap confidence intervals. Default is FALSE.
