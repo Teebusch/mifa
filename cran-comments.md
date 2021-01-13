@@ -1,11 +1,8 @@
 ## Resubmission
 This is a resubmission. These changes have been made:
 
-* Use standard CRAN template for the MIT license. 
-* Fix 2 invalid URLs in NEWS.md (added trailing slashes).
-* Changed two doi URLs in the documentation to use `\doi` and adapted doi URLs
-  in README.md to match the format.
-* Fix invalid link to external documentation (mice::mids).
+* Use standard 2-line CRAN template for the MIT license. 
+* Add literature reference for method to package description.
 
 ## Test environments
 * GitHub Actions (ubuntu-20.04): release, devel, oldrel
