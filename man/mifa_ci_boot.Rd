@@ -158,9 +158,11 @@ Normally, this function does not need to be called directly. Instead,
 use \code{mifa(..., ci = "boot")}.
 }
 \examples{
-\dontrun{
-data <- psych::bfi[, 1:25]
-mifa_ci_boot(data, n_pc = 3:8, n_boot = 50, print = FALSE)
+\donttest{
+if(requireNamespace("psych")) {
+  data <- psych::bfi[, 1:25]
+  mifa_ci_boot(data, n_pc = 3:8, n_boot = 10, print = FALSE)
+}
 }
 }
 \references{

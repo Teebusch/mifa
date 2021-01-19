@@ -1,0 +1,12 @@
+url: https://teebusch.github.io/mifa/
+
+home:
+  title: mifa - Multiple Imputation for Exploratory Factor Analysis
+  description: >
+    An R package for imputing the covariance matrix of incomplete data so that
+    factor analysis can be performed.
+
+template:
+  opengraph:
+    twitter:
+      creator: "@tobilottii"

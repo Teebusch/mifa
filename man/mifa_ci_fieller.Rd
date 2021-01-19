@@ -36,10 +36,12 @@ Normally, this function does not need to be called directly. Instead,
 use \code{mifa(..., ci = "fieller")}.
 }
 \examples{
-\dontrun{
-data <- psych::bfi[, 1:25]
-mi <- mifa(data, print = FALSE)
-mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+\donttest{
+if(requireNamespace("psych")) {
+  data <- psych::bfi[, 1:25]
+  mi <- mifa(data, print = FALSE)
+  mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+}
 }
 }
 \references{

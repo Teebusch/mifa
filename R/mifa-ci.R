@@ -29,9 +29,11 @@
 #' variance explained by different number of principal components.
 #' @export
 #' @examples
-#' \dontrun{
-#' data <- psych::bfi[, 1:25]
-#' mifa_ci_boot(data, n_pc = 3:8, n_boot = 50, print = FALSE)
+#' \donttest{
+#' if(requireNamespace("psych")) {
+#'   data <- psych::bfi[, 1:25]
+#'   mifa_ci_boot(data, n_pc = 3:8, n_boot = 10, print = FALSE)
+#' }
 #' }
 mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
                          conf = .95, n_boot = 1000, progress = FALSE, ...) {
@@ -120,10 +122,12 @@ mifa_ci_boot <- function(data, cov_vars = dplyr::everything(), n_pc,
 #' components.
 #' @export
 #' @examples
-#' \dontrun{
-#' data <- psych::bfi[, 1:25]
-#' mi <- mifa(data, print = FALSE)
-#' mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+#' \donttest{
+#' if(requireNamespace("psych")) {
+#'   data <- psych::bfi[, 1:25]
+#'   mi <- mifa(data, print = FALSE)
+#'   mifa_ci_fieller(mi$cov_imputations, n_pc = 3:8, N = nrow(data))
+#' }
 #' }
 mifa_ci_fieller <- function(cov_imps, n_pc, conf = .95, N) {
   # check and clean arguments

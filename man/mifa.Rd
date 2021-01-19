@@ -175,9 +175,11 @@ principal components and the corresponding Fieller (parametric) or bootstrap
 (nonparametric) confidence intervals.
 }
 \examples{
-\dontrun{
-data <- psych::bfi
-mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+\donttest{
+if(requireNamespace("psych")) {
+  data <- psych::bfi
+  mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+}
 }
 }
 \references{

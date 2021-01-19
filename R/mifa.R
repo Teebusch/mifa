@@ -65,9 +65,11 @@
 #' }
 #' @export
 #' @examples
-#' \dontrun{
-#' data <- psych::bfi
-#' mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+#' \donttest{
+#' if(requireNamespace("psych")) {
+#'   data <- psych::bfi
+#'   mifa(data, cov_vars = -c(age, education, gender), ci = "fieller", print = FALSE)
+#' }
 #' }
 mifa <- function(data, cov_vars = dplyr::everything(), n_pc, ci = FALSE,
                  conf = .95, n_boot = 1000, ...) {
