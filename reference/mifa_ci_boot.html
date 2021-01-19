@@ -52,7 +52,10 @@ variance for the covariance of an incomplete data imputed using
 multiple imputation.
 For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used." />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://teebusch.github.io/mifa/logo.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@tobilottii" />
+<meta name="twitter:site" content="@tobilottii" />
 
 
 
@@ -310,10 +313,18 @@ doi: <a href='https://doi.org/10.1080/01621459.1996.10476997'>10.1080/01621459.1
 <code><a href='mifa_ci_fieller.html'>mifa_ci_fieller</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"psych"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>25</span><span class='op'>]</span>
-<span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, n_boot <span class='op'>=</span> <span class='fl'>50</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+<span class='fu'>mifa_ci_boot</span><span class='op'>(</span><span class='va'>data</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, n_boot <span class='op'>=</span> <span class='fl'>10</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='op'>}</span>
+</div><div class='output co'>#&gt;   n_pc     lower     upper
+#&gt; 1    3 0.4057084 0.4183398
+#&gt; 2    4 0.4756646 0.4863418
+#&gt; 3    5 0.5341208 0.5461557
+#&gt; 4    6 0.5791203 0.5908674
+#&gt; 5    7 0.6174867 0.6277668
+#&gt; 6    8 0.6531412 0.6629284</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

@@ -51,7 +51,10 @@
 For multiple imputation, Multivariate Imputation by Chained Equations
 (MICE) from the mice package is used. The covariance matrices of the
 imputed data sets are combined using Rubin's rules." />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://teebusch.github.io/mifa/logo.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@tobilottii" />
+<meta name="twitter:site" content="@tobilottii" />
 
 
 
@@ -327,10 +330,49 @@ doi: <a href='https://doi.org/10.3758/s13428-017-1013-4'>10.3758/s13428-017-1013
     <div class='dont-index'><p><code><a href='mifa_ci_boot.html'>mifa_ci_boot()</a></code>, <code><a href='mifa_ci_fieller.html'>mifa_ci_fieller()</a></code>, <code><a href='https://amices.org/mice/reference/mice.html'>mice::mice()</a></code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"psych"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span>
 <span class='fu'>mifa</span><span class='op'>(</span><span class='va'>data</span>, cov_vars <span class='op'>=</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>age</span>, <span class='va'>education</span>, <span class='va'>gender</span><span class='op'>)</span>, ci <span class='op'>=</span> <span class='st'>"fieller"</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='op'>}</span>
+</div><div class='output co'>#&gt; <span class='message'>Loading required namespace: psych</span></div><div class='output co'>#&gt; Imputed covariance matrix of 25 variables
+#&gt; 
+#&gt; Variable:   A1 A2 A3 A4 A5 C1 C2 C3 C4 C5 E1 E2 E3 E4 E5 N1 N2 N3 N4 N5 O1 O2 O3 O4 O5 
+#&gt; N Imputed:  16 27 26 19 16 21 24 20 26 16 23 16 25  9 21 22 21 11 36 29 22  0 28 14 20
+#&gt; 
+#&gt; Number of MICE imputations: 5
+#&gt; Additional variables used for imputations:
+#&gt; gender education age
+#&gt; 
+#&gt; Cumulative proportion of variance explained by n principal components:
+#&gt; 
+#&gt;  n  prop  Fieller CI    
+#&gt;  1  0.21  [0.20, 0.22]  
+#&gt;  2  0.33  [0.32, 0.34]  
+#&gt;  3  0.41  [0.40, 0.42]  
+#&gt;  4  0.48  [0.47, 0.49]  
+#&gt;  5  0.54  [0.53, 0.55]  
+#&gt;  6  0.58  [0.58, 0.59]  
+#&gt;  7  0.62  [0.61, 0.63]  
+#&gt;  8  0.66  [0.65, 0.66]  
+#&gt;  9  0.69  [0.68, 0.69]  
+#&gt; 10  0.72  [0.71, 0.72]  
+#&gt; 11  0.74  [0.74, 0.75]  
+#&gt; 12  0.77  [0.76, 0.77]  
+#&gt; 13  0.79  [0.79, 0.79]  
+#&gt; 14  0.81  [0.81, 0.82]  
+#&gt; 15  0.83  [0.83, 0.84]  
+#&gt; 16  0.85  [0.85, 0.86]  
+#&gt; 17  0.87  [0.87, 0.88]  
+#&gt; 18  0.89  [0.89, 0.90]  
+#&gt; 19  0.91  [0.91, 0.91]  
+#&gt; 20  0.93  [0.93, 0.93]  
+#&gt; 21  0.94  [0.94, 0.95]  
+#&gt; 22  0.96  [0.96, 0.96]  
+#&gt; 23  0.97  [0.97, 0.97]  
+#&gt; 24  0.99  [0.99, 0.99]  
+#&gt; 25  1.00  [1.00, 1.00]  
+#&gt; </div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

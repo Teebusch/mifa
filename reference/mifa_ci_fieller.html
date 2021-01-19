@@ -51,7 +51,10 @@
 variance for given numbers of principal components using Fieller's method.
 Note that by setting ci = TRUE in mifa(), this confidence
 interval can be computed as well." />
-<meta property="og:image" content="/logo.png" />
+<meta property="og:image" content="https://teebusch.github.io/mifa/logo.png" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:creator" content="@tobilottii" />
+<meta name="twitter:site" content="@tobilottii" />
 
 
 
@@ -182,11 +185,19 @@ Journal of the Royal Statistical Society. Series B (Methodological): 175-185.</p
 <code><a href='mifa_ci_boot.html'>mifa_ci_boot</a>()</code></p></div>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+    <pre class="examples"><div class='input'><span class='co'># \donttest{</span>
+<span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/ns-load.html'>requireNamespace</a></span><span class='op'>(</span><span class='st'>"psych"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'>psych</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/psych/man/bfi.html'>bfi</a></span><span class='op'>[</span>, <span class='fl'>1</span><span class='op'>:</span><span class='fl'>25</span><span class='op'>]</span>
 <span class='va'>mi</span> <span class='op'>&lt;-</span> <span class='fu'><a href='mifa.html'>mifa</a></span><span class='op'>(</span><span class='va'>data</span>, print <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
 <span class='fu'>mifa_ci_fieller</span><span class='op'>(</span><span class='va'>mi</span><span class='op'>$</span><span class='va'>cov_imputations</span>, n_pc <span class='op'>=</span> <span class='fl'>3</span><span class='op'>:</span><span class='fl'>8</span>, N <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>)</span><span class='op'>)</span>
 <span class='op'>}</span>
+</div><div class='output co'>#&gt;   n_pc     lower     upper
+#&gt; 1    3 0.4025181 0.4195041
+#&gt; 2    4 0.4732084 0.4889571
+#&gt; 3    5 0.5340087 0.5484998
+#&gt; 4    6 0.5780892 0.5915733
+#&gt; 5    7 0.6148407 0.6274452
+#&gt; 6    8 0.6504145 0.6621411</div><div class='input'><span class='co'># }</span>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
