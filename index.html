@@ -100,8 +100,11 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install <code>mifa</code> from <a href="https://github.com/teebusch/mifa">GitHub</a> with:</p>
+<p>Install from CRAN with:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"mifa"</span><span class="op">)</span></code></pre></div>
+<p>Or install the development version from <a href="https://github.com/teebusch/mifa">Github</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("devtools")</span>
 <span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"teebusch/mifa"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -117,7 +120,7 @@
 <h3 class="hasAnchor">
 <a href="#imputing-the-covariance-matrix" class="anchor"></a>Imputing the Covariance Matrix</h3>
 <p>First, we use <code><a href="reference/mifa.html">mifa()</a></code> to impute the covariance matrix and get an idea how many factors we should use. We use the <code>cov_vars</code> argument to tell <code>mifa</code> to use <code>gender</code>, <code>education</code>, and <code>age</code> for the imputations, but exclude them from the covariance matrix:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/teebusch/mifa">mifa</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://personality-project.org/r/psych/">psych</a></span><span class="op">)</span>
 
@@ -154,14 +157,14 @@
 <h3 class="hasAnchor">
 <a href="#factor-analysis" class="anchor"></a>Factor Analysis</h3>
 <p>It looks like the first 5 principal components explain more than half of the variance in the responses, so we perform a factor analysis with 5 factors, using the <code><a href="https://rdrr.io/pkg/psych/man/fa.html">fa()</a></code> function from the <code>psych</code> package. We can get the imputed covariance matrix of our data from <code>mi$cov_combined</code>. From there on, it’s business as usual.</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.html">fa</a></span><span class="op">(</span><span class="va">mi</span><span class="op">$</span><span class="va">cov_combined</span>, n.obs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">bfi</span><span class="op">)</span>, nfactors <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></code></pre></div>
 <p>The factor diagram shows that the five factors correspond nicely to the 5 types of questions:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/psych/man/fa.diagram.html">fa.diagram</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></code></pre></div>
 <p><img src="reference/figures/README-fa-diagram-1.svg"><!-- --></p>
 <p>We can add the factor scores to the original data, in order to explore group differences. Because we need complete data to calculate factor scores, we first impute a single data set with mice:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data_imp</span> <span class="op">&lt;-</span> <span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/complete.mids.html">complete</a></span><span class="op">(</span><span class="fu">mice</span><span class="fu">::</span><span class="fu"><a href="https://amices.org/mice/reference/mice.html">mice</a></span><span class="op">(</span><span class="va">bfi</span>, <span class="fl">1</span>, print <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">fct_scores</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/psych/man/factor.scores.html">factor.scores</a></span><span class="op">(</span><span class="va">data_imp</span><span class="op">[</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">25</span><span class="op">]</span>, <span class="va">fit</span><span class="op">)</span><span class="op">$</span><span class="va">scores</span><span class="op">)</span>
@@ -177,7 +180,7 @@
 
 <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">data_imp</span><span class="op">$</span><span class="va">Gender</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"Male"</span>, <span class="st">"Female"</span><span class="op">)</span></code></pre></div>
 <p>Then we can visualize the group differences:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org">ggplot2</a></span><span class="op">)</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyr.tidyverse.org">tidyr</a></span><span class="op">)</span>
 
@@ -204,6 +207,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=mifa">https://​cloud.r-project.org/​package=mifa</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/teebusch/mifa/">https://​github.com/​teebusch/​mifa/​</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/teebusch/mifa/issues">https://​github.com/​teebusch/​mifa/​issues</a>
@@ -232,6 +237,7 @@
 <h2>Dev status</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.tidyverse.org/lifecycle/#maturing"><img src="https://img.shields.io/badge/lifecycle-maturing-blue.svg" alt="Lifecycle: maturing"></a></li>
+<li><a href="https://CRAN.R-project.org/package=mifa"><img src="https://www.r-pkg.org/badges/version/mifa" alt="CRAN status"></a></li>
 <li><a href="https://github.com/teebusch/mifa/actions"><img src="https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/Teebusch/mifa?branch=master"><img src="https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
 </ul>
