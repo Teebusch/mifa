@@ -49,8 +49,14 @@ by the authors, but you can still find it
 
 ## Installation
 
-You can install `mifa` from [GitHub](https://github.com/teebusch/mifa)
-with:
+Install from CRAN with:
+
+``` r
+install.packages("mifa")
+```
+
+Or install the development version from
+[Github](https://github.com/teebusch/mifa) with:
 
 ``` r
 # install.packages("devtools")
