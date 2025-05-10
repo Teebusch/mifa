@@ -1,33 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://teebusch.github.io/mifa//index.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/clean_n_pc.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/combine_rubin.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/get_fieller_ci.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/mice_impute_all_NA.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/mice_impute_once.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/mifa.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/mifa_ci_boot.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/mifa_ci_fieller.html</loc>
-  </url>
-  <url>
-    <loc>https://teebusch.github.io/mifa//reference/stop_constants.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://teebusch.github.io/mifa/404.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/LICENSE-text.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/LICENSE.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/authors.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/index.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/news/index.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/clean_n_pc.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/combine_rubin.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/get_fieller_ci.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/index.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/mice_impute_all_NA.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/mice_impute_once.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/mifa.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/mifa_ci_boot.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/mifa_ci_fieller.html</loc></url>
+<url><loc>https://teebusch.github.io/mifa/reference/stop_constants.html</loc></url>
 </urlset>
+
