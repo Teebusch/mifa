@@ -1,3 +1,10 @@
+# mifa 0.2.1
+
+* Update cross-references to mice package in documentation to comply with new
+  CRAN checks
+* Update example code and links in README
+* Remove unnecessary "LazyData" key from DESCRIPTION to remove CRAN check Note
+
 # mifa 0.2.0
 
 * Major code refactoring for readability and maintainability
