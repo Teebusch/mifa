@@ -1,6 +1,6 @@
 Package: mifa
 Title: Multiple Imputation for Exploratory Factor Analysis
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
   person("Vahid", "Nassiri", role = "aut"),
   person("Anikó", "Lovik", role = "aut"),
@@ -34,6 +34,5 @@ Description: Impute the covariance matrix of incomplete data so that factor
   Nassiri et al. (2018) <doi:10.3758/s13428-017-1013-4>.
 License: MIT + file LICENSE
 Encoding: UTF-8
-LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.3.2
 Roxygen: list(markdown = TRUE)
