@@ -21,7 +21,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">mifa</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.2.1</span>
       </span>
     </div>
 
@@ -57,7 +57,7 @@ For multiple imputation, Multivariate Imputation by Chained Equations
 variance for the covariance of an incomplete data imputed using
 multiple imputation.
 For multiple imputation, Multivariate Imputation by Chained Equations
-(MICE) from the mice package is used.</p>
+(MICE) from the <a href="https://amices.org/mice/reference/mice.html" class="external-link">mice</a> package is used.</p>
     </div>
 
     <div id="ref-usage">
@@ -158,7 +158,11 @@ or <code>mice.impute.panImpute()</code>, do not honour the <code>ignore</code> a
 as <code>data</code> indicating where in the data the imputations should be
 created. The default, <code>where = is.na(data)</code>, specifies that the
 missing data should be imputed. The <code>where</code> argument may be used to
-overimpute observed data, or to skip imputations for selected missing values.</p></dd>
+overimpute observed data, or to skip imputations for selected missing values.
+Note: Imputation methods that generate imptutations outside of
+<code>mice</code>, like <code>mice.impute.panImpute()</code> may depend on a complete
+predictor space. In that case, a custom <code>where</code> matrix can not be
+specified.</p></dd>
 
     <dt><code>blocks</code></dt>
 <dd><p>List of vectors with variable names per block. List elements
@@ -184,7 +188,12 @@ The default <code>visitSequence = "roman"</code> visits the blocks (left to righ
 in the order in which they appear in <code>blocks</code>.
 One may also use one of the following keywords: <code>"arabic"</code>
 (right to left), <code>"monotone"</code> (ordered low to high proportion
-of missing data) and <code>"revmonotone"</code> (reverse of monotone).</p></dd>
+of missing data) and <code>"revmonotone"</code> (reverse of monotone).
+<em>Special case</em>: If you specify both <code>visitSequence = "monotone"</code> and
+<code>maxit = 1</code>, then the procedure will edit the <code>predictorMatrix</code>
+to conform to the monotone pattern. Realize that convergence in one
+iteration is only guaranteed if the missing data pattern is actually
+monotone. The procedure does not check this.</p></dd>
 
     <dt><code>formulas</code></dt>
 <dd><p>A named list of formula's, or expressions that
@@ -206,7 +215,8 @@ called for block <code>blockname</code>.</p></dd>
 expressions as strings. Each string is parsed and
 executed within the <code>sampler()</code> function to post-process
 imputed values during the iterations.
-The default is a vector of empty strings, indicating no post-processing.</p></dd>
+The default is a vector of empty strings, indicating no post-processing.
+Multivariate (block) imputation methods ignore the <code>post</code> parameter.</p></dd>
 
     <dt><code>defaultMethod</code></dt>
 <dd><p>A vector of length 4 containing the default
