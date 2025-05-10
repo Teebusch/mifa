@@ -34,11 +34,10 @@ ggplot2::theme_set(theme_minimal(base_size = 16))
 
 <!-- badges: start -->
 
-[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+[![Lifecycle: maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![CRAN status](https://www.r-pkg.org/badges/version/mifa)](https://CRAN.R-project.org/package=mifa)
-[![R build status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
-[![Codecov test coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://codecov.io/gh/Teebusch/mifa?branch=master)
-
+[![R-CMD-check](https://github.com/Teebusch/mifa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Teebusch/mifa/actions/workflows/R-CMD-check.yaml)
+[![Codecov test coverage](https://codecov.io/gh/Teebusch/mifa/graph/badge.svg)](https://app.codecov.io/gh/Teebusch/mifa)
 <!-- badges: end -->
 
 `mifa` is an R package that implements multiple imputation of covariance
@@ -170,12 +169,12 @@ Then we can visualize the group differences:
 library(ggplot2)
 library(tidyr)
 
-data_imp2 <- tidyr::pivot_longer(data_imp, -Gender, "factor")
+data_imp2 <- tidyr::pivot_longer(data_imp, cols = -Gender, names_to = "factor")
 
 ggplot(data_imp2) +
   geom_density(aes(value, linetype = Gender)) +
   facet_wrap(~ factor, nrow = 2) +
-  theme(legend.position = c(.9, .1))
+  theme(legend.position = "inside", legend.position.inside = c(.9, .1))
 ```
 
 ## Further Reading

@@ -4,7 +4,7 @@
 #' variance for the covariance of an incomplete data imputed using
 #' multiple imputation.
 #' For multiple imputation, Multivariate Imputation by Chained Equations
-#' (MICE) from the [mice] package is used.
+#' (MICE) from the \link[mice]{mice} package is used.
 #'
 #' This function uses the Shao and Sitter (1996) method to combine multiple
 #' imputation and bootstrapping. The imputations are done using [mice::mice()].

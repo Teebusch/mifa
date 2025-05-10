@@ -83,7 +83,11 @@ or \code{mice.impute.panImpute()}, do not honour the \code{ignore} argument.}
 as \code{data} indicating where in the data the imputations should be
 created. The default, \code{where = is.na(data)}, specifies that the
 missing data should be imputed. The \code{where} argument may be used to
-overimpute observed data, or to skip imputations for selected missing values.}
+overimpute observed data, or to skip imputations for selected missing values.
+Note: Imputation methods that generate imptutations outside of
+\code{mice}, like \code{mice.impute.panImpute()} may depend on a complete
+predictor space. In that case, a custom \code{where} matrix can not be
+specified.}
     \item{\code{blocks}}{List of vectors with variable names per block. List elements
 may be named to identify blocks. Variables within a block are
 imputed by a multivariate imputation method
@@ -105,7 +109,12 @@ The default \code{visitSequence = "roman"} visits the blocks (left to right)
 in the order in which they appear in \code{blocks}.
 One may also use one of the following keywords: \code{"arabic"}
 (right to left), \code{"monotone"} (ordered low to high proportion
-of missing data) and \code{"revmonotone"} (reverse of monotone).}
+of missing data) and \code{"revmonotone"} (reverse of monotone).
+\emph{Special case}: If you specify both \code{visitSequence = "monotone"} and
+\code{maxit = 1}, then the procedure will edit the \code{predictorMatrix}
+to conform to the monotone pattern. Realize that convergence in one
+iteration is only guaranteed if the missing data pattern is actually
+monotone. The procedure does not check this.}
     \item{\code{formulas}}{A named list of formula's, or expressions that
 can be converted into formula's by \code{as.formula}. List elements
 correspond to blocks. The block to which the list element applies is
@@ -121,7 +130,8 @@ called for block \code{blockname}.}
 expressions as strings. Each string is parsed and
 executed within the \code{sampler()} function to post-process
 imputed values during the iterations.
-The default is a vector of empty strings, indicating no post-processing.}
+The default is a vector of empty strings, indicating no post-processing.
+Multivariate (block) imputation methods ignore the \code{post} parameter.}
     \item{\code{defaultMethod}}{A vector of length 4 containing the default
 imputation methods for 1) numeric data, 2) factor data with 2 levels, 3)
 factor data with > 2 unordered levels, and 4) factor data with > 2
@@ -158,7 +168,7 @@ n \code{ci}, it will also contain the estimated Fieller's (parametric) and/or
 bootstrap (nonparametric) confidence interval for the proportion of
 variance explained by the different numbers of principal components defined
 by \code{n_pc}.}
-\item{mids}{Object of type \link[mice:mids-class]{mice::mids}. This is the results of
+\item{mids}{Object of type \link[mice:mids]{mice::mids}. This is the results of
 the multiple imputation step for the covariance matrix. Can be useful for
 diagnosing the multiple imputations.}
 }
@@ -166,8 +176,8 @@ diagnosing the multiple imputations.}
 \description{
 Compute covariance matrix of incomplete data using multiple imputation.
 For multiple imputation, \emph{Multivariate Imputation by Chained Equations}
-(MICE) from the \link{mice} package is used. The covariance matrices of the
-imputed data sets are combined using Rubin's rules.
+(MICE) from the \link[mice]{mice} package is used. The covariance matrices of
+the imputed data sets are combined using Rubin's rules.
 }
 \details{
 The function also computes the variance explained by different numbers of
