@@ -8,13 +8,13 @@
 <!-- badges: start -->
 
 [![Lifecycle:
-maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/mifa)](https://CRAN.R-project.org/package=mifa)
 [![R build
 status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
 [![Codecov test
-coverage](https://codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://codecov.io/gh/Teebusch/mifa?branch=master)
+coverage](https://app.codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Teebusch/mifa?branch=master)
 
 <!-- badges: end -->
 
@@ -27,15 +27,15 @@ works as follows:
     [mice](https://amices.org/mice/) package.
 
 2.  Combine the covariance matrices of the imputed data sets into a
-    single covariance matrix using Rubin’s rules<sup>[1]</sup>
+    single covariance matrix using Rubin’s rules<sup>[^1]</sup>
 
 3.  Use the combined covariance matrix for exploratory factor analysis.
 
 `mifa` also provides two types of confidence intervals for the variance
 explained by different numbers of principal components: Fieller
-confidence intervals (parametric) for larger samples<sup>[2]</sup> and
+confidence intervals (parametric) for larger samples<sup>[^2]</sup> and
 bootstrapped confidence intervals (nonparametric) for smaller
-samples.<sup>[3]</sup>
+samples.<sup>[^3]</sup>
 
 **For more information about the method, see:**
 
@@ -169,25 +169,26 @@ Then we can visualize the group differences:
 library(ggplot2)
 library(tidyr)
 
-data_imp2 <- tidyr::pivot_longer(data_imp, -Gender, "factor")
+data_imp2 <- tidyr::pivot_longer(data_imp, cols = -Gender, names_to = "factor")
 
 ggplot(data_imp2) +
   geom_density(aes(value, linetype = Gender)) +
   facet_wrap(~ factor, nrow = 2) +
-  theme(legend.position = c(.9, .1))
+  theme(legend.position = "inside", legend.position.inside = c(.9, .1))
 ```
 
 ![](man/figures/README-fa-group-comparison-1.svg)<!-- -->
 
 ## Further Reading
 
-[1] Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
-John Wiley & Sons.
+[^1]: Rubin D. B. Multiple imputation for nonresponse in surveys (2004).
+    John Wiley & Sons.
 
-[2] Fieller, E. C. (1954). Some problems in interval estimation. Journal
-of the Royal Statistical Society. Series B (Methodological): 175-185.
+[^2]: Fieller, E. C. (1954). Some problems in interval estimation.
+    Journal of the Royal Statistical Society. Series B (Methodological):
+    175-185.
 
-[3] Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey data.
-Journal of the American Statistical Association 91.435 (1996):
-1278-1288. doi:
-[10.1080/01621459.1996.10476997](https://dx.doi.org/10.1080/01621459.1996.10476997)
+[^3]: Shao, J. & Sitter, R. R. (1996). Bootstrap for imputed survey
+    data. Journal of the American Statistical Association 91.435 (1996):
+    1278-1288. doi:
+    [10.1080/01621459.1996.10476997](https://dx.doi.org/10.1080/01621459.1996.10476997)
