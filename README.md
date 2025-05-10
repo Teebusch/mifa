@@ -11,11 +11,9 @@
 maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://lifecycle.r-lib.org/articles/stages.html#maturing)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/mifa)](https://CRAN.R-project.org/package=mifa)
-[![R build
-status](https://github.com/teebusch/mifa/workflows/R-CMD-check/badge.svg)](https://github.com/teebusch/mifa/actions)
+[![R-CMD-check](https://github.com/Teebusch/mifa/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/Teebusch/mifa/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://app.codecov.io/gh/Teebusch/mifa/branch/master/graph/badge.svg)](https://app.codecov.io/gh/Teebusch/mifa?branch=master)
-
+coverage](https://codecov.io/gh/Teebusch/mifa/graph/badge.svg)](https://app.codecov.io/gh/Teebusch/mifa)
 <!-- badges: end -->
 
 `mifa` is an R package that implements multiple imputation of covariance
