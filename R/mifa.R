@@ -2,8 +2,8 @@
 #'
 #' Compute covariance matrix of incomplete data using multiple imputation.
 #' For multiple imputation, *Multivariate Imputation by Chained Equations*
-#' (MICE) from the [mice] package is used. The covariance matrices of the
-#' imputed data sets are combined using Rubin's rules.
+#' (MICE) from the \link[mice]{mice} package is used. The covariance matrices of
+#' the imputed data sets are combined using Rubin's rules.
 #'
 #' The function also computes the variance explained by different numbers of
 #' principal components and the corresponding Fieller (parametric) or bootstrap
